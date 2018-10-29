@@ -19,12 +19,7 @@ function extraKey(keyPath: string[], expected: any, actual: any): Diff {
 
 const hasProp = Object.prototype.hasOwnProperty;
 
-export default function objectDiff(
-  expected: any,
-  actual: any,
-  diffs: Diff[] = [],
-  keyPath: string[] = []
-): Diff[] {
+function objectDiffRecursive(expected: any, actual: any, diffs: Diff[], keyPath: string[]) {
   const [expectedType, actualType] = [typeOf(expected), typeOf(actual)];
 
   if (expectedType !== actualType) {
@@ -57,7 +52,7 @@ export default function objectDiff(
       if (!hasProp.call(actual, expectedKey)) {
         diffs.push(missingKey(nextKeyPath, expected[expectedKey], actual[expectedKey]));
       } else {
-        objectDiff(expected[expectedKey], actual[expectedKey], diffs, nextKeyPath);
+        objectDiffRecursive(expected[expectedKey], actual[expectedKey], diffs, nextKeyPath);
       }
     }
 
@@ -69,6 +64,11 @@ export default function objectDiff(
       }
     }
   }
+}
 
+export default function objectDiff(expected: any, actual: any) {
+  const diffs: Diff[] = [];
+  const keyPath: string[] = [];
+  objectDiffRecursive(expected, actual, diffs, keyPath);
   return diffs;
 }

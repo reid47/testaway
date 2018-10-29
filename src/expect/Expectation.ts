@@ -50,6 +50,12 @@ export class Expectation {
     this.assert(equal, this.toEqual, [expected], reason);
   }
 
+  toMatch(expected: string | RegExp) {
+    const pass =
+      typeof expected === 'string' ? this.actual === expected : expected.test(this.actual);
+    this.assert(pass, this.toMatch, [expected]);
+  }
+
   assert(
     condition: boolean,
     matcher: (...obj: any[]) => void,
