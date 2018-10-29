@@ -20,6 +20,19 @@ export const enum TestEvent {
   runFinished
 }
 
+export const enum ValueType {
+  null,
+  undefined,
+  boolean,
+  number,
+  string,
+  function,
+  regexp,
+  date,
+  array,
+  object
+}
+
 export type TestStatus = 'passed' | 'failed' | 'skipped';
 
 export interface RunStartedEvent {
@@ -65,4 +78,11 @@ export interface Options {
 
 export interface MergedOptions {
   reporters: Reporter[];
+}
+
+export interface Diff {
+  type: 'wrong-type' | 'wrong-value' | 'missing-key' | 'extra-key';
+  keyPath: string[];
+  expected: any;
+  actual: any;
 }

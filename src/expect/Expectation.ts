@@ -1,6 +1,5 @@
-function fail(matcherName: string, expected: any) {
-  throw new Error('Expected ' + this.actual + ' ' + matcherName + ' ' + expected);
-}
+import ExpectationError from './ExpectationError';
+import deepEqual from '../utils/deep-equal';
 
 export class Expectation {
   private actual: any;
@@ -17,20 +16,48 @@ export class Expectation {
   }
 
   toBe(expected: any) {
-    const objectIs = Object.is(this.actual, expected);
-    if (!this.negated && objectIs) return;
-    if (this.negated && !objectIs) return;
-
-    fail.call(this, 'toBe', expected);
+    const pass = Object.is(this.actual, expected);
+    this.assert(pass, this.toBe, [expected]);
   }
 
-  // toThrow() {
-  //   try {
-  //     this.actual();
-  //     if (!this.negated) fail.call(this, 'toThrow', 'throw');
-  //   } catch {
-  //     // NOT WORKING
-  //     if (this.negated) fail.call(this, 'toThrow', 'throw');
-  //   }
-  // }
+  toBeDefined() {
+    const pass = this.actual !== void 0;
+    this.assert(pass, this.toBeUndefined, []);
+  }
+
+  toBeFalsy() {
+    const pass = !this.actual;
+    this.assert(pass, this.toBeFalsy, []);
+  }
+
+  toBeNull() {
+    const pass = this.actual === null;
+    this.assert(pass, this.toBeNull, []);
+  }
+
+  toBeTruthy() {
+    const pass = !!this.actual;
+    this.assert(pass, this.toBeTruthy, []);
+  }
+
+  toBeUndefined() {
+    const pass = this.actual === void 0;
+    this.assert(pass, this.toBeUndefined, []);
+  }
+
+  toEqual(expected: any) {
+    const { equal, reason } = deepEqual(expected, this.actual);
+    this.assert(equal, this.toEqual, [expected], reason);
+  }
+
+  assert(
+    condition: boolean,
+    matcher: (...obj: any[]) => void,
+    matcherArgs: any[],
+    additionalInfo?: string
+  ) {
+    if (!this.negated && condition) return;
+    if (this.negated && !condition) return;
+    throw new ExpectationError(matcher, this.negated, this.actual, matcherArgs, additionalInfo);
+  }
 }
