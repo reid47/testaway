@@ -37,7 +37,7 @@ export default class Test {
       const timeoutError = new Error('Timed out!');
 
       await new Promise(async (resolve, reject) => {
-        const timeout = setTimeout(() => reject(timeoutError), 1000);
+        const timeout = setTimeout(() => reject(timeoutError), this.options.timeout);
 
         if (this.func.length === 0) {
           try {

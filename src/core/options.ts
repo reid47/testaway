@@ -23,27 +23,35 @@ export const mergeTestRunOptionsWithDefaults = (given?: TestRunOptions): TestRun
 };
 
 export const mergeSuiteOptionsWithDefaults = (
-  testRunOptions: TestRunOptions,
-  parentSuiteOptions?: SuiteOptions,
-  given?: SuiteOptions
+  testRunOptions: TestRunOptions = {},
+  parentSuiteOptions: SuiteOptions = {},
+  given: SuiteOptions = {}
 ): SuiteOptions => {
-  if (!given) return defaultSuiteOptions;
+  const inheritedTestRunOptions = {
+    ...('timeout' in testRunOptions ? { timeout: testRunOptions.timeout } : {})
+  };
 
   return {
     ...defaultSuiteOptions,
+    ...inheritedTestRunOptions,
+    ...parentSuiteOptions,
     ...given
   };
 };
 
 export const mergeTestOptionsWithDefaults = (
-  testRunOptions: TestRunOptions,
-  parentSuiteOptions: SuiteOptions,
-  given?: TestOptions
+  testRunOptions: TestRunOptions = {},
+  parentSuiteOptions: SuiteOptions = {},
+  given: TestOptions = {}
 ): TestOptions => {
-  if (!given) return defaultTestOptions;
+  const inheritedTestRunOptions = {
+    ...('timeout' in testRunOptions ? { timeout: testRunOptions.timeout } : {})
+  };
 
   return {
     ...defaultTestOptions,
+    ...inheritedTestRunOptions,
+    ...parentSuiteOptions,
     ...given
   };
 };
