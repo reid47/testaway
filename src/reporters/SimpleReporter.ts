@@ -18,14 +18,16 @@ export default class SimpleReporter implements Reporter {
         this.failCount++;
         console.info('\u2717', testName);
 
-        if (event.error) {
+        if (event.error && event.error.message) {
           console.info(
             event.error.message
               .split('\n')
               .map(line => `  ${line}`)
               .join('\n')
           );
+        }
 
+        if (event.error && event.error.stack) {
           console.info(
             '\n' +
               event.error.stack

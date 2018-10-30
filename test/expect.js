@@ -37,9 +37,4 @@ describe('toBe', () => {
   });
 });
 
-it('hmm', () => {
-  // expect(new Date()).toEqual(new Date('12/23/1993'));
-  expect({ a: 4 }).toEqual({ a: 4, b: 5, c: 6 });
-});
-
 execute();

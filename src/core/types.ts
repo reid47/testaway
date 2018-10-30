@@ -4,6 +4,19 @@ export type TestFunc = (doneCallback?: DoneCallback) => Promise<void> | void;
 
 export type SuiteFunc = () => void;
 
+export interface TestRunOptions {
+  reporters?: Reporter[];
+  timeout?: number;
+}
+
+export interface SuiteOptions {
+  timeout?: number;
+}
+
+export interface TestOptions {
+  timeout?: number;
+}
+
 export const enum Hook {
   beforeEach,
   afterEach,
@@ -70,14 +83,6 @@ export interface Reporter {
   suiteFinished?: (event: SuiteFinishedEvent) => void;
   testStarted?: (event: TestStartedEvent) => void;
   testFinished?: (event: TestFinishedEvent) => void;
-}
-
-export interface Options {
-  reporters?: Reporter[];
-}
-
-export interface MergedOptions {
-  reporters: Reporter[];
 }
 
 export interface Diff {

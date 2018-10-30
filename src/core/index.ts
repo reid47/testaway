@@ -1,21 +1,50 @@
 import TestRun from './TestRun';
-import { Hook, Options, MergedOptions } from './types';
+import { Hook, TestFunc, TestOptions, TestRunOptions } from './types';
 
-function mergeOptions(options: Options): MergedOptions {
-  options.reporters = options.reporters || [];
-  return options as MergedOptions;
-}
+export default function createTestRun(testRunOptions?: TestRunOptions) {
+  const testRun = new TestRun(testRunOptions);
 
-export default function createTestRun(options: Options = {}) {
-  const testRun = new TestRun(mergeOptions(options));
+  const beforeEach = (func: TestFunc) => {
+    testRun.addHook(Hook.beforeEach, func);
+  };
+
+  const afterEach = (func: TestFunc) => {
+    testRun.addHook(Hook.afterEach, func);
+  };
+
+  const beforeAll = (func: TestFunc) => {
+    testRun.addHook(Hook.beforeAll, func);
+  };
+
+  const afterAll = (func: TestFunc) => {
+    testRun.addHook(Hook.afterAll, func);
+  };
+
+  const it = (testName: string, funcOrOptions: TestFunc | TestOptions, func: TestFunc) => {
+    if (typeof funcOrOptions === 'function') {
+      testRun.addTest(testName, funcOrOptions, {});
+    } else {
+      testRun.addTest(testName, func, funcOrOptions);
+    }
+  };
+
+  const describe = (suiteName: string, funcOrOptions: TestFunc | TestOptions, func: TestFunc) => {
+    if (typeof funcOrOptions === 'function') {
+      testRun.addSuite(suiteName, funcOrOptions, {});
+    } else {
+      testRun.addSuite(suiteName, func, funcOrOptions);
+    }
+  };
+
+  const execute = () => testRun.execute();
 
   return {
-    beforeEach: testRun.addHook.bind(testRun, Hook.beforeEach),
-    afterEach: testRun.addHook.bind(testRun, Hook.afterEach),
-    beforeAll: testRun.addHook.bind(testRun, Hook.beforeAll),
-    afterAll: testRun.addHook.bind(testRun, Hook.afterAll),
-    it: testRun.addTest.bind(testRun),
-    describe: testRun.addSuite.bind(testRun),
-    execute: testRun.execute.bind(testRun)
+    beforeEach,
+    afterEach,
+    beforeAll,
+    afterAll,
+    it,
+    describe,
+    execute
   };
 }

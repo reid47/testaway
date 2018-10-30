@@ -9,69 +9,78 @@ import {
   SuiteFinishedEvent,
   TestStartedEvent,
   TestFinishedEvent,
-  MergedOptions
+  TestOptions,
+  SuiteOptions,
+  TestRunOptions,
+  Reporter
 } from './types';
+import { mergeTestRunOptionsWithDefaults } from './options';
 
 export default class TestRun {
-  private options: MergedOptions;
-  private root: TestSuite;
-  private currentSuite: TestSuite;
+  options: TestRunOptions;
+  root: TestSuite;
+  currentSuite: TestSuite;
 
-  constructor(options: MergedOptions) {
-    this.options = options;
-    this.root = new TestSuite(this, null);
+  constructor(options?: TestRunOptions) {
+    this.options = mergeTestRunOptionsWithDefaults(options);
+    this.root = new TestSuite(this, null, [], undefined);
     this.currentSuite = this.root;
   }
 
-  addSuite(suiteName: string, defineSuite: SuiteFunc) {
+  addSuite(suiteName: string, defineSuite: SuiteFunc, suiteOptions: SuiteOptions) {
     const oldCurrentSuite = this.currentSuite;
-    this.currentSuite = this.currentSuite.addSuite(suiteName);
+    this.currentSuite = this.currentSuite.addSuite(suiteName, suiteOptions);
     defineSuite();
     this.currentSuite = oldCurrentSuite;
   }
 
-  addTest(testName: string, testFunc: TestFunc) {
-    this.currentSuite.addTest(testName, testFunc);
+  addTest(testName: string, testFunc: TestFunc, testOptions: TestOptions) {
+    this.currentSuite.addTest(testName, testFunc, testOptions);
   }
 
   addHook(hook: Hook, func: TestFunc) {
     this.currentSuite.addHook(hook, func);
   }
 
+  forEachReporter(func: (r: Reporter) => void) {
+    if (!this.options.reporters) return;
+    for (const reporter of this.options.reporters) func(reporter);
+  }
+
   reportRunStarted(event: RunStartedEvent) {
-    for (const reporter of this.options.reporters) {
+    this.forEachReporter(reporter => {
       reporter.runStarted && reporter.runStarted(event);
-    }
+    });
   }
 
   reportRunFinished(event: RunFinishedEvent) {
-    for (const reporter of this.options.reporters) {
+    this.forEachReporter(reporter => {
       reporter.runFinished && reporter.runFinished(event);
-    }
+    });
   }
 
   reportSuiteStarted(event: SuiteStartedEvent) {
-    for (const reporter of this.options.reporters) {
+    this.forEachReporter(reporter => {
       reporter.suiteStarted && reporter.suiteStarted(event);
-    }
+    });
   }
 
   reportSuiteFinished(event: SuiteFinishedEvent) {
-    for (const reporter of this.options.reporters) {
+    this.forEachReporter(reporter => {
       reporter.suiteFinished && reporter.suiteFinished(event);
-    }
+    });
   }
 
   reportTestStarted(event: TestStartedEvent) {
-    for (const reporter of this.options.reporters) {
+    this.forEachReporter(reporter => {
       reporter.testStarted && reporter.testStarted(event);
-    }
+    });
   }
 
   reportTestFinished(event: TestFinishedEvent) {
-    for (const reporter of this.options.reporters) {
+    this.forEachReporter(reporter => {
       reporter.testFinished && reporter.testFinished(event);
-    }
+    });
   }
 
   async execute() {

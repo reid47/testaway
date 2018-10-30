@@ -1,19 +1,26 @@
 import Test from './Test';
-import { TestFunc, Hook } from './types';
+import { TestFunc, Hook, TestOptions, SuiteOptions } from './types';
 import TestRun from './TestRun';
+import { mergeSuiteOptionsWithDefaults } from './options';
 
 export default class TestSuite {
-  private testRun: TestRun;
-  private name: string[];
-  private parent: TestSuite | null;
-  private tests: Test[];
-  private suites: TestSuite[];
-  private hooks: { [hook in Hook]: TestFunc[] };
+  testRun: TestRun;
+  parent: TestSuite | null;
+  name: string[];
+  options: SuiteOptions;
+  tests: Test[];
+  suites: TestSuite[];
+  hooks: { [hook in Hook]: TestFunc[] };
 
-  constructor(testRun: TestRun, parent?: TestSuite, name?: string) {
+  constructor(testRun: TestRun, parent: TestSuite | null, name: string[], options?: SuiteOptions) {
     this.testRun = testRun;
     this.parent = parent;
-    this.name = this.parent ? [...this.parent.name, name] : this.name ? [name] : [];
+    this.name = name;
+    this.options = mergeSuiteOptionsWithDefaults(
+      this.testRun.options,
+      parent ? parent.options : undefined,
+      options
+    );
     this.tests = [];
     this.suites = [];
     this.hooks = {
@@ -24,14 +31,14 @@ export default class TestSuite {
     };
   }
 
-  addSuite(suiteName: string) {
-    const newSuite = new TestSuite(this.testRun, this, suiteName);
+  addSuite(suiteName: string, suiteOptions: SuiteOptions) {
+    const newSuite = new TestSuite(this.testRun, this, [...this.name, suiteName], suiteOptions);
     this.suites.push(newSuite);
     return newSuite;
   }
 
-  addTest(testName: string, testFunc: TestFunc) {
-    this.tests.push(new Test(this.testRun, this, [...this.name, testName], testFunc));
+  addTest(testName: string, testFunc: TestFunc, testOptions: TestOptions) {
+    this.tests.push(new Test(this.testRun, this, [...this.name, testName], testFunc, testOptions));
   }
 
   addHook(hook: Hook, func: TestFunc) {
