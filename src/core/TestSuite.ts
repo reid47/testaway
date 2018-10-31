@@ -23,12 +23,7 @@ export default class TestSuite {
     );
     this.tests = [];
     this.suites = [];
-    this.hooks = {
-      [Hook.beforeEach]: [],
-      [Hook.afterEach]: [],
-      [Hook.beforeAll]: [],
-      [Hook.afterAll]: []
-    };
+    this.hooks = [[], [], [], []];
   }
 
   addSuite(suiteName: string, suiteOptions: SuiteOptions) {
