@@ -1,5 +1,6 @@
 import TestRun from './TestRun';
 import { Hook, TestFunc, TestOptions, TestRunOptions } from './types';
+import { Expectation } from './Expectation';
 
 export default function createTestRun(testRunOptions?: TestRunOptions) {
   const testRun = new TestRun(testRunOptions);
@@ -26,6 +27,8 @@ export default function createTestRun(testRunOptions?: TestRunOptions) {
     }
   };
 
+  const expect = (obj: any) => new Expectation(obj);
+
   return {
     execute,
     beforeEach,
@@ -33,6 +36,7 @@ export default function createTestRun(testRunOptions?: TestRunOptions) {
     beforeAll,
     afterAll,
     describe,
-    it
+    it,
+    expect
   };
 }

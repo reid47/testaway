@@ -16,26 +16,24 @@ export default class SimpleReporter implements Reporter {
 
       case 'failed':
         this.failCount++;
-        console.info('\u2717', testName);
-
-        if (event.error && event.error.message) {
-          console.info(
-            event.error.message
-              .split('\n')
-              .map(line => `  ${line}`)
-              .join('\n')
-          );
-        }
-
-        if (event.error && event.error.stack) {
-          console.info(
-            '\n' +
-              event.error.stack
-                .split('\n')
-                .map(line => `  ${line}`)
-                .join('\n')
-          );
-        }
+        console.error(
+          '\u2717',
+          testName +
+            (event.error && event.error.message
+              ? '\n' +
+                event.error.message
+                  .split('\n')
+                  .map(line => `  ${line}`)
+                  .join('\n')
+              : '') +
+            (event.error && event.error.stack
+              ? '\n' +
+                event.error.stack
+                  .split('\n')
+                  .map(line => `  ${line}`)
+                  .join('\n')
+              : '')
+        );
         return;
 
       case 'skipped':
@@ -48,12 +46,17 @@ export default class SimpleReporter implements Reporter {
   runFinished() {
     const total = this.passCount + this.failCount + this.skipCount;
 
-    console.info();
-    this.passCount && console.info(`passed: ${this.passCount}/${total}`);
-    this.failCount && console.info(`failed: ${this.failCount}/${total}`);
-    this.skipCount && console.info(`skipped: ${this.skipCount}/${total}`);
+    console.info(
+      [
+        this.passCount && `passed: ${this.passCount}/${total}`,
+        this.failCount && `failed: ${this.failCount}/${total}`,
+        this.skipCount && `skipped: ${this.skipCount}/${total}`
+      ]
+        .filter(Boolean)
+        .join('\n')
+    );
 
-    if (this.failCount && typeof process !== 'undefined') {
+    if (this.failCount && typeof process !== 'undefined' && typeof process.exit === 'function') {
       process.exit(1);
     }
   }
