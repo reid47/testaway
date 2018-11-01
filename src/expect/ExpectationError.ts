@@ -5,14 +5,14 @@ export default class ExpectationError extends Error {
   private negated: boolean;
   private actual: any;
   private matcherArgs: any[];
-  private additionalInfo: string;
+  private additionalInfo?: string;
 
   constructor(
     matcher: (...obj: any[]) => void,
     negated: boolean,
     actual: any,
     matcherArgs: any[],
-    additionalInfo: string
+    additionalInfo?: string
   ) {
     super();
 
@@ -24,7 +24,7 @@ export default class ExpectationError extends Error {
     this.additionalInfo = additionalInfo;
 
     this.message = this.formatMessage();
-    this.stack = this.stack
+    this.stack = (this.stack || '')
       .split('\n')
       .filter(line => /^[ ]*at/.test(line))
       .map(line => line.trim())
