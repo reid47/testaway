@@ -1,4 +1,4 @@
-export default class Mock {
+export class Mock {
   name: string = '';
   calls: any[] = [];
   context: any = null;

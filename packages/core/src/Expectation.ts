@@ -1,5 +1,6 @@
 import { ExpectationError } from './ExpectationError';
 import deepEqual from './utils/deep-equal';
+import isPromise from './utils/is-promise';
 
 interface Queryable {
   querySelectorAll(selector: string): NodeListOf<Element>;
@@ -8,16 +9,30 @@ interface Queryable {
 export class Expectation {
   private actual: any;
   private negated: boolean;
+  private expectResolve: boolean;
+  private expectReject: boolean;
   private domContext: Queryable | null;
 
   constructor(actual: any) {
     this.actual = actual;
     this.negated = false;
+    this.expectResolve = false;
+    this.expectReject = false;
     this.domContext = typeof document !== 'undefined' ? document : null;
   }
 
   get not() {
-    this.negated = !this.negated;
+    this.negated = true;
+    return this;
+  }
+
+  get resolves() {
+    this.expectResolve = true;
+    return this;
+  }
+
+  get rejects() {
+    this.expectReject = true;
     return this;
   }
 
@@ -138,12 +153,47 @@ export class Expectation {
     return this.assert(pass, this.toMatch, [expected]);
   }
 
+  toThrow(expected?: string | RegExp) {
+    if (typeof this.actual !== 'function') {
+      throw new Error('.toThrow expects to operate on a function');
+    }
+
+    let pass = false;
+    let error = null;
+
+    try {
+      this.actual();
+    } catch (err) {
+      error = err;
+      const errorMessage = err instanceof Error ? error.message : String(err);
+      if (typeof expected === 'string') pass = errorMessage.indexOf(expected) > -1;
+      else if (expected instanceof RegExp) pass = expected.test(errorMessage);
+    }
+
+    return this.assert(pass, this.toThrow, [expected]);
+  }
+
   assert(
     condition: boolean,
     matcher: (...obj: any[]) => void,
     matcherArgs: any[],
     additionalInfo?: string
   ) {
+    if (this.expectResolve) {
+      if (!isPromise(this.actual)) {
+        throw new Error('.resolves expects a Promise');
+      }
+
+      return new Promise((resolve, reject) => {
+        // TODO: this.actual.then
+        if (!this.negated && condition) resolve();
+        if (this.negated && !condition) resolve();
+        reject(
+          new ExpectationError(matcher, this.negated, this.actual, matcherArgs, additionalInfo)
+        );
+      });
+    }
+
     if (!this.negated && condition) return;
     if (this.negated && !condition) return;
     throw new ExpectationError(matcher, this.negated, this.actual, matcherArgs, additionalInfo);
