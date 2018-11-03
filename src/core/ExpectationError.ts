@@ -1,6 +1,6 @@
-import prettyPrint from '../utils/pretty-print';
+import prettyPrint from './utils/pretty-print';
 
-export default class ExpectationError extends Error {
+export class ExpectationError extends Error {
   private matcher: (...obj: any[]) => void;
   private negated: boolean;
   private actual: any;
@@ -15,14 +15,12 @@ export default class ExpectationError extends Error {
     additionalInfo?: string
   ) {
     super();
-
     this.name = this.constructor.name;
     this.matcher = matcher;
     this.negated = negated;
     this.actual = actual;
     this.matcherArgs = matcherArgs;
     this.additionalInfo = additionalInfo;
-
     this.message = this.formatMessage();
     this.stack = (this.stack || '')
       .split('\n')

@@ -1,4 +1,4 @@
-import { ValueType } from '../core/types';
+import { ValueType } from '../types';
 
 export default function typeOf(obj: any): ValueType {
   switch (typeof obj) {
