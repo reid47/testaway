@@ -9,9 +9,7 @@ interface Queryable {
 export class Expectation {
   actual: any;
   negated: boolean;
-  async: boolean;
-  shouldAwaitResolve: boolean;
-  shouldAwaitReject: boolean;
+  async: number;
   alreadyResolved: boolean;
   alreadyRejected: boolean;
   domContext: Queryable | null;
@@ -19,9 +17,7 @@ export class Expectation {
   constructor(actual: any) {
     this.actual = actual;
     this.negated = false;
-    this.async = false;
-    this.shouldAwaitResolve = false;
-    this.shouldAwaitReject = false;
+    this.async = 0;
     this.alreadyResolved = false;
     this.alreadyRejected = false;
     this.domContext = typeof document !== 'undefined' ? document : null;
@@ -33,14 +29,12 @@ export class Expectation {
   }
 
   get resolves(): Expectation {
-    this.async = true;
-    this.shouldAwaitResolve = true;
+    this.async = 1;
     return this;
   }
 
   get rejects(): Expectation {
-    this.async = true;
-    this.shouldAwaitReject = true;
+    this.async = -1;
     return this;
   }
 
@@ -347,8 +341,12 @@ export class Expectation {
     );
   }
 
+  extend(modifyPrototype: (exp: Expectation) => void) {
+    modifyPrototype(Expectation.prototype);
+  }
+
   private awaitActual() {
-    if (this.shouldAwaitResolve) return this.awaitResolve();
+    if (this.async > 0) return this.awaitResolve();
     return this.awaitReject();
   }
 
