@@ -103,6 +103,56 @@ test('expect not toBe', () => {
 //   );
 // });
 
+test('expect toBeCloseTo', () => {
+  expect(47).toBeCloseTo(47);
+  expect(47.0).toBeCloseTo(47.0001);
+
+  expectErrorMessage(
+    () => expect(47.01).toBeCloseTo(47.02),
+    'Expectation failed: expect(received).toBeCloseTo(value)',
+    '',
+    '  Expected:',
+    '    47.01',
+    '  to be close to (precision: 2 decimal points):',
+    '    47.02'
+  );
+
+  expectErrorMessage(
+    () => expect(47).toBeCloseTo(47.001, 5),
+    'Expectation failed: expect(received).toBeCloseTo(value)',
+    '',
+    '  Expected:',
+    '    47',
+    '  to be close to (precision: 5 decimal points):',
+    '    47.001'
+  );
+});
+
+test('expect not toBeCloseTo', () => {
+  expect(47).not.toBeCloseTo(48);
+  expect(47.1).not.toBeCloseTo(47.2);
+
+  expectErrorMessage(
+    () => expect(47.1).not.toBeCloseTo(47.1, 1),
+    'Expectation failed: expect(received).not.toBeCloseTo(value)',
+    '',
+    '  Expected:',
+    '    47.1',
+    '  not to be close to (precision: 1 decimal points):',
+    '    47.1'
+  );
+
+  expectErrorMessage(
+    () => expect(47).not.toBeCloseTo(47.001),
+    'Expectation failed: expect(received).not.toBeCloseTo(value)',
+    '',
+    '  Expected:',
+    '    47',
+    '  not to be close to (precision: 2 decimal points):',
+    '    47.001'
+  );
+});
+
 test('expect toBeDefined', () => {
   expect(47).toBeDefined();
   expect('hi').toBeDefined();

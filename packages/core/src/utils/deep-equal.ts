@@ -6,7 +6,6 @@ export function deepEqual(expected: any, actual: any): { equal: boolean; reasons
   const diffs = objectDiff(expected, actual);
   if (!diffs.length) return { equal: true };
 
-  // TODO: more friendly messages here
   const reasons = [];
 
   if (diffs.length === 1) {

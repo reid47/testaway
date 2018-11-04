@@ -1,6 +1,5 @@
 import { ExpectationError } from './ExpectationError';
 import { deepEqual } from './utils/deep-equal';
-import { isPromise } from './utils/is-promise';
 import { prettyPrint } from './utils/pretty-print';
 
 interface Queryable {
@@ -74,6 +73,20 @@ export class Expectation {
 
     const pass = Object.is(this.actual, expected);
     return this.assert(pass, 'toBe', 'to be', ['expected'], [expected]);
+  }
+
+  toBeCloseTo(value: number, precision: number = 2) {
+    const pow = Math.pow(10, precision + 1);
+    const delta = Math.abs(value - this.actual);
+    const maxDelta = Math.pow(10, -precision) / 2;
+    const pass = Math.round(delta * pow) / pow <= maxDelta;
+    return this.assert(
+      pass,
+      'toBeCloseTo',
+      `to be close to (precision: ${precision} decimal points)`,
+      ['value'],
+      [value]
+    );
   }
 
   toBeDefined() {

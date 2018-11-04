@@ -4,7 +4,6 @@ export default class SimpleReporter implements Reporter {
   testCount: number = 0;
   passCount: number = 0;
   failCount: number = 0;
-  skipCount: number = 0;
 
   runStarted(event: RunStartedEvent) {
     this.testCount = event.testCount;
@@ -42,16 +41,12 @@ export default class SimpleReporter implements Reporter {
               : '')
         );
         return;
-
-      case 'skipped':
-        this.skipCount++;
-        console.info('\u003f', testName);
-        return;
     }
   }
 
   runFinished(event: RunFinishedEvent) {
-    const runCount = this.passCount + this.failCount + this.skipCount;
+    const runCount = this.passCount + this.failCount;
+    const skipCount = this.testCount - runCount;
 
     console.info(
       [
@@ -59,9 +54,9 @@ export default class SimpleReporter implements Reporter {
         runCount < this.testCount ? `${runCount}/${this.testCount}` : 'all',
         ` tests in ${event.time / 1000}s`,
         '\n',
-        this.passCount && `passed: ${this.passCount}/${runCount}`,
-        this.failCount && `failed: ${this.failCount}/${runCount}`,
-        this.skipCount && `skipped: ${this.skipCount}/${runCount}`
+        this.passCount && `\npassed: ${this.passCount}/${runCount}`,
+        this.failCount && `\nfailed: ${this.failCount}/${runCount}`,
+        skipCount && `\nskipped: ${skipCount}/${this.testCount}`
       ]
         .filter(Boolean)
         .join('')
