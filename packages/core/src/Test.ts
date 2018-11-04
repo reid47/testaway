@@ -1,5 +1,5 @@
 import TestSuite from './TestSuite';
-import { TestFunc, TestStatus, TestOptions } from './types';
+import { TestFunc, TestStatus, TestOptions, TestCategory } from './types';
 import TestRun from './TestRun';
 import { mergeTestOptionsWithDefaults } from './options';
 
@@ -8,6 +8,7 @@ export default class Test {
   parent: TestSuite;
   name: string[];
   func: TestFunc;
+  category: TestCategory;
   options: TestOptions;
 
   constructor(
@@ -15,12 +16,14 @@ export default class Test {
     parent: TestSuite,
     name: string[],
     func: TestFunc,
+    category: TestCategory,
     options?: TestOptions
   ) {
     this.testRun = testRun;
     this.parent = parent;
     this.name = name;
     this.func = func;
+    this.category = category;
     this.options = mergeTestOptionsWithDefaults(this.testRun.options, parent.options, options);
   }
 

@@ -1,9 +1,15 @@
-import { Reporter, TestFinishedEvent } from './types';
+import { Reporter, TestFinishedEvent, RunStartedEvent, RunFinishedEvent } from './types';
 
 export default class SimpleReporter implements Reporter {
+  testCount: number = 0;
   passCount: number = 0;
   failCount: number = 0;
   skipCount: number = 0;
+
+  runStarted(event: RunStartedEvent) {
+    this.testCount = event.testCount;
+    console.info();
+  }
 
   testFinished(event: TestFinishedEvent) {
     const testName = event.testName.join(' > ');
@@ -44,17 +50,21 @@ export default class SimpleReporter implements Reporter {
     }
   }
 
-  runFinished() {
-    const total = this.passCount + this.failCount + this.skipCount;
+  runFinished(event: RunFinishedEvent) {
+    const runCount = this.passCount + this.failCount + this.skipCount;
 
     console.info(
       [
-        this.passCount && `passed: ${this.passCount}/${total}`,
-        this.failCount && `failed: ${this.failCount}/${total}`,
-        this.skipCount && `skipped: ${this.skipCount}/${total}`
+        '\nran ',
+        runCount < this.testCount ? `${runCount}/${this.testCount}` : 'all',
+        ` tests in ${event.time / 1000}s`,
+        '\n',
+        this.passCount && `passed: ${this.passCount}/${runCount}`,
+        this.failCount && `failed: ${this.failCount}/${runCount}`,
+        this.skipCount && `skipped: ${this.skipCount}/${runCount}`
       ]
         .filter(Boolean)
-        .join('\n')
+        .join('')
     );
 
     if (this.failCount && typeof process !== 'undefined' && typeof process.exit === 'function') {

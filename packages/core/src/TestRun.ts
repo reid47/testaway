@@ -12,7 +12,8 @@ import {
   TestOptions,
   SuiteOptions,
   TestRunOptions,
-  Reporter
+  Reporter,
+  TestCategory
 } from './types';
 import { mergeTestRunOptionsWithDefaults } from './options';
 
@@ -34,8 +35,13 @@ export default class TestRun {
     this.currentSuite = oldCurrentSuite;
   }
 
-  addTest(testName: string, testFunc: TestFunc, testOptions: TestOptions) {
-    this.currentSuite.addTest(testName, testFunc, testOptions);
+  addTest(
+    testName: string,
+    testFunc: TestFunc,
+    testCategory: TestCategory,
+    testOptions: TestOptions
+  ) {
+    this.currentSuite.addTest(testName, testFunc, testCategory, testOptions);
   }
 
   addHook(hook: Hook, func: TestFunc) {

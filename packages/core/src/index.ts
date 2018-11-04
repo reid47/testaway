@@ -1,5 +1,5 @@
 import TestRun from './TestRun';
-import { Hook, TestFunc, TestOptions, TestRunOptions } from './types';
+import { Hook, TestFunc, TestOptions, TestRunOptions, TestCategory } from './types';
 import { Expectation } from './Expectation';
 
 export default function createTestRun(testRunOptions?: TestRunOptions) {
@@ -11,11 +11,19 @@ export default function createTestRun(testRunOptions?: TestRunOptions) {
     testRun.addSuite(suiteName, suiteFunc, options);
   };
 
-  const it = (testName: string, funcOrOptions: TestFunc | TestOptions, func: TestFunc) => {
+  const addTest = (category: TestCategory) => (
+    testName: string,
+    funcOrOptions: TestFunc | TestOptions,
+    func: TestFunc
+  ) => {
     const testFunc = typeof funcOrOptions === 'function' ? funcOrOptions : func;
     const options = typeof funcOrOptions === 'function' ? {} : funcOrOptions;
-    testRun.addTest(testName, testFunc, options);
+    testRun.addTest(testName, testFunc, category, options);
   };
+
+  const it = addTest(TestCategory.default);
+  const fit = addTest(TestCategory.focused);
+  const xit = addTest(TestCategory.skipped);
 
   return {
     execute: () => testRun.execute(),
@@ -26,6 +34,10 @@ export default function createTestRun(testRunOptions?: TestRunOptions) {
     expect: (obj: any) => new Expectation(obj),
     describe,
     it,
-    test: it
+    fit,
+    xit,
+    test: it,
+    ftest: fit,
+    xtest: xit
   };
 }

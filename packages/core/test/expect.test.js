@@ -1,4 +1,4 @@
-const { test, expect, execute } = require('../dist').default();
+const { ftest, xtest, test, expect, execute } = require('../dist').default();
 const { expectErrorMessage, expectAsyncErrorMessage } = require('./test-helpers');
 
 test('expect toBe', () => {

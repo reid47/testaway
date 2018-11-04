@@ -24,6 +24,12 @@ export const enum Hook {
   afterAll
 }
 
+export const enum TestCategory {
+  default,
+  focused,
+  skipped
+}
+
 export const enum TestEvent {
   runStarted,
   suiteStarted,
