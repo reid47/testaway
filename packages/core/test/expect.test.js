@@ -27,6 +27,18 @@ test('expect toBe', () => {
     '  to be:',
     '    "47"'
   );
+
+  expectErrorMessage(
+    () => expect({ a: 1 }).toBe({ a: 1 }),
+    'Expectation failed: expect(received).toBe(expected)',
+    '',
+    '  Expected:',
+    '    Object { a: 1 }',
+    '  to be:',
+    '    Object { a: 1 }',
+    '  ',
+    '  Checked for reference equality because both values are objects. To check for structural equality, use toEqual.'
+  );
 });
 
 test('expect not toBe', () => {

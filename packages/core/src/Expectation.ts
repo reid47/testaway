@@ -1,6 +1,8 @@
 import { ExpectationError } from './ExpectationError';
 import { deepEqual } from './utils/deep-equal';
 import { prettyPrint } from './utils/pretty-print';
+import { typeOf } from './utils/type-of';
+import { ValueType } from './types';
 
 interface Queryable {
   querySelectorAll(selector: string): NodeListOf<Element>;
@@ -69,7 +71,17 @@ export class Expectation {
     if (this.async) return this.awaitActual().then(x => x && x.toBe(expected));
 
     const pass = Object.is(this.actual, expected);
-    return this.assert(pass, 'toBe', 'to be', ['expected'], [expected]);
+
+    let additionalInfo;
+    if (typeOf(this.actual) === ValueType.object && typeOf(expected) === ValueType.object) {
+      additionalInfo = [
+        '',
+        'Checked for reference equality because both values are objects. ' +
+          'To check for structural equality, use toEqual.'
+      ];
+    }
+
+    return this.assert(pass, 'toBe', 'to be', ['expected'], [expected], additionalInfo);
   }
 
   toBeCloseTo(value: number, precision: number = 2): void | Promise<void> {
