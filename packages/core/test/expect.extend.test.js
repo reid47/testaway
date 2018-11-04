@@ -1,5 +1,3 @@
-const { test, expect, execute } = require('../dist').default();
-
 test('expect.extend', () => {
   expect(() => expect(47).toBe47()).toThrow('toBe47 is not a function');
 
@@ -14,5 +12,3 @@ test('expect.extend', () => {
   expect(47).toBe47();
   expect(48).not.toBe47();
 });
-
-execute();

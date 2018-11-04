@@ -4,6 +4,9 @@ import { prettyPrint } from './utils/pretty-print';
 import { typeOf } from './utils/type-of';
 import { ValueType } from './types';
 
+const isElement = (obj: any) =>
+  obj && obj.classList && typeof obj.classList.contains === 'function';
+
 interface Queryable {
   querySelectorAll(selector: string): NodeListOf<Element>;
 }
@@ -193,6 +196,40 @@ export class Expectation {
       ['expected'],
       [expected],
       this.negated ? undefined : reasons
+    );
+  }
+
+  toHaveClass(expected: string | string[]): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toHaveClass(expected));
+
+    if (!isElement(this.actual)) {
+      return this.assert(
+        false,
+        'toHaveClass',
+        'to be a DOM node with class',
+        ['expected'],
+        [expected],
+        ['but it was not a DOM node.']
+      );
+    }
+
+    const expectedClasses =
+      typeof expected === 'string'
+        ? expected
+            .split(/\s+/)
+            .map(s => s.trim())
+            .filter(Boolean)
+        : expected;
+
+    const pass = expectedClasses.every(cls => this.actual.classList.contains(cls));
+
+    return this.assert(
+      pass,
+      'toHaveClass',
+      `to have class${expectedClasses.length > 1 ? 'es' : ''}`,
+      ['expected'],
+      [expectedClasses.join(' ')],
+      [['but actual classes were', this.actual.className]]
     );
   }
 

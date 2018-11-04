@@ -43,6 +43,10 @@ export function prettyPrint(obj: any, depth = 0): string {
     return `${indent}Array [${obj.map(element => prettyPrint(element, depth + 1)).join(',')}]`;
   }
 
+  if ('outerHTML' in obj) {
+    return `${indent}${obj.outerHTML}`;
+  }
+
   if (obj instanceof Date) {
     return `${indent}Date ${obj.toISOString()}`;
   }
