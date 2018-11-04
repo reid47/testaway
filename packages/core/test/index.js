@@ -1,4 +1,4 @@
-const testApi = require('../dist').default();
+const testApi = require('../dist/index.min')();
 
 Object.assign(global, testApi);
 
