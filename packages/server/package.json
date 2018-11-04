@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "test-driven-server",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
