@@ -1,6 +1,6 @@
 const makeIndent = (amount: number): string => '  '.repeat(amount);
 
-export default function prettyPrint(obj: any, depth = 0): string {
+export function prettyPrint(obj: any, depth = 0): string {
   const type = typeof obj;
   const indent = makeIndent(depth);
 
@@ -29,7 +29,18 @@ export default function prettyPrint(obj: any, depth = 0): string {
   }
 
   if (Array.isArray(obj)) {
-    return `${indent}Array [${obj.map(element => prettyPrint(element, depth + 1)).join(', ')}]`;
+    const shouldOneLine =
+      obj.length < 10 &&
+      obj.every(
+        element =>
+          typeof element === 'number' || typeof element === 'string' || typeof element === 'boolean'
+      );
+
+    if (shouldOneLine) {
+      return `${indent}Array [${obj.map(element => prettyPrint(element)).join(', ')}]`;
+    }
+
+    return `${indent}Array [${obj.map(element => prettyPrint(element, depth + 1)).join(',')}]`;
   }
 
   if (obj instanceof Date) {
@@ -41,11 +52,27 @@ export default function prettyPrint(obj: any, depth = 0): string {
   }
 
   if (type === 'object') {
+    const ctor = (obj.constructor && obj.constructor.name) || 'Object';
     const keys = Object.keys(obj);
-    if (!keys.length) return `${indent}Object {}`;
+    if (!keys.length) return `${indent}${ctor} {}`;
+
+    const shouldOneLine =
+      keys.length < 5 &&
+      keys.every(
+        key =>
+          typeof obj[key] === 'number' ||
+          typeof obj[key] === 'string' ||
+          typeof obj[key] === 'boolean'
+      );
+
+    if (shouldOneLine) {
+      return `${indent}${ctor} { ${keys
+        .map(key => `${key}: ${prettyPrint(obj[key])}`)
+        .join(', ')} }`;
+    }
 
     return (
-      `${indent}Object {` +
+      `${indent}${ctor} {` +
       '\n' +
       keys
         .map((key, i) => {

@@ -1,4 +1,4 @@
-import typeOf from './type-of';
+import { typeOf } from './type-of';
 import { ValueType, Diff } from '../types';
 
 function createDiff(
@@ -63,7 +63,7 @@ function objectDiffRecursive(expected: any, actual: any, diffs: Diff[], keyPath:
   }
 }
 
-export default function objectDiff(expected: any, actual: any) {
+export function objectDiff(expected: any, actual: any) {
   const diffs: Diff[] = [];
   const keyPath: string[] = [];
   objectDiffRecursive(expected, actual, diffs, keyPath);

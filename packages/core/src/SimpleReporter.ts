@@ -1,4 +1,4 @@
-import { Reporter, TestFinishedEvent } from '../core/types';
+import { Reporter, TestFinishedEvent } from './types';
 
 export default class SimpleReporter implements Reporter {
   passCount: number = 0;
@@ -19,6 +19,7 @@ export default class SimpleReporter implements Reporter {
         console.error(
           '\u2717',
           testName +
+            '\n' +
             (event.error && event.error.message
               ? '\n' +
                 event.error.message

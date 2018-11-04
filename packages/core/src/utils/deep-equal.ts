@@ -1,6 +1,6 @@
-import objectDiff from './object-diff';
+import { objectDiff } from './object-diff';
 
-export default function deepEqual(expected: any, actual: any): { equal: boolean; reason: string } {
+export function deepEqual(expected: any, actual: any): { equal: boolean; reason: string } {
   const diffs = objectDiff(expected, actual);
 
   if (!diffs.length) return { equal: true, reason: '' };

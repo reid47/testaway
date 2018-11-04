@@ -1,6 +1,6 @@
 import { ValueType } from '../types';
 
-export default function typeOf(obj: any): ValueType {
+export function typeOf(obj: any): ValueType {
   switch (typeof obj) {
     case 'undefined':
       return ValueType.undefined;

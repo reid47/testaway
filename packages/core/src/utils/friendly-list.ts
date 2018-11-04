@@ -1,6 +1,6 @@
-import prettyPrint from './pretty-print';
+import { prettyPrint } from './pretty-print';
 
-export default function friendlyList(label: string, values: any[]): string {
+export function friendlyList(label: string, values: any[]): string {
   const length = values.length;
 
   let out = label;

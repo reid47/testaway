@@ -25,6 +25,7 @@ export default function createTestRun(testRunOptions?: TestRunOptions) {
     afterAll: (func: TestFunc) => testRun.addHook(Hook.afterAll, func),
     expect: (obj: any) => new Expectation(obj),
     describe,
-    it
+    it,
+    test: it
   };
 }
