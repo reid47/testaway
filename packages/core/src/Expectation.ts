@@ -131,10 +131,18 @@ export class Expectation {
     return this.assert(pass, 'toBeUndefined', 'to be undefined', [], []);
   }
 
-  // toEqual(expected: any) {
-  //   const { equal, reason } = deepEqual(expected, this.actual);
-  //   return this.assert(equal, this.toEqual, [expected], reason);
-  // }
+  toEqual(expected: any) {
+    const { equal, reasons } = deepEqual(expected, this.actual);
+
+    return this.assert(
+      equal,
+      'toEqual',
+      'to equal',
+      ['expected'],
+      [expected],
+      this.negated ? undefined : reasons
+    );
+  }
 
   toHaveLength(expected: number) {
     const actualLength = this.actual.length;

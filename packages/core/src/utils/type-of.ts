@@ -20,3 +20,22 @@ export function typeOf(obj: any): ValueType {
       return ValueType.object;
   }
 }
+
+export function stringTypeOf(obj: any): string {
+  const type = typeof obj;
+  switch (type) {
+    case 'undefined':
+      return 'undefined';
+    case 'boolean':
+    case 'string':
+    case 'number':
+    case 'function':
+      return `a ${type}`;
+    default:
+      if (obj === null) return 'null';
+      if (Array.isArray(obj)) return 'an array';
+      if (obj instanceof Date) return 'a Date';
+      if (obj instanceof RegExp) return 'a RegExp';
+      return 'an object';
+  }
+}

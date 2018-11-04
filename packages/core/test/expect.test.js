@@ -241,6 +241,77 @@ test('expect not toBeUndefined', () => {
   );
 });
 
+test('expect toEqual', () => {
+  expect(47).toEqual(47);
+  expect('hello, world').toEqual('hello, world');
+  expect(true).toEqual(true);
+  expect({ a: 1 }).toEqual({ a: 1 });
+
+  expectErrorMessage(
+    () => expect(47).toEqual(48),
+    'Expectation failed: expect(received).toEqual(expected)',
+    '',
+    '  Expected:',
+    '    47',
+    '  to equal:',
+    '    48',
+    '  but values are different.'
+  );
+
+  expectErrorMessage(
+    () => expect(47).toEqual('47'),
+    'Expectation failed: expect(received).toEqual(expected)',
+    '',
+    '  Expected:',
+    '    47',
+    '  to equal:',
+    '    "47"',
+    '  but types are different (received a number, but expected a string).'
+  );
+
+  expectErrorMessage(
+    () => expect({ a: 1, b: 3 }).toEqual({ a: 2, c: 5 }),
+    'Expectation failed: expect(received).toEqual(expected)',
+    '',
+    '  Expected:',
+    '    Object { a: 1, b: 3 }',
+    '  to equal:',
+    '    Object { a: 2, c: 5 }',
+    '  but objects are different:',
+    '    - at key "a": received 1, but expected 2',
+    '    - missing expected key "c"',
+    '    - unexpected key "b"'
+  );
+});
+
+test('expect not toEqual', () => {
+  expect(47).not.toEqual(48);
+  expect('hello, world').not.toEqual('hello');
+  expect(true).not.toEqual(false);
+  expect({ a: 1 }).not.toEqual({ a: 2 });
+  expect('hi').not.toEqual(1);
+
+  expectErrorMessage(
+    () => expect(47).not.toEqual(47),
+    'Expectation failed: expect(received).not.toEqual(expected)',
+    '',
+    '  Expected:',
+    '    47',
+    '  not to equal:',
+    '    47'
+  );
+
+  expectErrorMessage(
+    () => expect({ a: 1 }).not.toEqual({ a: 1 }),
+    'Expectation failed: expect(received).not.toEqual(expected)',
+    '',
+    '  Expected:',
+    '    Object { a: 1 }',
+    '  not to equal:',
+    '    Object { a: 1 }'
+  );
+});
+
 test('expect toHaveLength', () => {
   expect([]).toHaveLength(0);
   expect([1, 2]).toHaveLength(2);
