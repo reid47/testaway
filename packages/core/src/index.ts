@@ -1,6 +1,7 @@
 import TestRun from './TestRun';
 import { Hook, TestFunc, TestOptions, TestRunOptions, TestCategory } from './types';
 import { Expectation } from './Expectation';
+import { SimpleReporter } from './SimpleReporter';
 
 export default function createTestRun(testRunOptions?: TestRunOptions) {
   const testRun = new TestRun(testRunOptions);
@@ -38,6 +39,7 @@ export default function createTestRun(testRunOptions?: TestRunOptions) {
     xit,
     test: it,
     ftest: fit,
-    xtest: xit
+    xtest: xit,
+    SimpleReporter
   };
 }

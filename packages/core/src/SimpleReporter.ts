@@ -1,6 +1,6 @@
 import { Reporter, TestFinishedEvent, RunStartedEvent, RunFinishedEvent } from './types';
 
-export default class SimpleReporter implements Reporter {
+export class SimpleReporter implements Reporter {
   testCount: number = 0;
   passCount: number = 0;
   failCount: number = 0;

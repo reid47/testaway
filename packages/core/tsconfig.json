@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "declaration": true,
     "lib": ["es2015", "dom"],
     "module": "commonjs",
     "noImplicitAny": true,

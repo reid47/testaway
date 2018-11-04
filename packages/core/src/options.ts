@@ -1,5 +1,5 @@
 import { TestRunOptions, TestOptions, SuiteOptions } from './types';
-import SimpleReporter from './SimpleReporter';
+import { SimpleReporter } from './SimpleReporter';
 
 const defaultTestRunOptions: TestRunOptions = {
   reporters: [new SimpleReporter()],
