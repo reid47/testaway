@@ -203,31 +203,71 @@ export class Expectation {
   //   return this.assert(pass, this.toHaveText, [expected]);
   // }
 
-  // toMatch(expected: string | RegExp) {
-  //   const pass =
-  //     typeof expected === 'string' ? this.actual === expected : expected.test(this.actual);
-  //   return this.assert(pass, this.toMatch, [expected]);
-  // }
+  toMatch(expected: string | RegExp) {
+    const givenString = typeof expected === 'string';
 
-  // toThrow(expected?: string | RegExp) {
-  //   if (typeof this.actual !== 'function') {
-  //     throw new Error('.toThrow expects to operate on a function');
-  //   }
+    const pass = givenString
+      ? this.actual.indexOf(expected) > -1
+      : (expected as RegExp).test(this.actual);
 
-  //   let pass = false;
-  //   let error = null;
+    const phrase = givenString ? 'to contain string' : 'to match regular expression';
+    const param = givenString ? 'string' : 'regex';
 
-  //   try {
-  //     this.actual();
-  //   } catch (err) {
-  //     error = err;
-  //     const errorMessage = err instanceof Error ? error.message : String(err);
-  //     if (typeof expected === 'string') pass = errorMessage.indexOf(expected) > -1;
-  //     else if (expected instanceof RegExp) pass = expected.test(errorMessage);
-  //   }
+    return this.assert(pass, 'toMatch', phrase, [param], [expected]);
+  }
 
-  //   return this.assert(pass, this.toThrow, [expected]);
-  // }
+  toThrow(expected?: string | RegExp | Function) {
+    if (typeof this.actual !== 'function') {
+      throw new Error('toThrow(...) expects a function to be passed to expect(...)');
+    }
+
+    let caught = null;
+    try {
+      this.actual();
+    } catch (thrown) {
+      caught = thrown;
+    }
+
+    const threwAnything = !!caught;
+
+    if (!arguments.length) {
+      return this.assert(threwAnything, 'toThrow', 'to throw', [], []);
+    }
+
+    if (typeof expected === 'function') {
+      const pass = caught instanceof expected;
+      return this.assert(
+        pass,
+        'toThrow',
+        'to throw an instance of',
+        ['errorType'],
+        [expected],
+        threwAnything ? undefined : ['but it did not throw.']
+      );
+    }
+
+    const caughtMessage = caught instanceof Error ? caught.message : String(caught);
+
+    if (expected instanceof RegExp) {
+      return this.assert(
+        expected.test(caughtMessage),
+        'toThrow',
+        'to throw an error matching regular expression',
+        ['regex'],
+        [expected],
+        threwAnything ? undefined : ['but it did not throw.']
+      );
+    }
+
+    return this.assert(
+      caughtMessage.indexOf('' + expected) > -1,
+      'toThrow',
+      'to throw an error containing string',
+      ['string'],
+      [expected],
+      threwAnything ? undefined : ['but it did not throw.']
+    );
+  }
 
   assert(
     condition: boolean,

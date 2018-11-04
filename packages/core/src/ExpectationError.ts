@@ -25,7 +25,10 @@ export class ExpectationError extends Error {
     let additional = '';
     if (additionalInfo) {
       additional += additionalInfo
-        .map(([label, value]) => {
+        .map(info => {
+          if (typeof info === 'string') return `\n  ${info}`;
+          const label = info[0];
+          const value = info[1];
           return `\n  ${label}:\n        ${prettyPrint(value)}`;
         })
         .join('');

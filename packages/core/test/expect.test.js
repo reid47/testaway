@@ -469,24 +469,24 @@ test('expect not toBeLessThan', () => {
 });
 
 test('expect toBeLessThanOrEqual', () => {
-  expect(0).toBeLessThan(100);
-  expect(-100).toBeLessThan(-1);
+  expect(0).toBeLessThanOrEqual(100);
+  expect(-100).toBeLessThanOrEqual(-1);
   expect(33).toBeLessThanOrEqual(33);
 
   expectErrorMessage(
-    () => expect(10).toBeLessThan(1),
-    'Expectation failed: expect(received).toBeLessThan(expected)',
+    () => expect(10).toBeLessThanOrEqual(1),
+    'Expectation failed: expect(received).toBeLessThanOrEqual(expected)',
     '',
     '  Expected:',
     '    10',
-    '  to be less than:',
+    '  to be less than or equal:',
     '    1'
   );
 });
 
 test('expect not toBeLessThanOrEqual', () => {
-  expect(10).not.toBeLessThan(8);
-  expect(-1).not.toBeLessThan(-100);
+  expect(10).not.toBeLessThanOrEqual(8);
+  expect(-1).not.toBeLessThanOrEqual(-100);
 
   expectErrorMessage(
     () => expect(10).not.toBeLessThanOrEqual(90),
@@ -496,6 +496,219 @@ test('expect not toBeLessThanOrEqual', () => {
     '    10',
     '  not to be less than or equal:',
     '    90'
+  );
+});
+
+test('expect toMatch', () => {
+  expect('hello world').toMatch('ello');
+  expect('hello world').toMatch(/ello/);
+
+  expectErrorMessage(
+    () => expect('hello world').toMatch('wow'),
+    'Expectation failed: expect(received).toMatch(string)',
+    '',
+    '  Expected:',
+    '    "hello world"',
+    '  to contain string:',
+    '    "wow"'
+  );
+
+  expectErrorMessage(
+    () => expect('hello world').toMatch(/wow/),
+    'Expectation failed: expect(received).toMatch(regex)',
+    '',
+    '  Expected:',
+    '    "hello world"',
+    '  to match regular expression:',
+    '    /wow/'
+  );
+});
+
+test('expect not toMatch', () => {
+  expect('hello world').not.toMatch('wow');
+  expect('hello world').not.toMatch(/wow/);
+
+  expectErrorMessage(
+    () => expect('hello world').not.toMatch('ello'),
+    'Expectation failed: expect(received).not.toMatch(string)',
+    '',
+    '  Expected:',
+    '    "hello world"',
+    '  not to contain string:',
+    '    "ello"'
+  );
+
+  expectErrorMessage(
+    () => expect('hello world').not.toMatch(/ello/),
+    'Expectation failed: expect(received).not.toMatch(regex)',
+    '',
+    '  Expected:',
+    '    "hello world"',
+    '  not to match regular expression:',
+    '    /ello/'
+  );
+});
+
+test('expect toThrow', () => {
+  expect(() => {
+    throw new Error('failed');
+  }).toThrow();
+  expect(() => {
+    throw new Error('failed');
+  }).toThrow('failed');
+  expect(() => {
+    throw new Error('failed');
+  }).toThrow('fail');
+  expect(() => {
+    throw new Error('failed');
+  }).toThrow(/ail/);
+  expect(() => {
+    throw new TypeError('failed');
+  }).toThrow(TypeError);
+
+  expectErrorMessage(
+    () => expect(() => {}).toThrow(),
+    'Expectation failed: expect(received).toThrow()',
+    '',
+    '  Expected:',
+    '    [Function]',
+    '  to throw.'
+  );
+
+  expectErrorMessage(
+    () =>
+      expect(() => {
+        throw new Error('failed');
+      }).toThrow('bad'),
+    'Expectation failed: expect(received).toThrow(string)',
+    '',
+    '  Expected:',
+    '    [Function]',
+    '  to throw an error containing string:',
+    '    "bad"'
+  );
+
+  expectErrorMessage(
+    () => expect(() => {}).toThrow('bad'),
+    'Expectation failed: expect(received).toThrow(string)',
+    '',
+    '  Expected:',
+    '    [Function]',
+    '  to throw an error containing string:',
+    '    "bad"',
+    '  but it did not throw.'
+  );
+
+  expectErrorMessage(
+    () =>
+      expect(() => {
+        throw new Error('failed');
+      }).toThrow(/bad/),
+    'Expectation failed: expect(received).toThrow(regex)',
+    '',
+    '  Expected:',
+    '    [Function]',
+    '  to throw an error matching regular expression:',
+    '    /bad/'
+  );
+
+  expectErrorMessage(
+    () => expect(() => {}).toThrow(/bad/),
+    'Expectation failed: expect(received).toThrow(regex)',
+    '',
+    '  Expected:',
+    '    [Function]',
+    '  to throw an error matching regular expression:',
+    '    /bad/',
+    '  but it did not throw.'
+  );
+
+  expectErrorMessage(
+    () =>
+      expect(() => {
+        throw new Error('failed');
+      }).toThrow(TypeError),
+    'Expectation failed: expect(received).toThrow(errorType)',
+    '',
+    '  Expected:',
+    '    [Function]',
+    '  to throw an instance of:',
+    '    [Function: TypeError]'
+  );
+
+  expectErrorMessage(
+    () => expect(() => {}).toThrow(TypeError),
+    'Expectation failed: expect(received).toThrow(errorType)',
+    '',
+    '  Expected:',
+    '    [Function]',
+    '  to throw an instance of:',
+    '    [Function: TypeError]',
+    '  but it did not throw.'
+  );
+});
+
+test('expect not toThrow', () => {
+  expect(() => {}).not.toThrow();
+  expect(() => {
+    throw new Error('failed');
+  }).not.toThrow('other');
+  expect(() => {
+    throw new Error('failed');
+  }).not.toThrow(/other/);
+  expect(() => {
+    throw new Error('failed');
+  }).not.toThrow(TypeError);
+
+  expectErrorMessage(
+    () =>
+      expect(() => {
+        throw new Error('uh oh');
+      }).not.toThrow(),
+    'Expectation failed: expect(received).not.toThrow()',
+    '',
+    '  Expected:',
+    '    [Function]',
+    '  not to throw.'
+  );
+
+  expectErrorMessage(
+    () =>
+      expect(() => {
+        throw new Error('failed');
+      }).not.toThrow('fail'),
+    'Expectation failed: expect(received).not.toThrow(string)',
+    '',
+    '  Expected:',
+    '    [Function]',
+    '  not to throw an error containing string:',
+    '    "fail"'
+  );
+
+  expectErrorMessage(
+    () =>
+      expect(() => {
+        throw new Error('failed');
+      }).not.toThrow(/fail/),
+    'Expectation failed: expect(received).not.toThrow(regex)',
+    '',
+    '  Expected:',
+    '    [Function]',
+    '  not to throw an error matching regular expression:',
+    '    /fail/'
+  );
+
+  expectErrorMessage(
+    () =>
+      expect(() => {
+        throw new TypeError('failed');
+      }).not.toThrow(TypeError),
+    'Expectation failed: expect(received).not.toThrow(errorType)',
+    '',
+    '  Expected:',
+    '    [Function]',
+    '  not to throw an instance of:',
+    '    [Function: TypeError]'
   );
 });
 
