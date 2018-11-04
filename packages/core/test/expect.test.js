@@ -29,23 +29,23 @@ test('expect toBe', () => {
   );
 });
 
-// test('expect not toBe', () => {
-//   expect(47).not.toBe(48);
-//   expect('hello, world').not.toBe('hello');
-//   expect(true).not.toBe(false);
-//   expect({ a: 1 }).not.toBe({ a: 1 });
-//   expect('hi').not.toBe(1);
+test('expect not toBe', () => {
+  expect(47).not.toBe(48);
+  expect('hello, world').not.toBe('hello');
+  expect(true).not.toBe(false);
+  expect({ a: 1 }).not.toBe({ a: 1 });
+  expect('hi').not.toBe(1);
 
-//   expectErrorMessage(
-//     () => expect(47).not.toBe(47),
-//     'Expectation failed: expect(received).not.toBe(expected)',
-//     '',
-//     '  Expected:',
-//     '    47',
-//     '  not to be:',
-//     '    47'
-//   );
-// });
+  expectErrorMessage(
+    () => expect(47).not.toBe(47),
+    'Expectation failed: expect(received).not.toBe(expected)',
+    '',
+    '  Expected:',
+    '    47',
+    '  not to be:',
+    '    47'
+  );
+});
 
 // test('expect resolves toBe', async () => {
 //   await expect(Promise.resolve(47)).resolves.toBe(47);
