@@ -1,12 +1,4 @@
-exports.expectErrorMessage = (func, ...lines) => {
-  let error = null;
-
-  try {
-    func();
-  } catch (caught) {
-    error = caught;
-  }
-
+const checkError = (error, lines) => {
   if (!error) throw new Error('No error thrown.');
 
   const actual = error.message;
@@ -24,4 +16,28 @@ exports.expectErrorMessage = (func, ...lines) => {
     err.stack = '';
     throw err;
   }
+};
+
+exports.expectErrorMessage = (func, ...lines) => {
+  let error = null;
+
+  try {
+    func();
+  } catch (caught) {
+    error = caught;
+  }
+
+  checkError(error, lines);
+};
+
+exports.expectAsyncErrorMessage = async (func, ...lines) => {
+  let error = null;
+
+  try {
+    await func();
+  } catch (caught) {
+    error = caught;
+  }
+
+  checkError(error, lines);
 };

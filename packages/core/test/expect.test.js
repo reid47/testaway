@@ -1,5 +1,5 @@
 const { test, expect, execute } = require('../dist').default();
-const { expectErrorMessage } = require('./test-helpers');
+const { expectErrorMessage, expectAsyncErrorMessage } = require('./test-helpers');
 
 test('expect toBe', () => {
   expect(47).toBe(47);
@@ -29,23 +29,79 @@ test('expect toBe', () => {
   );
 });
 
-test('expect not toBe', () => {
-  expect(47).not.toBe(48);
-  expect('hello, world').not.toBe('hello');
-  expect(true).not.toBe(false);
-  expect({ a: 1 }).not.toBe({ a: 1 });
-  expect('hi').not.toBe(1);
+// test('expect not toBe', () => {
+//   expect(47).not.toBe(48);
+//   expect('hello, world').not.toBe('hello');
+//   expect(true).not.toBe(false);
+//   expect({ a: 1 }).not.toBe({ a: 1 });
+//   expect('hi').not.toBe(1);
 
-  expectErrorMessage(
-    () => expect(47).not.toBe(47),
-    'Expectation failed: expect(received).not.toBe(expected)',
-    '',
-    '  Expected:',
-    '    47',
-    '  not to be:',
-    '    47'
-  );
-});
+//   expectErrorMessage(
+//     () => expect(47).not.toBe(47),
+//     'Expectation failed: expect(received).not.toBe(expected)',
+//     '',
+//     '  Expected:',
+//     '    47',
+//     '  not to be:',
+//     '    47'
+//   );
+// });
+
+// test('expect resolves toBe', async () => {
+//   await expect(Promise.resolve(47)).resolves.toBe(47);
+
+//   await expectAsyncErrorMessage(
+//     () => expect(Promise.resolve(47)).resolves.toBe(48),
+//     'Expectation failed: expect(received).resolves.toBe(expected)',
+//     '',
+//     '  Expected:',
+//     '    47',
+//     '  to be:',
+//     '    48'
+//   );
+// });
+
+// test('expect resolves not toBe', async () => {
+//   await expect(Promise.resolve(48)).resolves.not.toBe(47);
+
+//   await expectAsyncErrorMessage(
+//     () => expect(Promise.resolve(47)).resolves.not.toBe(47),
+//     'Expectation failed: expect(received).resolves.not.toBe(expected)',
+//     '',
+//     '  Expected:',
+//     '    47',
+//     '  not to be:',
+//     '    47'
+//   );
+// });
+
+// test('expect rejects toBe', async () => {
+//   await expect(Promise.resolve(47)).rejects.toBe(47);
+
+//   // await expectAsyncErrorMessage(
+//   //   () => expect(Promise.reject(47)).rejects.toBe(48),
+//   //   'Expectation failed: expect(received).rejects.toBe(expected)',
+//   //   '',
+//   //   '  Expected:',
+//   //   '    47',
+//   //   '  to be:',
+//   //   '    48'
+//   // );
+// });
+
+// test('expect rejects not toBe', async () => {
+//   await expect(Promise.reject(48)).rejects.not.toBe(47);
+
+//   await expectAsyncErrorMessage(
+//     () => expect(Promise.reject(47)).rejects.not.toBe(47),
+//     'Expectation failed: expect(received).rejects.not.toBe(expected)',
+//     '',
+//     '  Expected:',
+//     '    47',
+//     '  not to be:',
+//     '    47'
+//   );
+// });
 
 test('expect toBeDefined', () => {
   expect(47).toBeDefined();

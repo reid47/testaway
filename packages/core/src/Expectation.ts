@@ -10,15 +10,19 @@ interface Queryable {
 export class Expectation {
   actual: any;
   negated: boolean;
-  expectResolve: boolean;
-  expectReject: boolean;
+  shouldAwaitResolve: boolean;
+  shouldAwaitReject: boolean;
+  alreadyResolved: boolean;
+  alreadyRejected: boolean;
   domContext: Queryable | null;
 
   constructor(actual: any) {
     this.actual = actual;
     this.negated = false;
-    this.expectResolve = false;
-    this.expectReject = false;
+    this.shouldAwaitResolve = false;
+    this.shouldAwaitReject = false;
+    this.alreadyResolved = false;
+    this.alreadyRejected = false;
     this.domContext = typeof document !== 'undefined' ? document : null;
   }
 
@@ -27,15 +31,15 @@ export class Expectation {
     return this;
   }
 
-  // get resolves(): Expectation {
-  //   this.expectResolve = true;
-  //   return this;
-  // }
+  get resolves(): Expectation {
+    this.shouldAwaitResolve = true;
+    return this;
+  }
 
-  // get rejects(): Expectation {
-  //   this.expectReject = true;
-  //   return this;
-  // }
+  get rejects(): Expectation {
+    this.shouldAwaitReject = true;
+    return this;
+  }
 
   // in(domNodeOrSelector: Element | string): Expectation {
   //   if (typeof document === 'undefined') {
@@ -64,7 +68,10 @@ export class Expectation {
   //   return this;
   // }
 
-  toBe(expected: any) {
+  toBe(expected: any): void | Promise<void> {
+    if (this.shouldAwaitResolve) return this.awaitResolve().then(x => x.toBe(expected));
+    if (this.shouldAwaitReject) return this.awaitReject().then(x => x.toBe(expected));
+
     const pass = Object.is(this.actual, expected);
     return this.assert(pass, 'toBe', 'to be', ['expected'], [expected]);
   }
@@ -277,7 +284,37 @@ export class Expectation {
     );
   }
 
-  assert(
+  private awaitResolve() {
+    return Promise.resolve()
+      .then(() => this.actual)
+      .then(resolved => {
+        const exp = new Expectation(resolved);
+        exp.domContext = this.domContext;
+        exp.negated = this.negated;
+        exp.alreadyResolved = true;
+        return exp;
+      })
+      .catch(rejected => {
+        throw new Error('Rejected when it should have been resolved!');
+      });
+  }
+
+  private awaitReject() {
+    return Promise.resolve()
+      .then(() => this.actual)
+      .then(resolved => {
+        throw new Error('Resolved when it should have been rejected!');
+      })
+      .catch(rejected => {
+        const exp = new Expectation(rejected);
+        exp.domContext = this.domContext;
+        exp.negated = this.negated;
+        exp.alreadyRejected = true;
+        return exp;
+      });
+  }
+
+  private assert(
     condition: boolean,
     matcherName: string,
     matcherPhrase: string,

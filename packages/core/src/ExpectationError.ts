@@ -18,7 +18,9 @@ export class ExpectationError extends Error {
     additionalInfo?: any[]
   ): ExpectationError {
     const err = new ExpectationError();
-    const matcher = `${expectation.negated ? '.not' : ''}.${matcherName}`;
+    const matcher = `${expectation.alreadyRejected ? '.rejects' : ''}${
+      expectation.alreadyResolved ? '.resolves' : ''
+    }${expectation.negated ? '.not' : ''}.${matcherName}`;
     const phrase = `${expectation.negated ? 'not ' : ''}${matcherPhrase}`;
     const phraseEnd = matcherArgs.length === 0 ? '.' : `:\n        ${prettyPrint(matcherArgs[0])}`;
 
