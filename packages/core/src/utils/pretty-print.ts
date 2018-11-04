@@ -51,6 +51,11 @@ export function prettyPrint(obj: any, depth = 0): string {
     return `${indent}${obj.toString()}`;
   }
 
+  if (obj instanceof Error) {
+    const ctor = (obj.constructor && obj.constructor.name) || 'Error';
+    return `${indent}${ctor}: ${obj.message}`;
+  }
+
   if (type === 'object') {
     const ctor = (obj.constructor && obj.constructor.name) || 'Object';
     const keys = Object.keys(obj);

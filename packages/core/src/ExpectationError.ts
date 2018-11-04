@@ -9,15 +9,14 @@ const stripIndent = (message: string) =>
     .trim();
 
 export class ExpectationError extends Error {
-  static create(
+  constructor(
     expectation: Expectation,
     matcherName: string,
     matcherPhrase: string,
-    matcherParamNames: string[],
+    matcherParamNames: string[] | null,
     matcherArgs: any[],
     additionalInfo?: any[]
-  ): ExpectationError {
-    const err = new ExpectationError();
+  ) {
     const matcher = `${expectation.alreadyRejected ? '.rejects' : ''}${
       expectation.alreadyResolved ? '.resolves' : ''
     }${expectation.negated ? '.not' : ''}.${matcherName}`;
@@ -36,14 +35,15 @@ export class ExpectationError extends Error {
         .join('');
     }
 
-    err.message = stripIndent(`
-      Expectation failed: expect(received)${matcher}(${matcherParamNames.join(', ')})
+    const matcherParams = matcherParamNames ? `(${matcherParamNames.join(', ')})` : '';
+    const message = stripIndent(`
+      Expectation failed: expect(received)${matcher}${matcherParams}
 
       Expected:
         ${prettyPrint(expectation.actual)}
       ${phrase}${phraseEnd}${additional}
     `);
 
-    return err;
+    super(message);
   }
 }

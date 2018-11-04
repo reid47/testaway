@@ -9,6 +9,7 @@ interface Queryable {
 export class Expectation {
   actual: any;
   negated: boolean;
+  async: boolean;
   shouldAwaitResolve: boolean;
   shouldAwaitReject: boolean;
   alreadyResolved: boolean;
@@ -18,6 +19,7 @@ export class Expectation {
   constructor(actual: any) {
     this.actual = actual;
     this.negated = false;
+    this.async = false;
     this.shouldAwaitResolve = false;
     this.shouldAwaitReject = false;
     this.alreadyResolved = false;
@@ -31,11 +33,13 @@ export class Expectation {
   }
 
   get resolves(): Expectation {
+    this.async = true;
     this.shouldAwaitResolve = true;
     return this;
   }
 
   get rejects(): Expectation {
+    this.async = true;
     this.shouldAwaitReject = true;
     return this;
   }
@@ -68,14 +72,15 @@ export class Expectation {
   // }
 
   toBe(expected: any): void | Promise<void> {
-    if (this.shouldAwaitResolve) return this.awaitResolve().then(x => x.toBe(expected));
-    if (this.shouldAwaitReject) return this.awaitReject().then(x => x.toBe(expected));
+    if (this.async) return this.awaitActual().then(x => x && x.toBe(expected));
 
     const pass = Object.is(this.actual, expected);
     return this.assert(pass, 'toBe', 'to be', ['expected'], [expected]);
   }
 
-  toBeCloseTo(value: number, precision: number = 2) {
+  toBeCloseTo(value: number, precision: number = 2): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toBeCloseTo(value, precision));
+
     const pow = Math.pow(10, precision + 1);
     const delta = Math.abs(value - this.actual);
     const maxDelta = Math.pow(10, -precision) / 2;
@@ -89,22 +94,30 @@ export class Expectation {
     );
   }
 
-  toBeDefined() {
+  toBeDefined(): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toBeDefined());
+
     const pass = this.actual !== void 0;
     return this.assert(pass, 'toBeDefined', 'to be defined', [], []);
   }
 
-  toBeFalsy() {
+  toBeFalsy(): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toBeFalsy());
+
     const pass = !this.actual;
     return this.assert(pass, 'toBeFalsy', 'to be falsy', [], []);
   }
 
-  toBeGreaterThan(expected: number) {
+  toBeGreaterThan(expected: number): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toBeGreaterThan(expected));
+
     const pass = this.actual > expected;
     return this.assert(pass, 'toBeGreaterThan', 'to be greater than', ['expected'], [expected]);
   }
 
-  toBeGreaterThanOrEqual(expected: number) {
+  toBeGreaterThanOrEqual(expected: number): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toBeGreaterThanOrEqual(expected));
+
     const pass = this.actual >= expected;
     return this.assert(
       pass,
@@ -115,17 +128,23 @@ export class Expectation {
     );
   }
 
-  toBeInstanceOf(expected: Function) {
+  toBeInstanceOf(expected: Function): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toBeInstanceOf(expected));
+
     const pass = this.actual instanceof expected;
     return this.assert(pass, 'toBeInstanceOf', 'to be an instance of', ['expected'], [expected]);
   }
 
-  toBeLessThan(expected: number) {
+  toBeLessThan(expected: number): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toBeLessThan(expected));
+
     const pass = this.actual < expected;
     return this.assert(pass, 'toBeLessThan', 'to be less than', ['expected'], [expected]);
   }
 
-  toBeLessThanOrEqual(expected: number) {
+  toBeLessThanOrEqual(expected: number): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toBeLessThanOrEqual(expected));
+
     const pass = this.actual <= expected;
     return this.assert(
       pass,
@@ -136,24 +155,31 @@ export class Expectation {
     );
   }
 
-  toBeNull() {
+  toBeNull(): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toBeNull());
+
     const pass = this.actual === null;
     return this.assert(pass, 'toBeNull', 'to be null', [], []);
   }
 
-  toBeTruthy() {
+  toBeTruthy(): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toBeTruthy());
+
     const pass = !!this.actual;
     return this.assert(pass, 'toBeTruthy', 'to be truthy', [], []);
   }
 
-  toBeUndefined() {
+  toBeUndefined(): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toBeUndefined());
+
     const pass = this.actual === void 0;
     return this.assert(pass, 'toBeUndefined', 'to be undefined', [], []);
   }
 
-  toEqual(expected: any) {
-    const { equal, reasons } = deepEqual(expected, this.actual);
+  toEqual(expected: any): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toEqual(expected));
 
+    const { equal, reasons } = deepEqual(expected, this.actual);
     return this.assert(
       equal,
       'toEqual',
@@ -164,7 +190,9 @@ export class Expectation {
     );
   }
 
-  toHaveLength(expected: number) {
+  toHaveLength(expected: number): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toHaveLength(expected));
+
     const actualLength = this.actual.length;
     const pass = actualLength === expected;
     const additionalInfo = this.negated ? undefined : [['but actual length was', actualLength]];
@@ -178,7 +206,16 @@ export class Expectation {
     );
   }
 
-  toHaveProperty(key: string, value?: any) {
+  toHaveProperty(key: string, value?: any): void | Promise<void> {
+    if (this.async) {
+      const args = arguments;
+      return this.awaitActual().then(x => {
+        if (!x) return;
+        if (args.length < 2) return x.toHaveProperty(key);
+        return x.toHaveProperty(key, value);
+      });
+    }
+
     const hasProperty = this.actual.hasOwnProperty(key);
 
     const expectingValue = arguments.length > 1;
@@ -203,7 +240,9 @@ export class Expectation {
     );
   }
 
-  toHaveType(expected: string) {
+  toHaveType(expected: string): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toHaveType(expected));
+
     const actualType = typeof this.actual;
     const pass = actualType === expected;
     const additionalInfo = this.negated ? undefined : [['but actual type was', actualType]];
@@ -231,7 +270,9 @@ export class Expectation {
   //   return this.assert(pass, this.toHaveText, [expected]);
   // }
 
-  toMatch(expected: string | RegExp) {
+  toMatch(expected: string | RegExp): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toMatch(expected));
+
     const givenString = typeof expected === 'string';
 
     const pass = givenString
@@ -244,7 +285,16 @@ export class Expectation {
     return this.assert(pass, 'toMatch', phrase, [param], [expected]);
   }
 
-  toThrow(expected?: string | RegExp | Function) {
+  toThrow(expected?: string | RegExp | Function): void | Promise<void> {
+    if (this.async) {
+      const args = arguments;
+      return this.awaitActual().then(x => {
+        if (!x) return;
+        if (args.length < 1) return x.toThrow();
+        return x.toThrow(expected);
+      });
+    }
+
     if (typeof this.actual !== 'function') {
       throw new Error('toThrow(...) expects a function to be passed to expect(...)');
     }
@@ -297,48 +347,55 @@ export class Expectation {
     );
   }
 
+  private awaitActual() {
+    if (this.shouldAwaitResolve) return this.awaitResolve();
+    return this.awaitReject();
+  }
+
   private awaitResolve() {
     return Promise.resolve()
       .then(() => this.actual)
-      .then(resolved => {
-        const exp = new Expectation(resolved);
-        exp.domContext = this.domContext;
-        exp.negated = this.negated;
-        exp.alreadyResolved = true;
-        return exp;
-      })
-      .catch(rejected => {
-        throw new Error('Rejected when it should have been resolved!');
-      });
+      .then(
+        resolved => {
+          const exp = new Expectation(resolved);
+          exp.domContext = this.domContext;
+          exp.negated = this.negated;
+          exp.alreadyResolved = true;
+          return exp;
+        },
+        rejected =>
+          this.assert(false, 'resolves', 'to resolve, but it rejected with', null, [rejected])
+      );
   }
 
   private awaitReject() {
     return Promise.resolve()
       .then(() => this.actual)
-      .then(resolved => {
-        throw new Error('Resolved when it should have been rejected!');
-      })
-      .catch(rejected => {
-        const exp = new Expectation(rejected);
-        exp.domContext = this.domContext;
-        exp.negated = this.negated;
-        exp.alreadyRejected = true;
-        return exp;
-      });
+      .then(
+        resolved =>
+          this.assert(false, 'rejects', 'to reject, but it resolved to', null, [resolved]),
+        rejected => {
+          const exp = new Expectation(rejected);
+          exp.domContext = this.domContext;
+          exp.negated = this.negated;
+          exp.alreadyRejected = true;
+          return exp;
+        }
+      );
   }
 
   private assert(
     condition: boolean,
     matcherName: string,
     matcherPhrase: string,
-    matcherParamNames: string[],
+    matcherParamNames: string[] | null,
     matcherArgs: any[],
     additionalInfo?: any[]
   ) {
     if (!this.negated && condition) return;
     if (this.negated && !condition) return;
 
-    throw ExpectationError.create(
+    throw new ExpectationError(
       this,
       matcherName,
       matcherPhrase,
