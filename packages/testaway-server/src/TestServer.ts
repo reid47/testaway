@@ -24,11 +24,22 @@ export class TestServer {
     this.server = http.createServer(this.app);
     this.wss = new WebSocket.Server({ server: this.server });
     this.runner = new BrowserTestRunner();
-    this.initializeRoutes();
-    this.initializeWebSocket();
 
     this.runner.init().then(() => {
       console.log('puppeteer launched!');
+    });
+
+    this.app.get('/run/*', (req, res) => {
+      const fileName = req.params[0];
+      this.fileServer
+        .getFile(fileName)
+        .then((script: string) => res.send(toHtml({ script, port: this.options.port })))
+        .catch(() => res.status(404).send('File not found: ' + fileName));
+    });
+
+    this.wss.on('connection', (ws: WebSocket) => {
+      this.handleConnection(ws);
+      ws.on('message', (message: string) => this.handleMessage(JSON.parse(message)));
     });
   }
 
@@ -40,31 +51,16 @@ export class TestServer {
     this.wss.clients.forEach(client => this.notifyClient(client, data));
   }
 
-  initializeRoutes() {
-    this.app.get('/run/*', (req, res) => {
-      const fileName = req.params[0];
-      this.fileServer
-        .getFile(fileName)
-        .then((script: string) => res.send(toHtml({ script, port: this.options.port })))
-        .catch(() => res.send('File not found: ' + fileName));
-    });
+  handleConnection(ws: WebSocket) {
+    this.notifyClient(ws, this.fileServer.listFilesEvent());
   }
 
-  initializeWebSocket() {
-    this.wss.on('connection', (ws: WebSocket) => {
-      this.notifyClient(ws, this.fileServer.listFilesEvent());
-
-      ws.on('message', (message: string) => {
-        const event = JSON.parse(message);
-
-        if (event.type === 'run_test_file') {
-          console.log('requested to run file:', event.file);
-          this.runner.runFile(event.file);
-        } else if (event.type === 'test_finished') {
-          this.notifyClients(event);
-        }
-      });
-    });
+  handleMessage(event: any) {
+    if (event.type === 'run_test_file') {
+      this.runner.runFile(event.file);
+    } else if (event.type === 'test_finished') {
+      this.notifyClients(event);
+    }
   }
 
   start() {
