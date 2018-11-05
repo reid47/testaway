@@ -49,21 +49,10 @@ export default class TestServer {
     this.app.get('/run/*', (req, res) => {
       const fileName = req.params[0];
       this.fs.readFile(`/bundles/${fileName}`, (error, result) => {
-        if (error) res.send('File not found: ' + fileName);
-        else
-          res.send(`
-          <!doctype html>
-          <head>
-            <title>test!</title>
-          </head>
-          <body>
-            <script>
-              window.describe = () => {};
-              window.it = () => {};
-            </script>
-            <script src="/bundles/${fileName}"></script>
-          </body>
-        `);
+        if (error) {
+          res.send('File not found: ' + fileName);
+          return;
+        }
       });
     });
   }
