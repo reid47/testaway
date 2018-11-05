@@ -14,7 +14,8 @@ test('expect toBe', () => {
     '  Expected:',
     '    47',
     '  to be:',
-    '    48'
+    '    48',
+    ''
   );
 
   expectErrorMessage(
@@ -24,7 +25,8 @@ test('expect toBe', () => {
     '  Expected:',
     '    47',
     '  to be:',
-    '    "47"'
+    '    "47"',
+    ''
   );
 
   expectErrorMessage(
@@ -36,7 +38,8 @@ test('expect toBe', () => {
     '  to be:',
     '    Object { a: 1 }',
     '  ',
-    '  Checked for reference equality because both values are objects. To check for structural equality, use toEqual.'
+    '  Checked for reference equality because both values are objects. To check for structural equality, use toEqual.',
+    ''
   );
 });
 
@@ -54,7 +57,8 @@ test('expect not toBe', () => {
     '  Expected:',
     '    47',
     '  not to be:',
-    '    47'
+    '    47',
+    ''
   );
 });
 
@@ -69,7 +73,8 @@ test('expect toBeCloseTo', () => {
     '  Expected:',
     '    47.01',
     '  to be close to (precision: 2 decimal points):',
-    '    47.02'
+    '    47.02',
+    ''
   );
 
   expectErrorMessage(
@@ -79,7 +84,8 @@ test('expect toBeCloseTo', () => {
     '  Expected:',
     '    47',
     '  to be close to (precision: 5 decimal points):',
-    '    47.001'
+    '    47.001',
+    ''
   );
 });
 
@@ -94,7 +100,8 @@ test('expect not toBeCloseTo', () => {
     '  Expected:',
     '    47.1',
     '  not to be close to (precision: 1 decimal points):',
-    '    47.1'
+    '    47.1',
+    ''
   );
 
   expectErrorMessage(
@@ -104,7 +111,8 @@ test('expect not toBeCloseTo', () => {
     '  Expected:',
     '    47',
     '  not to be close to (precision: 2 decimal points):',
-    '    47.001'
+    '    47.001',
+    ''
   );
 });
 
@@ -118,7 +126,8 @@ test('expect toBeDefined', () => {
     '',
     '  Expected:',
     '    undefined',
-    '  to be defined.'
+    '  to be defined.',
+    ''
   );
 });
 
@@ -132,7 +141,8 @@ test('expect not toBeDefined', () => {
     '',
     '  Expected:',
     '    true',
-    '  not to be defined.'
+    '  not to be defined.',
+    ''
   );
 });
 
@@ -150,7 +160,8 @@ test('expect toBeFalsy', () => {
     '',
     '  Expected:',
     '    true',
-    '  to be falsy.'
+    '  to be falsy.',
+    ''
   );
 });
 
@@ -165,7 +176,8 @@ test('expect not toBeFalsy', () => {
     '',
     '  Expected:',
     '    undefined',
-    '  not to be falsy.'
+    '  not to be falsy.',
+    ''
   );
 
   expectErrorMessage(
@@ -174,7 +186,8 @@ test('expect not toBeFalsy', () => {
     '',
     '  Expected:',
     '    Array []',
-    '  to be falsy.'
+    '  to be falsy.',
+    ''
   );
 
   expectErrorMessage(
@@ -183,7 +196,8 @@ test('expect not toBeFalsy', () => {
     '',
     '  Expected:',
     '    Object {}',
-    '  to be falsy.'
+    '  to be falsy.',
+    ''
   );
 });
 
@@ -198,7 +212,8 @@ test('expect toBeInstanceOf', () => {
     '  Expected:',
     '    false',
     '  to be an instance of:',
-    '    [Function: Wow]'
+    '    [Function: Wow]',
+    ''
   );
 });
 
@@ -213,7 +228,8 @@ test('expect not toBeInstanceOf', () => {
     '  Expected:',
     '    Wow {}',
     '  not to be an instance of:',
-    '    [Function: Wow]'
+    '    [Function: Wow]',
+    ''
   );
 });
 
@@ -226,7 +242,8 @@ test('expect toBeNull', () => {
     '',
     '  Expected:',
     '    true',
-    '  to be null.'
+    '  to be null.',
+    ''
   );
 });
 
@@ -240,7 +257,8 @@ test('expect not toBeNull', () => {
     '',
     '  Expected:',
     '    null',
-    '  not to be null.'
+    '  not to be null.',
+    ''
   );
 });
 
@@ -256,7 +274,8 @@ test('expect toBeTruthy', () => {
     '',
     '  Expected:',
     '    false',
-    '  to be truthy.'
+    '  to be truthy.',
+    ''
   );
 });
 
@@ -270,7 +289,8 @@ test('expect not toBeTruthy', () => {
     '',
     '  Expected:',
     '    "yep"',
-    '  not to be truthy.'
+    '  not to be truthy.',
+    ''
   );
 });
 
@@ -284,7 +304,8 @@ test('expect toBeUndefined', () => {
     '',
     '  Expected:',
     '    true',
-    '  to be undefined.'
+    '  to be undefined.',
+    ''
   );
 });
 
@@ -298,7 +319,8 @@ test('expect not toBeUndefined', () => {
     '',
     '  Expected:',
     '    undefined',
-    '  not to be undefined.'
+    '  not to be undefined.',
+    ''
   );
 });
 
@@ -316,7 +338,8 @@ test('expect toEqual', () => {
     '    47',
     '  to equal:',
     '    48',
-    '  but values are different.'
+    '  but values are different.',
+    ''
   );
 
   expectErrorMessage(
@@ -327,7 +350,8 @@ test('expect toEqual', () => {
     '    47',
     '  to equal:',
     '    "47"',
-    '  but types are different (received a number, but expected a string).'
+    '  but types are different (received a number, but expected a string).',
+    ''
   );
 
   expectErrorMessage(
@@ -341,7 +365,8 @@ test('expect toEqual', () => {
     '  but objects are different:',
     '    - at key "a": received 1, but expected 2',
     '    - missing expected key "c"',
-    '    - unexpected key "b"'
+    '    - unexpected key "b"',
+    ''
   );
 });
 
@@ -359,7 +384,8 @@ test('expect not toEqual', () => {
     '  Expected:',
     '    47',
     '  not to equal:',
-    '    47'
+    '    47',
+    ''
   );
 
   expectErrorMessage(
@@ -369,7 +395,8 @@ test('expect not toEqual', () => {
     '  Expected:',
     '    Object { a: 1 }',
     '  not to equal:',
-    '    Object { a: 1 }'
+    '    Object { a: 1 }',
+    ''
   );
 });
 
@@ -388,7 +415,8 @@ test('expect toHaveLength', () => {
     '  to have length:',
     '    99',
     '  but actual length was:',
-    '    0'
+    '    0',
+    ''
   );
 
   expectErrorMessage(
@@ -400,7 +428,8 @@ test('expect toHaveLength', () => {
     '  to have length:',
     '    100',
     '  but actual length was:',
-    '    undefined'
+    '    undefined',
+    ''
   );
 });
 
@@ -415,7 +444,8 @@ test('expect not toHaveLength', () => {
     '  Expected:',
     '    Array [1, 1, 1]',
     '  not to have length:',
-    '    3'
+    '    3',
+    ''
   );
 });
 
@@ -430,7 +460,8 @@ test('expect toHaveProperty', () => {
     '  Expected:',
     '    Object {}',
     '  to have property:',
-    '    "hello"'
+    '    "hello"',
+    ''
   );
 
   expectErrorMessage(
@@ -444,7 +475,8 @@ test('expect toHaveProperty', () => {
     '  with value:',
     '    "other"',
     '  but actual value for "hello" was:',
-    '    "world"'
+    '    "world"',
+    ''
   );
 });
 
@@ -459,7 +491,8 @@ test('expect not toHaveProperty', () => {
     '  Expected:',
     '    Object { hello: "world" }',
     '  not to have property:',
-    '    "hello"'
+    '    "hello"',
+    ''
   );
 
   expectErrorMessage(
@@ -473,7 +506,8 @@ test('expect not toHaveProperty', () => {
     '  with value:',
     '    "world"',
     '  but actual value for "hello" was:',
-    '    "world"'
+    '    "world"',
+    ''
   );
 });
 
@@ -490,7 +524,8 @@ test('expect toHaveType', () => {
     '  to have type:',
     '    "string"',
     '  but actual type was:',
-    '    "boolean"'
+    '    "boolean"',
+    ''
   );
 });
 
@@ -505,7 +540,8 @@ test('expect not toHaveType', () => {
     '  Expected:',
     '    undefined',
     '  not to have type:',
-    '    "undefined"'
+    '    "undefined"',
+    ''
   );
 });
 
@@ -520,7 +556,8 @@ test('expect toBeGreaterThan', () => {
     '  Expected:',
     '    10',
     '  to be greater than:',
-    '    100'
+    '    100',
+    ''
   );
 });
 
@@ -535,7 +572,8 @@ test('expect not toBeGreaterThan', () => {
     '  Expected:',
     '    10',
     '  not to be greater than:',
-    '    9'
+    '    9',
+    ''
   );
 });
 
@@ -551,7 +589,8 @@ test('expect toBeGreaterThanOrEqual', () => {
     '  Expected:',
     '    10',
     '  to be greater than or equal:',
-    '    100'
+    '    100',
+    ''
   );
 });
 
@@ -566,7 +605,8 @@ test('expect not toBeGreaterThanOrEqual', () => {
     '  Expected:',
     '    10',
     '  not to be greater than or equal:',
-    '    9'
+    '    9',
+    ''
   );
 });
 
@@ -581,7 +621,8 @@ test('expect toBeLessThan', () => {
     '  Expected:',
     '    10',
     '  to be less than:',
-    '    1'
+    '    1',
+    ''
   );
 });
 
@@ -596,7 +637,8 @@ test('expect not toBeLessThan', () => {
     '  Expected:',
     '    10',
     '  not to be less than:',
-    '    11'
+    '    11',
+    ''
   );
 });
 
@@ -612,7 +654,8 @@ test('expect toBeLessThanOrEqual', () => {
     '  Expected:',
     '    10',
     '  to be less than or equal:',
-    '    1'
+    '    1',
+    ''
   );
 });
 
@@ -627,7 +670,8 @@ test('expect not toBeLessThanOrEqual', () => {
     '  Expected:',
     '    10',
     '  not to be less than or equal:',
-    '    90'
+    '    90',
+    ''
   );
 });
 
@@ -642,7 +686,8 @@ test('expect toMatch', () => {
     '  Expected:',
     '    "hello world"',
     '  to contain string:',
-    '    "wow"'
+    '    "wow"',
+    ''
   );
 
   expectErrorMessage(
@@ -652,7 +697,8 @@ test('expect toMatch', () => {
     '  Expected:',
     '    "hello world"',
     '  to match regular expression:',
-    '    /wow/'
+    '    /wow/',
+    ''
   );
 });
 
@@ -667,7 +713,8 @@ test('expect not toMatch', () => {
     '  Expected:',
     '    "hello world"',
     '  not to contain string:',
-    '    "ello"'
+    '    "ello"',
+    ''
   );
 
   expectErrorMessage(
@@ -677,7 +724,8 @@ test('expect not toMatch', () => {
     '  Expected:',
     '    "hello world"',
     '  not to match regular expression:',
-    '    /ello/'
+    '    /ello/',
+    ''
   );
 });
 
@@ -704,7 +752,8 @@ test('expect toThrow', () => {
     '',
     '  Expected:',
     '    [Function]',
-    '  to throw.'
+    '  to throw.',
+    ''
   );
 
   expectErrorMessage(
@@ -717,7 +766,8 @@ test('expect toThrow', () => {
     '  Expected:',
     '    [Function]',
     '  to throw an error containing string:',
-    '    "bad"'
+    '    "bad"',
+    ''
   );
 
   expectErrorMessage(
@@ -728,7 +778,8 @@ test('expect toThrow', () => {
     '    [Function]',
     '  to throw an error containing string:',
     '    "bad"',
-    '  but it did not throw.'
+    '  but it did not throw.',
+    ''
   );
 
   expectErrorMessage(
@@ -741,7 +792,8 @@ test('expect toThrow', () => {
     '  Expected:',
     '    [Function]',
     '  to throw an error matching regular expression:',
-    '    /bad/'
+    '    /bad/',
+    ''
   );
 
   expectErrorMessage(
@@ -752,7 +804,8 @@ test('expect toThrow', () => {
     '    [Function]',
     '  to throw an error matching regular expression:',
     '    /bad/',
-    '  but it did not throw.'
+    '  but it did not throw.',
+    ''
   );
 
   expectErrorMessage(
@@ -765,7 +818,8 @@ test('expect toThrow', () => {
     '  Expected:',
     '    [Function]',
     '  to throw an instance of:',
-    '    [Function: TypeError]'
+    '    [Function: TypeError]',
+    ''
   );
 
   expectErrorMessage(
@@ -776,7 +830,8 @@ test('expect toThrow', () => {
     '    [Function]',
     '  to throw an instance of:',
     '    [Function: TypeError]',
-    '  but it did not throw.'
+    '  but it did not throw.',
+    ''
   );
 });
 
@@ -801,7 +856,8 @@ test('expect not toThrow', () => {
     '',
     '  Expected:',
     '    [Function]',
-    '  not to throw.'
+    '  not to throw.',
+    ''
   );
 
   expectErrorMessage(
@@ -814,7 +870,8 @@ test('expect not toThrow', () => {
     '  Expected:',
     '    [Function]',
     '  not to throw an error containing string:',
-    '    "fail"'
+    '    "fail"',
+    ''
   );
 
   expectErrorMessage(
@@ -827,7 +884,8 @@ test('expect not toThrow', () => {
     '  Expected:',
     '    [Function]',
     '  not to throw an error matching regular expression:',
-    '    /fail/'
+    '    /fail/',
+    ''
   );
 
   expectErrorMessage(
@@ -840,6 +898,7 @@ test('expect not toThrow', () => {
     '  Expected:',
     '    [Function]',
     '  not to throw an instance of:',
-    '    [Function: TypeError]'
+    '    [Function: TypeError]',
+    ''
   );
 });

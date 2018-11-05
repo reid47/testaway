@@ -30,7 +30,7 @@ export function prettyPrint(obj: any, depth = 0): string {
 
   if (Array.isArray(obj)) {
     const shouldOneLine =
-      obj.length < 10 &&
+      obj.length < 5 &&
       obj.every(
         element =>
           typeof element === 'number' || typeof element === 'string' || typeof element === 'boolean'
@@ -40,7 +40,10 @@ export function prettyPrint(obj: any, depth = 0): string {
       return `${indent}Array [${obj.map(element => prettyPrint(element)).join(', ')}]`;
     }
 
-    return `${indent}Array [${obj.map(element => prettyPrint(element, depth + 1)).join(',')}]`;
+    // TODO: test all this...
+    return `${indent}Array [${obj
+      .map(element => `${indent}${prettyPrint(element, depth + 1)}\n`)
+      .join(',')}]`;
   }
 
   if ('outerHTML' in obj) {

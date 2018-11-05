@@ -10,7 +10,8 @@ test('expect resolves toBe', async () => {
     '  Expected:',
     '    47',
     '  to be:',
-    '    48'
+    '    48',
+    ''
   );
 
   await expectAsyncErrorMessage(
@@ -20,7 +21,8 @@ test('expect resolves toBe', async () => {
     '  Expected:',
     '    Promise {}',
     '  to resolve, but it rejected with:',
-    '    47'
+    '    47',
+    ''
   );
 });
 
@@ -34,7 +36,8 @@ test('expect resolves not toBe', async () => {
     '  Expected:',
     '    47',
     '  not to be:',
-    '    47'
+    '    47',
+    ''
   );
 });
 
@@ -48,7 +51,8 @@ test('expect rejects toBe', async () => {
     '  Expected:',
     '    47',
     '  to be:',
-    '    48'
+    '    48',
+    ''
   );
 });
 
@@ -62,6 +66,7 @@ test('expect rejects not toBe', async () => {
     '  Expected:',
     '    47',
     '  not to be:',
-    '    47'
+    '    47',
+    ''
   );
 });

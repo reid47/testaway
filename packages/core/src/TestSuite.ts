@@ -7,16 +7,25 @@ export default class TestSuite {
   testRun: TestRun;
   parent: TestSuite | null;
   name: string[];
+  category: TestCategory;
   options: SuiteOptions;
   tests: Test[];
   suites: TestSuite[];
   hooks: { [hook in Hook]: TestFunc[] };
   hasFocusedTests: boolean;
+  hasFocusedSuites: boolean;
 
-  constructor(testRun: TestRun, parent: TestSuite | null, name: string[], options?: SuiteOptions) {
+  constructor(
+    testRun: TestRun,
+    parent: TestSuite | null,
+    name: string[],
+    category: TestCategory,
+    options?: SuiteOptions
+  ) {
     this.testRun = testRun;
     this.parent = parent;
     this.name = name;
+    this.category = category;
     this.options = mergeSuiteOptionsWithDefaults(
       this.testRun.options,
       parent ? parent.options : undefined,
@@ -26,10 +35,22 @@ export default class TestSuite {
     this.suites = [];
     this.hooks = [[], [], [], []];
     this.hasFocusedTests = false;
+    this.hasFocusedSuites = false;
   }
 
-  addSuite(suiteName: string, suiteOptions: SuiteOptions) {
-    const newSuite = new TestSuite(this.testRun, this, [...this.name, suiteName], suiteOptions);
+  addSuite(suiteName: string, suiteCategory: TestCategory, suiteOptions: SuiteOptions) {
+    if (suiteCategory === TestCategory.focused) {
+      this.hasFocusedSuites = true;
+      if (this.parent) this.parent.hasFocusedSuites = true;
+    }
+
+    const newSuite = new TestSuite(
+      this.testRun,
+      this,
+      [...this.name, suiteName],
+      suiteCategory,
+      suiteOptions
+    );
     this.suites.push(newSuite);
     return newSuite;
   }
@@ -80,7 +101,8 @@ export default class TestSuite {
 
     for (let i = 0, count = this.tests.length; i < count; i++) {
       const test = this.tests[i];
-      if (this.hasFocusedTests && test.category !== TestCategory.focused) continue;
+      if ((this.hasFocusedTests || this.hasFocusedSuites) && test.category !== TestCategory.focused)
+        continue;
       if (test.category === TestCategory.skipped) continue;
 
       await this.executeHook(Hook.beforeEach);
@@ -91,6 +113,8 @@ export default class TestSuite {
     for (let i = 0, count = this.suites.length; i < count; i++) {
       const suite = this.suites[i];
       if (this.hasFocusedTests && !suite.hasFocusedTests) continue;
+      if (this.hasFocusedSuites && suite.category !== TestCategory.focused) continue;
+      if (suite.category === TestCategory.skipped) continue;
 
       await this.executeHook(Hook.beforeEach);
       await suite.execute();

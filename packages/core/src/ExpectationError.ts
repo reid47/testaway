@@ -44,6 +44,6 @@ export class ExpectationError extends Error {
       ${phrase}${phraseEnd}${additional}
     `);
 
-    super(message);
+    super(message + '\n');
   }
 }

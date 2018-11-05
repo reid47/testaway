@@ -24,13 +24,18 @@ export default class TestRun {
 
   constructor(options?: TestRunOptions) {
     this.options = mergeTestRunOptionsWithDefaults(options);
-    this.root = new TestSuite(this, null, [], undefined);
+    this.root = new TestSuite(this, null, [], TestCategory.default, undefined);
     this.currentSuite = this.root;
   }
 
-  addSuite(suiteName: string, defineSuite: SuiteFunc, suiteOptions: SuiteOptions) {
+  addSuite(
+    suiteName: string,
+    defineSuite: SuiteFunc,
+    suiteCategory: TestCategory,
+    suiteOptions: SuiteOptions
+  ) {
     const oldCurrentSuite = this.currentSuite;
-    this.currentSuite = this.currentSuite.addSuite(suiteName, suiteOptions);
+    this.currentSuite = this.currentSuite.addSuite(suiteName, suiteCategory, suiteOptions);
     defineSuite();
     this.currentSuite = oldCurrentSuite;
   }
