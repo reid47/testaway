@@ -70,11 +70,12 @@ export class FileServer {
 
   addFile(fullPath: string) {
     const partialPath = fullPath.replace(this.options.rootDir, '').replace(/^\/+/, '');
-    this.bundleCache.delete(partialPath);
-    console.log('File added:', partialPath);
 
+    this.bundleCache.delete(partialPath);
     const watchingCompiler = this.createFileCompiler(fullPath, partialPath);
     this.bundleCache.set(partialPath, watchingCompiler);
+
+    console.log('File added:', partialPath);
     this.testServer.notifyClients(this.listFilesEvent());
   }
 
@@ -83,9 +84,9 @@ export class FileServer {
 
     const watchingCompiler = this.bundleCache.get(partialPath);
     if (watchingCompiler) watchingCompiler.close(() => {});
+    this.bundleCache.delete(partialPath);
 
     console.log('File deleted:', partialPath);
-    this.bundleCache.delete(partialPath);
     this.testServer.notifyClients(this.listFilesEvent());
   }
 
