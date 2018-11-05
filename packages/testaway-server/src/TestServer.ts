@@ -4,7 +4,8 @@ import * as webpack from 'webpack';
 import MemoryFs = require('memory-fs');
 import * as WebSocket from 'ws';
 import * as http from 'http';
-import * as fs from 'fs';
+import { BrowserTestRunner } from './BrowserTestRunner';
+import { toHtml } from './runner-template';
 
 export default class TestServer {
   options: any;
@@ -13,6 +14,7 @@ export default class TestServer {
   app: express.Express;
   server: http.Server;
   wss: WebSocket.Server;
+  runner: BrowserTestRunner;
 
   static create(options: any) {
     return new TestServer(options);
@@ -25,8 +27,13 @@ export default class TestServer {
     this.app = express();
     this.server = http.createServer(this.app);
     this.wss = new WebSocket.Server({ server: this.server });
+    this.runner = new BrowserTestRunner();
     this.initializeRoutes();
     this.initializeWebSocket();
+
+    this.runner.init().then(() => {
+      console.log('puppeteer launched!');
+    });
   }
 
   messageClient(client: WebSocket, data: any) {
@@ -38,14 +45,6 @@ export default class TestServer {
   }
 
   initializeRoutes() {
-    this.app.get('/bundles/*', (req, res) => {
-      const fileName = req.params[0];
-      this.fs.readFile(`/bundles/${fileName}`, (error, result) => {
-        if (error) res.send('File not found: ' + fileName);
-        else res.send(result);
-      });
-    });
-
     this.app.get('/run/*', (req, res) => {
       const fileName = req.params[0];
       this.fs.readFile(`/bundles/${fileName}`, (error, result) => {
@@ -53,6 +52,8 @@ export default class TestServer {
           res.send('File not found: ' + fileName);
           return;
         }
+
+        res.send(toHtml({ script: result, port: this.options.port }));
       });
     });
   }
@@ -62,7 +63,14 @@ export default class TestServer {
       this.messageClient(ws, this.listFilesEvent());
 
       ws.on('message', (message: string) => {
-        console.log('received from a client:', message);
+        const event = JSON.parse(message);
+
+        if (event.type === 'run_test_file') {
+          console.log('requested to run file:', event.file);
+          this.runner.runFile(event.file);
+        } else if (event.type === 'test_finished') {
+          this.messageAllClients(event);
+        }
       });
     });
   }
@@ -98,6 +106,7 @@ export default class TestServer {
 
     const watching = compiler.watch({}, (error, stats) => {
       console.log('Compiling', partialPath);
+      if (error) console.error(error);
       // console.log(stats.toString());
     });
 

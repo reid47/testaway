@@ -29,6 +29,13 @@ class App extends PureComponent {
     }
   };
 
+  run = () => {
+    const file = this.state.files[0];
+    if (!file) return;
+    console.log('running file:', file);
+    this.socket.send(JSON.stringify({ type: 'run_test_file', file }));
+  };
+
   render() {
     const { files } = this.state;
 
@@ -37,6 +44,7 @@ class App extends PureComponent {
         {files.map(file => (
           <div key={file}>{file}</div>
         ))}
+        <button onClick={this.run}>click to run</button>
       </div>
     );
   }

@@ -11,14 +11,14 @@ export default [
       name: 'Testaway'
     },
     plugins: [typescript({ target: 'es2017' }), terser(), filesize()]
+  },
+  {
+    input: 'src/index.ts',
+    output: {
+      format: 'umd',
+      file: 'dist/index.es5.min.js',
+      name: 'Testaway'
+    },
+    plugins: [typescript({ target: 'es5' }), terser(), filesize()]
   }
-  // {
-  //   input: 'src/index.ts',
-  //   output: {
-  //     format: 'umd',
-  //     file: 'dist/index.es5.min.js',
-  //     name: 'Testaway'
-  //   },
-  //   plugins: [typescript({ target: 'es5' }), terser(), filesize()]
-  // }
 ];
