@@ -1,5 +1,5 @@
 {
-  "name": "test-driven",
+  "name": "testaway-core",
   "version": "1.0.0",
   "main": "dist/index.min.js",
   "types": "dist/index.d.ts",
