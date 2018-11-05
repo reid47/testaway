@@ -10,7 +10,7 @@ export default [
       file: 'dist/index.min.js',
       name: 'TestDriven'
     },
-    plugins: [typescript({ target: 'es2016' }), terser(), filesize()]
+    plugins: [typescript({ target: 'es2017' }), terser(), filesize()]
   }
   // {
   //   input: 'src/index.ts',
