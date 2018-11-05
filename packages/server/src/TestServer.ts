@@ -4,6 +4,7 @@ import * as webpack from 'webpack';
 import MemoryFs = require('memory-fs');
 import * as WebSocket from 'ws';
 import * as http from 'http';
+import * as fs from 'fs';
 
 export default class TestServer {
   options: any;
