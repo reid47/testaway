@@ -2,7 +2,7 @@ const { JSDOM } = require('jsdom');
 const { expectErrorMessage } = require('./test-helpers');
 const originalDocument = global.document;
 
-xdescribe('expect DOM', () => {
+describe('expect DOM', () => {
   beforeEach(() => {
     const jsDom = new JSDOM('<!doctype html><html><body></body></html>');
     global.document = jsDom.window.document;

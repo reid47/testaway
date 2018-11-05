@@ -1,6 +1,6 @@
 const createRun = require('../dist/index.min');
 
-fdescribe('running tests', () => {
+describe('running tests', () => {
   let logs, run;
 
   beforeEach(() => {

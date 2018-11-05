@@ -4,7 +4,7 @@ import { prettyPrint } from './utils/pretty-print';
 import { typeOf } from './utils/type-of';
 import { ValueType } from './types';
 
-const isElement = (obj: any) =>
+const isDomElement = (obj: any) =>
   obj && obj.classList && typeof obj.classList.contains === 'function';
 
 interface Queryable {
@@ -73,8 +73,6 @@ export class Expectation {
   toBe(expected: any): void | Promise<void> {
     if (this.async) return this.awaitActual().then(x => x && x.toBe(expected));
 
-    const pass = Object.is(this.actual, expected);
-
     let additionalInfo;
     if (typeOf(this.actual) === ValueType.object && typeOf(expected) === ValueType.object) {
       additionalInfo = [
@@ -84,7 +82,14 @@ export class Expectation {
       ];
     }
 
-    return this.assert(pass, 'toBe', 'to be', ['expected'], [expected], additionalInfo);
+    return this.assert(
+      Object.is(this.actual, expected),
+      'toBe',
+      'to be',
+      ['expected'],
+      [expected],
+      additionalInfo
+    );
   }
 
   toBeCloseTo(value: number, precision: number = 2): void | Promise<void> {
@@ -93,9 +98,9 @@ export class Expectation {
     const pow = Math.pow(10, precision + 1);
     const delta = Math.abs(value - this.actual);
     const maxDelta = Math.pow(10, -precision) / 2;
-    const pass = Math.round(delta * pow) / pow <= maxDelta;
+
     return this.assert(
-      pass,
+      Math.round(delta * pow) / pow <= maxDelta,
       'toBeCloseTo',
       `to be close to (precision: ${precision} decimal points)`,
       ['value'],
@@ -106,30 +111,32 @@ export class Expectation {
   toBeDefined(): void | Promise<void> {
     if (this.async) return this.awaitActual().then(x => x && x.toBeDefined());
 
-    const pass = this.actual !== void 0;
-    return this.assert(pass, 'toBeDefined', 'to be defined', [], []);
+    return this.assert(this.actual !== void 0, 'toBeDefined', 'to be defined', [], []);
   }
 
   toBeFalsy(): void | Promise<void> {
     if (this.async) return this.awaitActual().then(x => x && x.toBeFalsy());
 
-    const pass = !this.actual;
-    return this.assert(pass, 'toBeFalsy', 'to be falsy', [], []);
+    return this.assert(!this.actual, 'toBeFalsy', 'to be falsy', [], []);
   }
 
   toBeGreaterThan(expected: number): void | Promise<void> {
     if (this.async) return this.awaitActual().then(x => x && x.toBeGreaterThan(expected));
 
-    const pass = this.actual > expected;
-    return this.assert(pass, 'toBeGreaterThan', 'to be greater than', ['expected'], [expected]);
+    return this.assert(
+      this.actual > expected,
+      'toBeGreaterThan',
+      'to be greater than',
+      ['expected'],
+      [expected]
+    );
   }
 
   toBeGreaterThanOrEqual(expected: number): void | Promise<void> {
     if (this.async) return this.awaitActual().then(x => x && x.toBeGreaterThanOrEqual(expected));
 
-    const pass = this.actual >= expected;
     return this.assert(
-      pass,
+      this.actual >= expected,
       'toBeGreaterThanOrEqual',
       'to be greater than or equal',
       ['expected'],
@@ -140,23 +147,32 @@ export class Expectation {
   toBeInstanceOf(expected: Function): void | Promise<void> {
     if (this.async) return this.awaitActual().then(x => x && x.toBeInstanceOf(expected));
 
-    const pass = this.actual instanceof expected;
-    return this.assert(pass, 'toBeInstanceOf', 'to be an instance of', ['expected'], [expected]);
+    return this.assert(
+      this.actual instanceof expected,
+      'toBeInstanceOf',
+      'to be an instance of',
+      ['expected'],
+      [expected]
+    );
   }
 
   toBeLessThan(expected: number): void | Promise<void> {
     if (this.async) return this.awaitActual().then(x => x && x.toBeLessThan(expected));
 
-    const pass = this.actual < expected;
-    return this.assert(pass, 'toBeLessThan', 'to be less than', ['expected'], [expected]);
+    return this.assert(
+      this.actual < expected,
+      'toBeLessThan',
+      'to be less than',
+      ['expected'],
+      [expected]
+    );
   }
 
   toBeLessThanOrEqual(expected: number): void | Promise<void> {
     if (this.async) return this.awaitActual().then(x => x && x.toBeLessThanOrEqual(expected));
 
-    const pass = this.actual <= expected;
     return this.assert(
-      pass,
+      this.actual <= expected,
       'toBeLessThanOrEqual',
       'to be less than or equal',
       ['expected'],
@@ -167,28 +183,26 @@ export class Expectation {
   toBeNull(): void | Promise<void> {
     if (this.async) return this.awaitActual().then(x => x && x.toBeNull());
 
-    const pass = this.actual === null;
-    return this.assert(pass, 'toBeNull', 'to be null', [], []);
+    return this.assert(this.actual === null, 'toBeNull', 'to be null', [], []);
   }
 
   toBeTruthy(): void | Promise<void> {
     if (this.async) return this.awaitActual().then(x => x && x.toBeTruthy());
 
-    const pass = !!this.actual;
-    return this.assert(pass, 'toBeTruthy', 'to be truthy', [], []);
+    return this.assert(!!this.actual, 'toBeTruthy', 'to be truthy', [], []);
   }
 
   toBeUndefined(): void | Promise<void> {
     if (this.async) return this.awaitActual().then(x => x && x.toBeUndefined());
 
-    const pass = this.actual === void 0;
-    return this.assert(pass, 'toBeUndefined', 'to be undefined', [], []);
+    return this.assert(this.actual === void 0, 'toBeUndefined', 'to be undefined', [], []);
   }
 
   toEqual(expected: any): void | Promise<void> {
     if (this.async) return this.awaitActual().then(x => x && x.toEqual(expected));
 
     const { equal, reasons } = deepEqual(expected, this.actual);
+
     return this.assert(
       equal,
       'toEqual',
@@ -202,7 +216,7 @@ export class Expectation {
   toHaveClass(expected: string | string[]): void | Promise<void> {
     if (this.async) return this.awaitActual().then(x => x && x.toHaveClass(expected));
 
-    if (!isElement(this.actual)) {
+    if (!isDomElement(this.actual)) {
       return this.assert(
         false,
         'toHaveClass',
@@ -237,10 +251,10 @@ export class Expectation {
     if (this.async) return this.awaitActual().then(x => x && x.toHaveLength(expected));
 
     const actualLength = this.actual.length;
-    const pass = actualLength === expected;
     const additionalInfo = this.negated ? undefined : [['but actual length was', actualLength]];
+
     return this.assert(
-      pass,
+      actualLength === expected,
       'toHaveLength',
       'to have length',
       ['expected'],
@@ -356,9 +370,8 @@ export class Expectation {
     }
 
     if (typeof expected === 'function') {
-      const pass = caught instanceof expected;
       return this.assert(
-        pass,
+        caught instanceof expected,
         'toThrow',
         'to throw an instance of',
         ['errorType'],
