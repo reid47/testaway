@@ -1,4 +1,4 @@
-import TestServer from './TestServer';
+import { TestServer } from './TestServer';
 
 const options = {
   port: 3000,
