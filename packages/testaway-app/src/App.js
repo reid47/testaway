@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import TestFile from './TestFile';
 import './App.css';
 
 class App extends PureComponent {
@@ -75,12 +76,8 @@ class App extends PureComponent {
 
     return (
       <div className="App">
-        {fileNames.map(file => (
-          <section key={file} className="test-file">
-            <h2 className="test-file-name">{file}</h2>
-            <button onClick={() => this.run(file)}>click to run</button>
-            {this.renderSuite(fileDefinitions[file].root, true)}
-          </section>
+        {fileNames.map(fileName => (
+          <TestFile key={fileName} fileName={fileName} fileDefinition={fileDefinitions[fileName]} />
         ))}
       </div>
     );

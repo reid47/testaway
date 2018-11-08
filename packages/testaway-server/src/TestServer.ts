@@ -87,7 +87,6 @@ export class TestServer {
 
   handleConnection(ws: WebSocket) {
     const fileNames = this.fileServer.getFileNames();
-    console.log('connect!', this.testFileDefinitions);
 
     this.notifyClient(ws, {
       type: 'connected',

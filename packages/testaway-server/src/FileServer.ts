@@ -54,7 +54,6 @@ export class FileServer {
     compiler.outputFileSystem = this.fileSystem;
 
     compiler.hooks.done.tap('afterEmit', stats => {
-      console.log('emit:', fileName);
       this.testServer.runner.analyzeFile(fileName);
 
       this.testServer.notifyClients({

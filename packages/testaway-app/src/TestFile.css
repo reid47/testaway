@@ -1,0 +1,46 @@
+.test-file {
+  margin: 16px;
+}
+
+.test-list {
+  margin: 0;
+  margin-left: 8px;
+  padding-left: 8px;
+  border-left: 1px solid #bbb;
+}
+
+.test-file-name {
+  font-weight: bold;
+}
+
+.test-file-name,
+.test-suite-name,
+.test-name {
+  height: 32px;
+  font-size: 16px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.test-file-icon,
+.test-suite-icon,
+.test-icon {
+  margin-right: 8px;
+}
+
+.test-list-item {
+  list-style: none;
+  position: relative;
+  padding-left: 4px;
+}
+
+.test-list-item:before {
+  content: '';
+  display: block;
+  position: absolute;
+  border-bottom: 1px solid #bbb;
+  width: 8px;
+  top: 16px;
+  left: -8px;
+}
