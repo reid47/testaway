@@ -3,6 +3,7 @@ import {
   TestFunc,
   SuiteFunc,
   Hook,
+  RunDefinedEvent,
   RunStartedEvent,
   RunFinishedEvent,
   SuiteStartedEvent,
@@ -58,53 +59,42 @@ export default class TestRun {
     for (const reporter of this.options.reporters) func(reporter);
   }
 
+  reportRunDefined(event: RunDefinedEvent) {
+    this.forEachReporter(rep => rep.runDefined && rep.runDefined(event));
+  }
+
   reportRunStarted(event: RunStartedEvent) {
-    this.forEachReporter(reporter => {
-      reporter.runStarted && reporter.runStarted(event);
-    });
+    this.forEachReporter(rep => rep.runStarted && rep.runStarted(event));
   }
 
   reportRunFinished(event: RunFinishedEvent) {
-    this.forEachReporter(reporter => {
-      reporter.runFinished && reporter.runFinished(event);
-    });
+    this.forEachReporter(rep => rep.runFinished && rep.runFinished(event));
   }
 
   reportSuiteStarted(event: SuiteStartedEvent) {
-    this.forEachReporter(reporter => {
-      reporter.suiteStarted && reporter.suiteStarted(event);
-    });
+    this.forEachReporter(rep => rep.suiteStarted && rep.suiteStarted(event));
   }
 
   reportSuiteFinished(event: SuiteFinishedEvent) {
-    this.forEachReporter(reporter => {
-      reporter.suiteFinished && reporter.suiteFinished(event);
-    });
+    this.forEachReporter(rep => rep.suiteFinished && rep.suiteFinished(event));
   }
 
   reportTestStarted(event: TestStartedEvent) {
-    this.forEachReporter(reporter => {
-      reporter.testStarted && reporter.testStarted(event);
-    });
+    this.forEachReporter(rep => rep.testStarted && rep.testStarted(event));
   }
 
   reportTestFinished(event: TestFinishedEvent) {
-    this.forEachReporter(reporter => {
-      reporter.testFinished && reporter.testFinished(event);
-    });
+    this.forEachReporter(rep => rep.testFinished && rep.testFinished(event));
+  }
+
+  analyze() {
+    this.reportRunDefined({ root: this.root.analyze() });
   }
 
   async execute() {
-    this.reportRunStarted({
-      testCount: this.root.countTests()
-    });
-
+    this.reportRunStarted({ testCount: this.root.countTests() });
     const startTime = Date.now();
-
     await this.root.execute();
-
-    this.reportRunFinished({
-      time: Date.now() - startTime
-    });
+    this.reportRunFinished({ time: Date.now() - startTime });
   }
 }

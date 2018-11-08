@@ -1,5 +1,5 @@
 import TestSuite from './TestSuite';
-import { TestFunc, TestStatus, TestOptions, TestCategory } from './types';
+import { TestFunc, TestStatus, TestOptions, TestCategory, TestDefinition } from './types';
 import TestRun from './TestRun';
 import { mergeTestOptionsWithDefaults } from './options';
 
@@ -25,6 +25,10 @@ export default class Test {
     this.func = func;
     this.category = category;
     this.options = mergeTestOptionsWithDefaults(this.testRun.options, parent.options, options);
+  }
+
+  analyze(): TestDefinition {
+    return { name: this.name, category: this.category };
   }
 
   async execute() {

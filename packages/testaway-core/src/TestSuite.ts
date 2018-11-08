@@ -1,5 +1,5 @@
 import Test from './Test';
-import { TestFunc, Hook, TestOptions, SuiteOptions, TestCategory } from './types';
+import { TestFunc, Hook, TestOptions, SuiteOptions, TestCategory, SuiteDefinition } from './types';
 import TestRun from './TestRun';
 import { mergeSuiteOptionsWithDefaults } from './options';
 
@@ -81,6 +81,14 @@ export default class TestSuite {
       count += this.suites[i].countTests();
     }
     return count;
+  }
+
+  analyze(): SuiteDefinition {
+    return {
+      name: this.name,
+      tests: this.tests.map(test => test.analyze()),
+      suites: this.suites.map(suite => suite.analyze())
+    };
   }
 
   async executeHook(hook: Hook) {

@@ -1,3 +1,29 @@
+import { Expectation } from './Expectation';
+import { SimpleReporter } from './SimpleReporter';
+
+export interface Testaway {
+  analyze: () => void;
+  execute: () => void;
+  expect: (obj: any) => Expectation;
+  beforeEach: (func: TestFunc) => void;
+  afterEach: (func: TestFunc) => void;
+  beforeAll: (func: TestFunc) => void;
+  afterAll: (func: TestFunc) => void;
+  describe: (name: string, funcOrOptions: TestFunc | TestOptions, func: TestFunc) => void;
+  fdescribe: (name: string, funcOrOptions: TestFunc | TestOptions, func: TestFunc) => void;
+  xdescribe: (name: string, funcOrOptions: TestFunc | TestOptions, func: TestFunc) => void;
+  suite: (name: string, funcOrOptions: TestFunc | TestOptions, func: TestFunc) => void;
+  fsuite: (name: string, funcOrOptions: TestFunc | TestOptions, func: TestFunc) => void;
+  xsuite: (name: string, funcOrOptions: TestFunc | TestOptions, func: TestFunc) => void;
+  it: (name: string, funcOrOptions: TestFunc | TestOptions, func: TestFunc) => void;
+  fit: (name: string, funcOrOptions: TestFunc | TestOptions, func: TestFunc) => void;
+  xit: (name: string, funcOrOptions: TestFunc | TestOptions, func: TestFunc) => void;
+  test: (name: string, funcOrOptions: TestFunc | TestOptions, func: TestFunc) => void;
+  ftest: (name: string, funcOrOptions: TestFunc | TestOptions, func: TestFunc) => void;
+  xtest: (name: string, funcOrOptions: TestFunc | TestOptions, func: TestFunc) => void;
+  SimpleReporter: new () => Reporter;
+}
+
 export type DoneCallback = (err?: Error | string) => void;
 
 export type TestFunc = (doneCallback?: DoneCallback) => Promise<void> | void;
@@ -54,6 +80,21 @@ export const enum ValueType {
 
 export type TestStatus = 'passed' | 'failed' | 'skipped';
 
+export interface TestDefinition {
+  name: string[];
+  category: TestCategory;
+}
+
+export interface SuiteDefinition {
+  name: string[];
+  tests: TestDefinition[];
+  suites: SuiteDefinition[];
+}
+
+export interface RunDefinedEvent {
+  root: SuiteDefinition;
+}
+
 export interface RunStartedEvent {
   testCount: number;
 }
@@ -83,6 +124,7 @@ export interface TestFinishedEvent {
 }
 
 export interface Reporter {
+  runDefined?: (event: RunDefinedEvent) => void;
   runStarted?: (event: RunStartedEvent) => void;
   runFinished?: (event: RunFinishedEvent) => void;
   suiteStarted?: (event: SuiteStartedEvent) => void;

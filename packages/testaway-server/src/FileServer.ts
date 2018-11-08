@@ -36,14 +36,15 @@ export class FileServer {
     });
   }
 
-  createFileCompiler(fullPath: string, partialPath: string) {
+  createFileCompiler(fullPath: string, fileName: string) {
     const compiler = webpack({
       mode: 'development',
       entry: fullPath,
       watch: true,
+      devtool: 'inline-source-map',
       output: {
         path: '/bundles',
-        filename: partialPath
+        filename: fileName
       },
       optimization: {
         noEmitOnErrors: true
@@ -52,16 +53,18 @@ export class FileServer {
 
     compiler.outputFileSystem = this.fileSystem;
 
-    compiler.hooks.done.tap('done', stats => {
+    compiler.hooks.done.tap('afterEmit', stats => {
+      console.log('emit:', fileName);
+      this.testServer.runner.analyzeFile(fileName);
+
       this.testServer.notifyClients({
         type: 'recompilation',
-        file: `/bundles/${partialPath}`,
+        file: `/bundles/${fileName}`,
         stats: stats.toJson()
       });
     });
 
     return compiler.watch({}, (error, stats) => {
-      console.log('Compiling', partialPath);
       // TODO handle compilation errors here?
       if (error) console.error(error);
       // console.log(stats.toString());
@@ -69,24 +72,22 @@ export class FileServer {
   }
 
   addFile(fullPath: string) {
-    const partialPath = fullPath.replace(this.options.rootDir, '').replace(/^\/+/, '');
+    const fileName = fullPath.replace(this.options.rootDir, '').replace(/^\/+/, '');
+    this.bundleCache.delete(fileName);
+    const watchingCompiler = this.createFileCompiler(fullPath, fileName);
+    this.bundleCache.set(fileName, watchingCompiler);
 
-    this.bundleCache.delete(partialPath);
-    const watchingCompiler = this.createFileCompiler(fullPath, partialPath);
-    this.bundleCache.set(partialPath, watchingCompiler);
-
-    console.log('File added:', partialPath);
-    this.testServer.notifyClients(this.listFilesEvent());
+    this.testServer.notifyClients({
+      type: 'fileAdded',
+      fileName
+    });
   }
 
   removeFile(fullPath: string) {
-    const partialPath = fullPath.replace(this.options.rootDir, '').replace(/^\/+/, '');
-
-    const watchingCompiler = this.bundleCache.get(partialPath);
+    const fileName = fullPath.replace(this.options.rootDir, '').replace(/^\/+/, '');
+    const watchingCompiler = this.bundleCache.get(fileName);
     if (watchingCompiler) watchingCompiler.close(() => {});
-    this.bundleCache.delete(partialPath);
-
-    console.log('File deleted:', partialPath);
+    this.bundleCache.delete(fileName);
     this.testServer.notifyClients(this.listFilesEvent());
   }
 

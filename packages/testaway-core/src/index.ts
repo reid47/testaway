@@ -1,9 +1,9 @@
 import TestRun from './TestRun';
-import { Hook, TestFunc, TestOptions, TestRunOptions, TestCategory } from './types';
+import { Testaway, Hook, TestFunc, TestOptions, TestRunOptions, TestCategory } from './types';
 import { Expectation } from './Expectation';
 import { SimpleReporter } from './SimpleReporter';
 
-export default function createTestRun(testRunOptions?: TestRunOptions) {
+export default function createTestRun(testRunOptions?: TestRunOptions): Testaway {
   const testRun = new TestRun(testRunOptions);
 
   const add = (suite: boolean, category: TestCategory) => (
@@ -17,6 +17,7 @@ export default function createTestRun(testRunOptions?: TestRunOptions) {
     else testRun.addTest(name, actualFunc, category, options);
   };
 
+  const analyze = () => testRun.analyze();
   const execute = () => testRun.execute();
   const expect = (obj: any) => new Expectation(obj);
 
@@ -34,6 +35,7 @@ export default function createTestRun(testRunOptions?: TestRunOptions) {
   const xit = add(false, TestCategory.skipped);
 
   return {
+    analyze,
     execute,
     beforeEach,
     afterEach,

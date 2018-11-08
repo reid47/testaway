@@ -19,6 +19,14 @@ export class BrowserTestRunner {
     this.browser = undefined;
   }
 
+  async analyzeFile(fileName: string) {
+    await this.init();
+    if (!this.browser) return;
+    const page = await this.browser.newPage();
+    // TODO: how to close this page when analysis is done?
+    await page.goto(`http://localhost:3000/analyze/${fileName}`);
+  }
+
   async runFile(fileName: string) {
     await this.init();
     if (!this.browser) return;
