@@ -22,11 +22,13 @@ export default class TestRun {
   options: TestRunOptions;
   root: TestSuite;
   currentSuite: TestSuite;
+  testIds: { [id: string]: boolean };
 
   constructor(options?: TestRunOptions) {
     this.options = mergeTestRunOptionsWithDefaults(options);
     this.root = new TestSuite(this, null, [], TestCategory.default, undefined);
     this.currentSuite = this.root;
+    this.testIds = Object.create(null);
   }
 
   addSuite(
@@ -52,6 +54,13 @@ export default class TestRun {
 
   addHook(hook: Hook, func: TestFunc) {
     this.currentSuite.addHook(hook, func);
+  }
+
+  getTestId(testName: string[]) {
+    let id = testName.join('>>');
+    while (id in this.testIds) id += '_';
+    this.testIds[id] = true;
+    return id;
   }
 
   forEachReporter(func: (r: Reporter) => void) {
@@ -88,7 +97,9 @@ export default class TestRun {
   }
 
   analyze() {
-    this.reportRunDefined({ root: this.root.analyze() });
+    const root = this.root.analyze();
+    this.reportRunDefined({ root });
+    return root;
   }
 
   async execute() {

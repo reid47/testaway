@@ -81,6 +81,7 @@ export const enum ValueType {
 export type TestStatus = 'passed' | 'failed' | 'skipped';
 
 export interface TestDefinition {
+  id: string;
   name: string[];
   category: TestCategory;
 }
@@ -113,10 +114,12 @@ export interface SuiteFinishedEvent {
 }
 
 export interface TestStartedEvent {
+  testId: string;
   testName: string[];
 }
 
 export interface TestFinishedEvent {
+  testId: string;
   testName: string[];
   status: TestStatus;
   time: number;

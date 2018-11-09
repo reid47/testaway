@@ -51,7 +51,15 @@ export class TestServer {
       const fileName = req.params[0];
       this.fileServer
         .getFile(fileName)
-        .then((script: string) => res.send(executeTemplate({ script, port: this.options.port })))
+        .then((script: string) =>
+          res.send(
+            executeTemplate({
+              fileName,
+              script,
+              port: this.options.port
+            })
+          )
+        )
         .catch(() => res.status(404).send('File not found: ' + fileName));
     });
 
@@ -105,12 +113,8 @@ export class TestServer {
     const event = JSON.parse(message);
     console.log(event);
 
-    if (event.type === 'run_test_file') {
-      return this.runner.runFile(event.file);
-    }
-
-    if (event.type === 'test_finished') {
-      return this.notifyClients(event);
+    if (event.type === 'testRunRequested') {
+      return this.runner.runFile(event.fileName);
     }
 
     if (event.type === 'runDefined') {

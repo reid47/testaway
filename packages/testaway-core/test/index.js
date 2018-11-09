@@ -2,6 +2,7 @@ const testApi = require('../dist/index.min')();
 
 Object.assign(global, testApi);
 
+require('./metadata.test');
 require('./run.test');
 require('./expect.test');
 require('./expect.async.test');

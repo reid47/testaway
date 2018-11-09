@@ -5,19 +5,26 @@ const testawayCore = fs
   .readFileSync(path.resolve(__dirname, '../../testaway-core/dist/index.min.js'))
   .toString();
 
-export function executeTemplate({ script, port }: { script: string; port: number }) {
+export function executeTemplate({
+  fileName,
+  script,
+  port
+}: {
+  fileName: string;
+  script: string;
+  port: number;
+}) {
   return `<!doctype html><html><head><script type="text/javascript">
     ${testawayCore}
 
-    Testaway.runId = (new Date()).getTime();
     Testaway.socket = new WebSocket('ws://localhost:${port}/socket');
 
     Testaway.currentRun = Testaway({
       reporters: [{
         testFinished: function(event) {
           Testaway.socket.send(JSON.stringify({
-            type: 'test_finished',
-            runId: Testaway.runId,
+            type: 'testFinished',
+            fileName: ${JSON.stringify(fileName)},
             data: event
           }));
         }

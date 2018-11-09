@@ -15,7 +15,7 @@ function Test({ testName, category }) {
   );
 }
 
-function TestSuite({ depth = 0, suiteName, tests, suites }) {
+function TestSuite({ runFile, depth = 0, name, tests, suites }) {
   const isRoot = depth === 0;
 
   return (
@@ -26,22 +26,25 @@ function TestSuite({ depth = 0, suiteName, tests, suites }) {
         ) : (
           <Square className="test-suite-icon" size="1em" />
         )}
-        {suiteName}
+        {name}
+        {isRoot && <button onClick={() => runFile(name)}>run file</button>}
       </div>
       <ul className="test-list">
-        {tests.map(test => {
-          const testName = test.name.pop();
-          return <Test key={testName} testName={testName} />;
+        {tests.map(({ name }) => {
+          const key = name.join('>>');
+          const testName = name.pop();
+          return <Test key={key} testName={testName} />;
         })}
         {suites.length > 0 && (
           <li className="test-list-item">
             {suites.map(({ name, suites, tests }) => {
+              const key = name.join('>>');
               const suiteName = name.pop();
               return (
                 <TestSuite
-                  key={suiteName}
+                  key={key}
                   depth={depth + 1}
-                  suiteName={suiteName}
+                  name={suiteName}
                   tests={tests}
                   suites={suites}
                 />
@@ -54,12 +57,12 @@ function TestSuite({ depth = 0, suiteName, tests, suites }) {
   );
 }
 
-function TestFile({ fileName, fileDefinition }) {
+function TestFile({ fileName, fileDefinition, runFile }) {
   if (!fileDefinition) return null;
 
   const { root } = fileDefinition;
   const { tests, suites } = root;
-  return <TestSuite suiteName={fileName} tests={tests} suites={suites} />;
+  return <TestSuite runFile={runFile} name={fileName} tests={tests} suites={suites} />;
 }
 
 export default TestFile;

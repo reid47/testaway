@@ -4,6 +4,7 @@ import TestRun from './TestRun';
 import { mergeTestOptionsWithDefaults } from './options';
 
 export default class Test {
+  id: string;
   testRun: TestRun;
   parent: TestSuite;
   name: string[];
@@ -19,6 +20,7 @@ export default class Test {
     category: TestCategory,
     options?: TestOptions
   ) {
+    this.id = testRun.getTestId(name);
     this.testRun = testRun;
     this.parent = parent;
     this.name = name;
@@ -28,11 +30,16 @@ export default class Test {
   }
 
   analyze(): TestDefinition {
-    return { name: this.name, category: this.category };
+    return {
+      id: this.id,
+      name: this.name,
+      category: this.category
+    };
   }
 
   async execute() {
     this.testRun.reportTestStarted({
+      testId: this.id,
       testName: this.name
     });
 
@@ -71,6 +78,7 @@ export default class Test {
     }
 
     this.testRun.reportTestFinished({
+      testId: this.id,
       testName: this.name,
       time: Date.now() - startTime,
       status,

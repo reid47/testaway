@@ -30,14 +30,14 @@ class App extends PureComponent {
     this.socket.onmessage = this.handleSocketEvent.bind(this);
   };
 
-  handleConnect = event => {
+  handleConnect = () => {
     console.clear();
     clearInterval(this.connectInterval);
     this.setState({ connected: true });
     console.log('Connected to test server...');
   };
 
-  handleDisconnect = event => {
+  handleDisconnect = () => {
     clearInterval(this.connectInterval);
     this.setState({ connected: false });
     this.connectInterval = setInterval(() => this.connect(), 3000);
@@ -66,9 +66,9 @@ class App extends PureComponent {
 
   notifyServer = message => this.socket.send(JSON.stringify(message));
 
-  runFile = file => {
-    if (!file) return;
-    this.notifyServer({ type: 'testRunRequested', file });
+  runFile = fileName => {
+    if (!fileName) return;
+    this.notifyServer({ type: 'testRunRequested', fileName });
   };
 
   render() {
@@ -90,7 +90,12 @@ class App extends PureComponent {
     return (
       <div className="App">
         {fileNames.map(fileName => (
-          <TestFile key={fileName} fileName={fileName} fileDefinition={fileDefinitions[fileName]} />
+          <TestFile
+            key={fileName}
+            runFile={this.runFile}
+            fileName={fileName}
+            fileDefinition={fileDefinitions[fileName]}
+          />
         ))}
       </div>
     );
