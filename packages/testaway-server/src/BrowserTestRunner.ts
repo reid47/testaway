@@ -4,6 +4,11 @@ const executablePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Ch
 
 export class BrowserTestRunner {
   browser?: puppeteer.Browser;
+  options: any;
+
+  constructor(options: any) {
+    this.options = options;
+  }
 
   async init() {
     if (this.browser) return;
@@ -24,7 +29,7 @@ export class BrowserTestRunner {
     if (!this.browser) return;
     const page = await this.browser.newPage();
     // TODO: how to close this page when analysis is done?
-    await page.goto(`http://localhost:3000/analyze/${fileName}`);
+    await page.goto(`http://localhost:${this.options.port}/analyze/${fileName}`);
   }
 
   async runFile(fileName: string) {
@@ -32,6 +37,6 @@ export class BrowserTestRunner {
     if (!this.browser) return;
     const page = await this.browser.newPage();
     // TODO: how to close this page when tests are done?
-    await page.goto(`http://localhost:3000/run/${fileName}`);
+    await page.goto(`http://localhost:${this.options.port}/run/${fileName}`);
   }
 }

@@ -3,4 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const socketPort = process.env.TESTAWAY_SERVER_PORT || 4700;
+
+ReactDOM.render(<App socketPort={socketPort} />, document.getElementById('root'));

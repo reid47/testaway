@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import Activity from 'react-feather/dist/icons/activity';
 import TestFile from './TestFile';
 import './App.css';
 
@@ -6,27 +7,44 @@ class App extends PureComponent {
   socket = null;
 
   state = {
+    connected: false,
     fileNames: [],
     fileDefinitions: {}
   };
 
   componentDidMount() {
-    this.socket = new WebSocket('ws://localhost:3000/socket');
-
-    this.socket.onopen = event => {
-      console.log('Connected to test server...');
-    };
-
-    this.socket.onmessage = event => {
-      this.handleSocketEvent(JSON.parse(event.data));
-    };
+    this.connect();
+    this.connectInterval = setInterval(() => this.connect(), 3000);
   }
 
   componentWillUnmount() {
+    clearInterval(this.connectInterval);
     this.socket = null;
   }
 
-  handleSocketEvent = event => {
+  connect = () => {
+    const { socketPort } = this.props;
+    this.socket = new WebSocket(`ws://localhost:${socketPort}/socket`);
+    this.socket.onopen = this.handleConnect.bind(this);
+    this.socket.onclose = this.handleDisconnect.bind(this);
+    this.socket.onmessage = this.handleSocketEvent.bind(this);
+  };
+
+  handleConnect = event => {
+    console.clear();
+    clearInterval(this.connectInterval);
+    this.setState({ connected: true });
+    console.log('Connected to test server...');
+  };
+
+  handleDisconnect = event => {
+    clearInterval(this.connectInterval);
+    this.setState({ connected: false });
+    this.connectInterval = setInterval(() => this.connect(), 3000);
+  };
+
+  handleSocketEvent = message => {
+    const event = JSON.parse(message.data);
     console.log(event);
 
     if (event.type === 'connected') {
@@ -46,33 +64,28 @@ class App extends PureComponent {
     }
   };
 
-  run = file => {
+  notifyServer = message => this.socket.send(JSON.stringify(message));
+
+  runFile = file => {
     if (!file) return;
-    console.log('running file:', file);
-    this.socket.send(JSON.stringify({ type: 'run_test_file', file }));
-  };
-
-  renderTest = ({ name, category }) => {
-    const testName = name.join(' > ');
-    return <div key={testName}>{testName + `(${category})`}</div>;
-  };
-
-  renderSuite = ({ name, tests, suites }, atRoot) => {
-    const suiteName = name.join(' > ');
-    const empty = !tests.length && !suites.length;
-
-    return (
-      <div key={atRoot ? '_root_suite_' : suiteName}>
-        <div>{suiteName}</div>
-        {empty && 'No tests defined'}
-        {tests.map(this.renderTest)}
-        {suites.map(this.renderSuite)}
-      </div>
-    );
+    this.notifyServer({ type: 'testRunRequested', file });
   };
 
   render() {
-    const { fileNames, fileDefinitions } = this.state;
+    const { socketPort } = this.props;
+    const { connected, fileNames, fileDefinitions } = this.state;
+
+    if (!connected) {
+      return (
+        <div className="App not-connected">
+          <div>
+            <Activity size={64} />
+            <h2>not connected to testaway server</h2>
+            <h3>attempting to connect on port {socketPort}</h3>
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div className="App">

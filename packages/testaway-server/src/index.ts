@@ -1,7 +1,7 @@
 import { TestServer } from './TestServer';
 
 const options = {
-  port: 3000,
+  port: 4700,
   rootDir: '/Users/reid/Code/testaway',
   testFilePattern: '<rootDir>/notes/**/*.test.js'
 };

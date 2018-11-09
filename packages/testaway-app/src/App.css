@@ -1,0 +1,16 @@
+.App {
+  height: 100%;
+}
+
+.App.not-connected {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
+
+.App.not-connected h2,
+.App.not-connected h3 {
+  font-weight: normal;
+}

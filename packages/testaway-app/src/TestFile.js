@@ -55,6 +55,8 @@ function TestSuite({ depth = 0, suiteName, tests, suites }) {
 }
 
 function TestFile({ fileName, fileDefinition }) {
+  if (!fileDefinition) return null;
+
   const { root } = fileDefinition;
   const { tests, suites } = root;
   return <TestSuite suiteName={fileName} tests={tests} suites={suites} />;

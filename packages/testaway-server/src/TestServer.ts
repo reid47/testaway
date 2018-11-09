@@ -41,7 +41,7 @@ export class TestServer {
     this.app = express();
     this.server = http.createServer(this.app);
     this.wss = new WebSocket.Server({ server: this.server });
-    this.runner = new BrowserTestRunner();
+    this.runner = new BrowserTestRunner(options);
 
     this.runner.init().then(() => {
       console.log('puppeteer launched!');
