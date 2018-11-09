@@ -74,7 +74,7 @@ export default class Test {
       status = 'passed';
     } catch (err) {
       status = 'failed';
-      error = err;
+      error = err.stack || err.message || String(err);
     }
 
     this.testRun.reportTestFinished({

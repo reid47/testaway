@@ -9,7 +9,8 @@ class App extends PureComponent {
   state = {
     connected: false,
     fileNames: [],
-    fileDefinitions: {}
+    fileDefinitions: {},
+    fileResults: {}
   };
 
   componentDidMount() {
@@ -34,7 +35,6 @@ class App extends PureComponent {
     console.clear();
     clearInterval(this.connectInterval);
     this.setState({ connected: true });
-    console.log('Connected to test server...');
   };
 
   handleDisconnect = () => {
@@ -45,23 +45,43 @@ class App extends PureComponent {
 
   handleSocketEvent = message => {
     const event = JSON.parse(message.data);
-    console.log(event);
 
     if (event.type === 'connected') {
-      const { fileNames, fileDefinitions } = event;
-      this.setState({ fileNames, fileDefinitions });
+      const { fileNames, fileDefinitions, fileResults } = event;
+      this.setState({ fileNames, fileDefinitions, fileResults });
       return;
     }
 
     if (event.type === 'fileAnalyzed') {
       const { fileName, data } = event;
-      this.setState(({ fileDefinitions }) => ({
+      this.setState(({ fileDefinitions, fileResults }) => ({
+        fileResults: {
+          ...fileResults,
+          [fileName]: {}
+        },
         fileDefinitions: {
           ...fileDefinitions,
           [fileName]: data
         }
       }));
+      return;
     }
+
+    if (event.type === 'testFinished') {
+      const { fileName, data } = event;
+      this.setState(({ fileResults }) => ({
+        fileResults: {
+          ...fileResults,
+          [fileName]: {
+            ...fileResults[fileName],
+            [data.testId]: data
+          }
+        }
+      }));
+      return;
+    }
+
+    console.log(event);
   };
 
   notifyServer = message => this.socket.send(JSON.stringify(message));
@@ -73,7 +93,7 @@ class App extends PureComponent {
 
   render() {
     const { socketPort } = this.props;
-    const { connected, fileNames, fileDefinitions } = this.state;
+    const { connected, fileNames, fileDefinitions, fileResults } = this.state;
 
     if (!connected) {
       return (
@@ -95,6 +115,7 @@ class App extends PureComponent {
             runFile={this.runFile}
             fileName={fileName}
             fileDefinition={fileDefinitions[fileName]}
+            fileResults={fileResults[fileName]}
           />
         ))}
       </div>

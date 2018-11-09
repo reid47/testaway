@@ -44,3 +44,11 @@
   top: 16px;
   left: -8px;
 }
+
+.test-error {
+  margin: 0;
+  background: #fafafa;
+  padding: 8px;
+  font-size: 14px;
+  overflow: auto;
+}

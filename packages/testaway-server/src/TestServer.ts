@@ -15,6 +15,12 @@ interface TestDefinition {
   category: any;
 }
 
+interface TestResult {
+  time: number;
+  status: 'passed' | 'failed';
+  error?: any;
+}
+
 interface SuiteDefinition {
   name: string[];
   tests: TestDefinition[];
@@ -29,6 +35,7 @@ export class TestServer {
   wss: WebSocket.Server;
   runner: BrowserTestRunner;
   testFileDefinitions: Map<string, TestFileDefinition>;
+  testFileResults: Map<string, TestResult>;
 
   static create(options: any) {
     return new TestServer(options);
@@ -37,6 +44,7 @@ export class TestServer {
   constructor(options: any) {
     this.options = options;
     this.testFileDefinitions = new Map<string, TestFileDefinition>();
+    this.testFileResults = new Map<string, TestResult>();
     this.fileServer = new FileServer(this, options);
     this.app = express();
     this.server = http.createServer(this.app);
@@ -95,17 +103,18 @@ export class TestServer {
 
   handleConnection(ws: WebSocket) {
     const fileNames = this.fileServer.getFileNames();
+    const fileDefinitions: any = {};
+    const fileResults: any = {};
+    fileNames.forEach(fileName => {
+      fileDefinitions[fileName] = this.testFileDefinitions.get(fileName);
+      fileResults[fileName] = this.testFileResults.get(fileName);
+    });
 
     this.notifyClient(ws, {
       type: 'connected',
       fileNames,
-      fileDefinitions: fileNames.reduce(
-        (acc, fileName) => ({
-          ...acc,
-          [fileName]: this.testFileDefinitions.get(fileName)
-        }),
-        {}
-      )
+      fileDefinitions,
+      fileResults
     });
   }
 
@@ -115,6 +124,17 @@ export class TestServer {
 
     if (event.type === 'testRunRequested') {
       return this.runner.runFile(event.fileName);
+    }
+
+    if (event.type === 'testFinished') {
+      const { fileName, data } = event;
+      this.testFileResults.set(data.testId, data);
+
+      return this.notifyClients({
+        type: 'testFinished',
+        fileName,
+        data
+      });
     }
 
     if (event.type === 'runDefined') {
