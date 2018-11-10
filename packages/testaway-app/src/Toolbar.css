@@ -1,0 +1,7 @@
+.Toolbar {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16px;
+  background: rgb(65, 87, 97);
+  box-shadow: 0 0 4px 4px rgba(110, 110, 110, 0.4);
+}

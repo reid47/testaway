@@ -1,5 +1,8 @@
 .App {
   height: 100%;
+  background: #eee;
+  display: flex;
+  flex-direction: column;
 }
 
 .App.not-connected {
@@ -13,4 +16,8 @@
 .App.not-connected h2,
 .App.not-connected h3 {
   font-weight: normal;
+}
+
+main {
+  overflow: auto;
 }

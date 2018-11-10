@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import Activity from 'react-feather/dist/icons/activity';
+import Toolbar from './Toolbar';
 import TestFile from './TestFile';
 import './App.css';
 
@@ -109,15 +110,18 @@ class App extends PureComponent {
 
     return (
       <div className="App">
-        {fileNames.map(fileName => (
-          <TestFile
-            key={fileName}
-            runFile={this.runFile}
-            fileName={fileName}
-            fileDefinition={fileDefinitions[fileName]}
-            fileResults={fileResults[fileName]}
-          />
-        ))}
+        <Toolbar />
+        <main>
+          {fileNames.map(fileName => (
+            <TestFile
+              key={fileName}
+              runFile={this.runFile}
+              fileName={fileName}
+              fileDefinition={fileDefinitions[fileName]}
+              fileResults={fileResults[fileName]}
+            />
+          ))}
+        </main>
       </div>
     );
   }
