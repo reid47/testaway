@@ -1,7 +1,7 @@
 import React from 'react';
 import './Toolbar.css';
 
-function Toolbar({}) {
+function Toolbar() {
   return (
     <div className="Toolbar">
       <button />

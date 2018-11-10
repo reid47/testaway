@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import File from 'react-feather/dist/icons/file';
-import Square from 'react-feather/dist/icons/square';
-import Circle from 'react-feather/dist/icons/circle';
 import CollapseIcon from 'react-feather/dist/icons/minus-square';
 import ExpandIcon from 'react-feather/dist/icons/plus-square';
 import CheckCircle from 'react-feather/dist/icons/check-circle';
 import XCircle from 'react-feather/dist/icons/x-circle';
+import PlayIcon from 'react-feather/dist/icons/play';
 import './TestFile.css';
+
+const flexGrow = <div style={{ flexGrow: 1 }} />;
 
 function countTests(tests, suites) {
   const testCount = tests.length;
@@ -94,6 +95,11 @@ function TestFile({ fileName, fileDefinition, fileResults = {}, runFile }) {
       <div className="TestFile-header">
         <File className="TestFile-icon" size={12} />
         {fileName}
+        {flexGrow}
+        <button className="TestFile-run-button" onClick={() => runFile(fileName)}>
+          run file
+          <PlayIcon size="1em" />
+        </button>
       </div>
       <div className="TestFile-tests">
         <TestSuite

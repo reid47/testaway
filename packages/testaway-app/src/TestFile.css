@@ -10,10 +10,25 @@
   border-bottom: 1px solid #ddd;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 .TestFile-icon {
   margin-right: 4px;
+}
+
+.TestFile-run-button {
+  box-sizing: border-box;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 2px 0 2px 2px;
+}
+
+.TestFile-run-button svg {
+  margin-left: 4px;
 }
 
 .TestFile-tests {
