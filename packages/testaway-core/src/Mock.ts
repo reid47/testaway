@@ -6,9 +6,13 @@ export class Mock {
   name?: string;
   calls: any[] = [];
   context: any = null;
-  argsCallHandlers: { callArgs: any[]; returnValue: any }[] = [];
+  argsCallHandlers: { callArgs: any[]; returnValue?: any; throwValue?: any }[] = [];
   numberedCallHandlers: any = {};
   defaultCallHandler: any = initialCallHandler;
+
+  get called() {
+    return this.calls.length > 0;
+  }
 
   get callCount() {
     return this.calls.length;
@@ -31,9 +35,12 @@ export class Mock {
     if (numberedCallHandler) return numberedCallHandler(...args);
 
     for (const argsCallHandler of this.argsCallHandlers) {
-      const { callArgs, returnValue } = argsCallHandler;
+      const { callArgs, throwValue, returnValue } = argsCallHandler;
       const { equal } = deepEqual(callArgs, args);
-      if (equal) return returnValue;
+      if (equal) {
+        if (throwValue) throw throwValue;
+        return returnValue;
+      }
     }
 
     return this.defaultCallHandler(...args);
@@ -64,6 +71,27 @@ export class Mock {
     }
 
     this.defaultCallHandler = () => returnValue;
+  }
+
+  throws(throwValue: any) {
+    if (this.context) {
+      if ('callNumber' in this.context) {
+        const { callNumber } = this.context;
+        this.numberedCallHandlers[`${callNumber}`] = () => {
+          throw throwValue;
+        };
+      } else if ('callArgs' in this.context) {
+        const { callArgs } = this.context;
+        this.argsCallHandlers.push({ callArgs, throwValue });
+      }
+
+      this.context = null;
+      return;
+    }
+
+    this.defaultCallHandler = () => {
+      throw throwValue;
+    };
   }
 
   // resolvesTo(resolvedValue: any) {

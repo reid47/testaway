@@ -16,12 +16,14 @@ fdescribe('mock', () => {
       expect(f.mock.calls).toBeInstanceOf(Array);
       expect(f.mock.calls).toHaveLength(0);
       expect(f.mock.callCount).toBe(0);
+      expect(f.mock.called).toBe(false);
 
       f(47);
       expect(f.mock.calls).toHaveLength(1);
       expect(f.mock.callCount).toBe(1);
       expect(f.mock.calls[0].args).toEqual([47]);
       expect(f.mock.lastCall.args).toEqual([47]);
+      expect(f.mock.called).toBe(true);
 
       f('hello', 'world');
       expect(f.mock.calls).toHaveLength(2);
@@ -29,10 +31,12 @@ fdescribe('mock', () => {
       expect(f.mock.calls[0].args).toEqual([47]);
       expect(f.mock.calls[1].args).toEqual(['hello', 'world']);
       expect(f.mock.lastCall.args).toEqual(['hello', 'world']);
+      expect(f.mock.called).toBe(true);
 
       f.mock.resetCalls();
       expect(f.mock.calls).toHaveLength(0);
       expect(f.mock.lastCall).toBeUndefined();
+      expect(f.mock.called).toBe(false);
     });
 
     test('default return values', () => {
@@ -101,6 +105,27 @@ fdescribe('mock', () => {
       expect(f(47)).toBe('no args');
       expect(f(47)).toBe('call 2');
       expect(f(47)).toBe('no args');
+    });
+
+    test('throwing', () => {
+      const f1 = mock.func();
+      f1.mock.throws(new Error('threw!'));
+      expect(() => f1()).toThrow('threw!');
+      expect(() => f1()).toThrow('threw!');
+
+      const f2 = mock.func();
+      f2.mock.onCall(2).throws(new Error('threw!'));
+      expect(f2()).toBeUndefined();
+      expect(f2()).toBeUndefined();
+      expect(() => f2()).toThrow('threw!');
+      expect(f2()).toBeUndefined();
+
+      const f3 = mock.func();
+      f3.mock.onArgs('bad').throws(new Error('bad arg!'));
+      expect(f3('ok')).toBeUndefined();
+      expect(f3('sure')).toBeUndefined();
+      expect(() => f3('bad')).toThrow('bad arg!');
+      expect(f3('fine')).toBeUndefined();
     });
 
     test('resetting', () => {
