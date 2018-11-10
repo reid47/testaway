@@ -4,7 +4,7 @@ import { Expectation } from './Expectation';
 const stripIndent = (message: string) =>
   message
     .split('\n')
-    .map(line => line.replace(/^      /, '  '))
+    .map(line => line.replace(/^      /, ''))
     .join('\n')
     .trim();
 
@@ -27,10 +27,10 @@ export class ExpectationError extends Error {
     if (additionalInfo) {
       additional += additionalInfo
         .map(info => {
-          if (typeof info === 'string') return `\n  ${info}`;
+          if (typeof info === 'string') return `\n${info}`;
           const label = info[0];
           const value = info[1];
-          return `\n  ${label}:\n        ${prettyPrint(value)}`;
+          return `\n${label}:\n  ${prettyPrint(value)}`;
         })
         .join('');
     }
@@ -45,5 +45,9 @@ export class ExpectationError extends Error {
     `);
 
     super(message + '\n');
+
+    if (expectation.stack) {
+      this.stack = expectation.stack;
+    }
   }
 }

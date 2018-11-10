@@ -7,24 +7,17 @@ export class FileServer {
   private testServer: TestServer;
   private options: any;
   private fileSystem: MemoryFs;
-  private bundleCache: Map<string, webpack.Compiler.Watching>;
+  private compilerCache: Map<string, webpack.Compiler.Watching>;
 
   constructor(testServer: TestServer, options: any) {
     this.testServer = testServer;
     this.options = options;
     this.fileSystem = new MemoryFs();
-    this.bundleCache = new Map<string, webpack.Compiler.Watching>();
+    this.compilerCache = new Map<string, webpack.Compiler.Watching>();
   }
 
   getFileNames() {
-    return Array.from(this.bundleCache.keys());
-  }
-
-  listFilesEvent() {
-    return {
-      type: 'list_files',
-      files: this.getFileNames()
-    };
+    return Array.from(this.compilerCache.keys());
   }
 
   getFile(fileName: string) {
@@ -72,22 +65,28 @@ export class FileServer {
 
   addFile(fullPath: string) {
     const fileName = fullPath.replace(this.options.rootDir, '').replace(/^\/+/, '');
-    this.bundleCache.delete(fileName);
+    this.compilerCache.delete(fileName);
     const watchingCompiler = this.createFileCompiler(fullPath, fileName);
-    this.bundleCache.set(fileName, watchingCompiler);
+    this.compilerCache.set(fileName, watchingCompiler);
 
     this.testServer.notifyClients({
       type: 'fileAdded',
-      fileName
+      fileName,
+      allFileNames: this.getFileNames()
     });
   }
 
   removeFile(fullPath: string) {
     const fileName = fullPath.replace(this.options.rootDir, '').replace(/^\/+/, '');
-    const watchingCompiler = this.bundleCache.get(fileName);
+    const watchingCompiler = this.compilerCache.get(fileName);
     if (watchingCompiler) watchingCompiler.close(() => {});
-    this.bundleCache.delete(fileName);
-    this.testServer.notifyClients(this.listFilesEvent());
+    this.compilerCache.delete(fileName);
+
+    this.testServer.notifyClients({
+      type: 'fileRemoved',
+      fileName,
+      allFileNames: this.getFileNames()
+    });
   }
 
   startWatching() {

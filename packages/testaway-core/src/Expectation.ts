@@ -12,6 +12,7 @@ interface Queryable {
 }
 
 export class Expectation {
+  stack?: string;
   actual: any;
   negated: boolean;
   async: number;
@@ -26,6 +27,18 @@ export class Expectation {
     this.alreadyResolved = false;
     this.alreadyRejected = false;
     this.domContext = typeof document !== 'undefined' ? document : null;
+
+    const err = new Error();
+    if (Error.captureStackTrace) Error.captureStackTrace(err, Expectation);
+    if (!err.stack) {
+      try {
+        throw err;
+      } catch (e) {
+        this.stack = e.stack;
+      }
+    } else {
+      this.stack = err.stack;
+    }
   }
 
   get not(): Expectation {

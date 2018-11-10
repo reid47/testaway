@@ -45,7 +45,7 @@ export default class Test {
 
     const startTime = Date.now();
     let status: TestStatus = 'skipped';
-    let error;
+    let error: string = '';
 
     try {
       const timeoutError = new Error('Timed out!');

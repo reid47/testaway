@@ -123,7 +123,7 @@ export interface TestFinishedEvent {
   testName: string[];
   status: TestStatus;
   time: number;
-  error?: Error;
+  error?: string;
 }
 
 export interface Reporter {

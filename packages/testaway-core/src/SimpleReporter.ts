@@ -16,25 +16,16 @@ export class SimpleReporter implements Reporter {
     switch (event.status) {
       case 'passed':
         this.passCount++;
-        console.info('\u2713', testName);
+        console.info(`\u2713 ${testName}`);
         return;
 
       case 'failed':
         this.failCount++;
         console.error(
-          '\u2717',
-          testName +
-            '\n' +
-            (event.error && event.error.message
+          `\u2717 ${testName}\n` +
+            (event.error
               ? '\n' +
-                event.error.message
-                  .split('\n')
-                  .map(line => `  ${line}`)
-                  .join('\n')
-              : '') +
-            (event.error && event.error.stack
-              ? '\n' +
-                event.error.stack
+                event.error
                   .split('\n')
                   .map(line => `  ${line}`)
                   .join('\n')

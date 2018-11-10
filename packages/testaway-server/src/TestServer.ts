@@ -4,6 +4,7 @@ import * as http from 'http';
 import { BrowserTestRunner } from './BrowserTestRunner';
 import { FileServer } from './FileServer';
 import { executeTemplate, analyzeTemplate } from './html-templates';
+import { debug } from './logger';
 
 interface TestFileDefinition {
   fileName: string;
@@ -52,7 +53,7 @@ export class TestServer {
     this.runner = new BrowserTestRunner(options);
 
     this.runner.init().then(() => {
-      console.log('puppeteer launched!');
+      debug('puppeteer launched!');
     });
 
     this.app.get('/run/*', (req, res) => {
@@ -120,7 +121,7 @@ export class TestServer {
 
   handleMessage(message: string) {
     const event = JSON.parse(message);
-    console.log(event);
+    debug(event);
 
     if (event.type === 'testRunRequested') {
       return this.runner.runFile(event.fileName);
@@ -153,7 +154,7 @@ export class TestServer {
     const { port } = this.options;
     this.fileServer.startWatching();
     this.server.listen(port, () => {
-      console.log(`Test server listening on port ${port}!`);
+      debug(`Test server started on port ${port}`);
     });
   }
 }
