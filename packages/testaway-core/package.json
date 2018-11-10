@@ -5,7 +5,7 @@
   "types": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "dev": "tsc -w",
+    "develop": "NODE_ENV=development rollup -c rollup.config.js --watch",
     "build:clean": "rm -rf dist",
     "build:types": "tsc --declaration --emitDeclarationOnly",
     "build:bundle": "rollup -c rollup.config.js",
