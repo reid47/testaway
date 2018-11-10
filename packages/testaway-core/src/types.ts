@@ -1,5 +1,6 @@
 import { Expectation } from './Expectation';
 import { SimpleReporter } from './SimpleReporter';
+import { MockFactory } from './MockFactory';
 
 export interface Testaway {
   analyze: () => void;
@@ -22,6 +23,7 @@ export interface Testaway {
   ftest: (name: string, funcOrOptions: TestFunc | TestOptions, func: TestFunc) => void;
   xtest: (name: string, funcOrOptions: TestFunc | TestOptions, func: TestFunc) => void;
   SimpleReporter: new () => Reporter;
+  mock: new () => MockFactory;
 }
 
 export type DoneCallback = (err?: Error | string) => void;

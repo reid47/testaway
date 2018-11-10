@@ -1,38 +1,47 @@
+import { deepEqual } from './utils/deep-equal';
+
+const initialCallHandler = () => void 0;
+
 export class Mock {
-  name: string = '';
+  name?: string;
   calls: any[] = [];
   context: any = null;
+  argsCallHandlers: { callArgs: any[]; returnValue: any }[] = [];
   numberedCallHandlers: any = {};
-  defaultCallHandler: any = (): any => void 0;
-
-  static create() {
-    const instance = new Mock();
-
-    function MockFunction(...args: any[]) {
-      return instance.callMock(...args);
-    }
-
-    MockFunction.mock = instance;
-    return MockFunction;
-  }
+  defaultCallHandler: any = initialCallHandler;
 
   get callCount() {
     return this.calls.length;
   }
 
-  named(name: string) {
+  get lastCall() {
+    return this.calls[this.calls.length - 1];
+  }
+
+  constructor(name?: string, setup?: Function) {
     this.name = name;
-    return this;
+    if (setup) setup(this);
   }
 
   callMock(...args: any[]) {
     const callNumber = this.calls.length;
-    this.calls.push(args);
+    this.calls.push({ args });
 
     const numberedCallHandler = this.numberedCallHandlers['' + callNumber];
     if (numberedCallHandler) return numberedCallHandler(...args);
 
+    for (const argsCallHandler of this.argsCallHandlers) {
+      const { callArgs, returnValue } = argsCallHandler;
+      const { equal } = deepEqual(callArgs, args);
+      if (equal) return returnValue;
+    }
+
     return this.defaultCallHandler(...args);
+  }
+
+  onArgs(...args: any[]) {
+    this.context = { callArgs: args };
+    return this;
   }
 
   onCall(index: number) {
@@ -43,15 +52,18 @@ export class Mock {
   returns(returnValue: any) {
     if (this.context) {
       if ('callNumber' in this.context) {
-        this.numberedCallHandlers['' + this.context.callNumber] = () => returnValue;
+        const { callNumber } = this.context;
+        this.numberedCallHandlers[`${callNumber}`] = () => returnValue;
+      } else if ('callArgs' in this.context) {
+        const { callArgs } = this.context;
+        this.argsCallHandlers.push({ callArgs, returnValue });
       }
 
       this.context = null;
-      return this;
+      return;
     }
 
     this.defaultCallHandler = () => returnValue;
-    return this;
   }
 
   // resolvesTo(resolvedValue: any) {
@@ -64,5 +76,12 @@ export class Mock {
 
   resetCalls() {
     this.calls = [];
+  }
+
+  reset() {
+    this.resetCalls();
+    this.numberedCallHandlers = {};
+    this.argsCallHandlers = [];
+    this.defaultCallHandler = initialCallHandler;
   }
 }

@@ -2,6 +2,7 @@ import TestRun from './TestRun';
 import { Testaway, Hook, TestFunc, TestOptions, TestRunOptions, TestCategory } from './types';
 import { Expectation } from './Expectation';
 import { SimpleReporter } from './SimpleReporter';
+import { MockFactory } from './MockFactory';
 
 export default function createTestRun(testRunOptions?: TestRunOptions): Testaway {
   const testRun = new TestRun(testRunOptions);
@@ -54,6 +55,7 @@ export default function createTestRun(testRunOptions?: TestRunOptions): Testaway
     ftest: fit,
     xtest: xit,
     expect,
-    SimpleReporter
+    SimpleReporter,
+    mock: MockFactory
   };
 }

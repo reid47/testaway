@@ -8,5 +8,6 @@ require('./expect.test');
 require('./expect.async.test');
 require('./expect.dom.test');
 require('./expect.extend.test');
+require('./mock.test');
 
 execute();
