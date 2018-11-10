@@ -45,9 +45,5 @@ export class ExpectationError extends Error {
     `);
 
     super(message + '\n');
-
-    if (expectation.stack) {
-      this.stack = expectation.stack;
-    }
   }
 }
