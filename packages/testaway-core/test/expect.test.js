@@ -363,7 +363,7 @@ test('expect toEqual', () => {
     'to equal:',
     '  Object { a: 1, c: 5 }',
     'but objects are different:',
-    '  - unexpected key "c"',
+    '  - missing expected key "c"',
     ''
   );
 

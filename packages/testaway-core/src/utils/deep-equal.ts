@@ -8,15 +8,13 @@ export function deepEqual(expected: any, actual: any): { equal: boolean; reasons
 
   const reasons = [];
 
-  if (diffs.length === 1) {
-    const { type, actual, expected } = diffs[0];
-    if (type === 'wrong-type') {
-      reasons.push(
-        `but types are different (received ${stringTypeOf(actual)}, but expected ${stringTypeOf(
-          expected
-        )}).`
-      );
-    }
+  if (diffs.length === 1 && diffs[0].type === 'wrong-type') {
+    const { actual, expected } = diffs[0];
+    reasons.push(
+      `but types are different (received ${stringTypeOf(actual)}, but expected ${stringTypeOf(
+        expected
+      )}).`
+    );
   } else if (diffs.every(diff => diff.keyPath.length > 0)) {
     const keyDiffs = diffs
       .map(({ type, keyPath, expected, actual }) => {
