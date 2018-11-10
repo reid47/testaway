@@ -33,7 +33,7 @@ export function deepEqual(expected: any, actual: any): { equal: boolean; reasons
         }
       })
       .sort()
-      .map(line => `    - ${line}`)
+      .map(line => `  - ${line}`)
       .join('\n');
 
     reasons.push(`but objects are different:\n${keyDiffs}`);

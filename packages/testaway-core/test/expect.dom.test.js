@@ -33,11 +33,11 @@ describe('expect DOM', () => {
       () => expect(47).toHaveClass('something'),
       'Expectation failed: expect(received).toHaveClass(expected)',
       '',
-      '  Expected:',
-      '    47',
-      '  to be a DOM node with class:',
-      '    "something"',
-      '  but it was not a DOM node.',
+      'Expected:',
+      '  47',
+      'to be a DOM node with class:',
+      '  "something"',
+      'but it was not a DOM node.',
       ''
     );
 
@@ -45,12 +45,12 @@ describe('expect DOM', () => {
       () => expect(buttonElement).toHaveClass('something'),
       'Expectation failed: expect(received).toHaveClass(expected)',
       '',
-      '  Expected:',
-      '    <button id="btn-id" class="btn test-btn">click me</button>',
-      '  to have class:',
-      '    "something"',
-      '  but actual classes were:',
-      '    "btn test-btn"',
+      'Expected:',
+      '  <button id="btn-id" class="btn test-btn">click me</button>',
+      'to have class:',
+      '  "something"',
+      'but actual classes were:',
+      '  "btn test-btn"',
       ''
     );
 
@@ -58,12 +58,12 @@ describe('expect DOM', () => {
       () => expect(buttonElement).toHaveClass('something else'),
       'Expectation failed: expect(received).toHaveClass(expected)',
       '',
-      '  Expected:',
-      '    <button id="btn-id" class="btn test-btn">click me</button>',
-      '  to have classes:',
-      '    "something else"',
-      '  but actual classes were:',
-      '    "btn test-btn"',
+      'Expected:',
+      '  <button id="btn-id" class="btn test-btn">click me</button>',
+      'to have classes:',
+      '  "something else"',
+      'but actual classes were:',
+      '  "btn test-btn"',
       ''
     );
   });
@@ -97,12 +97,12 @@ describe('expect DOM', () => {
       () => expect(buttonElement).not.toHaveClass('btn'),
       'Expectation failed: expect(received).not.toHaveClass(expected)',
       '',
-      '  Expected:',
-      '    <button id="btn-id" class="btn test-btn">click me</button>',
-      '  not to have class:',
-      '    "btn"',
-      '  but actual classes were:',
-      '    "btn test-btn"',
+      'Expected:',
+      '  <button id="btn-id" class="btn test-btn">click me</button>',
+      'not to have class:',
+      '  "btn"',
+      'but actual classes were:',
+      '  "btn test-btn"',
       ''
     );
 
@@ -110,12 +110,12 @@ describe('expect DOM', () => {
       () => expect(buttonElement).not.toHaveClass('test-btn btn'),
       'Expectation failed: expect(received).not.toHaveClass(expected)',
       '',
-      '  Expected:',
-      '    <button id="btn-id" class="btn test-btn">click me</button>',
-      '  not to have classes:',
-      '    "test-btn btn"',
-      '  but actual classes were:',
-      '    "btn test-btn"',
+      'Expected:',
+      '  <button id="btn-id" class="btn test-btn">click me</button>',
+      'not to have classes:',
+      '  "test-btn btn"',
+      'but actual classes were:',
+      '  "btn test-btn"',
       ''
     );
   });

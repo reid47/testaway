@@ -11,10 +11,10 @@ test('expect toBe', () => {
     () => expect(47).toBe(48),
     'Expectation failed: expect(received).toBe(expected)',
     '',
-    '  Expected:',
-    '    47',
-    '  to be:',
-    '    48',
+    'Expected:',
+    '  47',
+    'to be:',
+    '  48',
     ''
   );
 
@@ -22,10 +22,10 @@ test('expect toBe', () => {
     () => expect(47).toBe('47'),
     'Expectation failed: expect(received).toBe(expected)',
     '',
-    '  Expected:',
-    '    47',
-    '  to be:',
-    '    "47"',
+    'Expected:',
+    '  47',
+    'to be:',
+    '  "47"',
     ''
   );
 
@@ -33,12 +33,12 @@ test('expect toBe', () => {
     () => expect({ a: 1 }).toBe({ a: 1 }),
     'Expectation failed: expect(received).toBe(expected)',
     '',
-    '  Expected:',
-    '    Object { a: 1 }',
-    '  to be:',
-    '    Object { a: 1 }',
-    '  ',
-    '  Checked for reference equality because both values are objects. To check for structural equality, use toEqual.',
+    'Expected:',
+    '  Object { a: 1 }',
+    'to be:',
+    '  Object { a: 1 }',
+    '',
+    'Checked for reference equality because both values are objects. To check for structural equality, use toEqual.',
     ''
   );
 });
@@ -54,10 +54,10 @@ test('expect not toBe', () => {
     () => expect(47).not.toBe(47),
     'Expectation failed: expect(received).not.toBe(expected)',
     '',
-    '  Expected:',
-    '    47',
-    '  not to be:',
-    '    47',
+    'Expected:',
+    '  47',
+    'not to be:',
+    '  47',
     ''
   );
 });
@@ -70,10 +70,10 @@ test('expect toBeCloseTo', () => {
     () => expect(47.01).toBeCloseTo(47.02),
     'Expectation failed: expect(received).toBeCloseTo(value)',
     '',
-    '  Expected:',
-    '    47.01',
-    '  to be close to (precision: 2 decimal points):',
-    '    47.02',
+    'Expected:',
+    '  47.01',
+    'to be close to (precision: 2 decimal points):',
+    '  47.02',
     ''
   );
 
@@ -81,10 +81,10 @@ test('expect toBeCloseTo', () => {
     () => expect(47).toBeCloseTo(47.001, 5),
     'Expectation failed: expect(received).toBeCloseTo(value)',
     '',
-    '  Expected:',
-    '    47',
-    '  to be close to (precision: 5 decimal points):',
-    '    47.001',
+    'Expected:',
+    '  47',
+    'to be close to (precision: 5 decimal points):',
+    '  47.001',
     ''
   );
 });
@@ -97,10 +97,10 @@ test('expect not toBeCloseTo', () => {
     () => expect(47.1).not.toBeCloseTo(47.1, 1),
     'Expectation failed: expect(received).not.toBeCloseTo(value)',
     '',
-    '  Expected:',
-    '    47.1',
-    '  not to be close to (precision: 1 decimal points):',
-    '    47.1',
+    'Expected:',
+    '  47.1',
+    'not to be close to (precision: 1 decimal points):',
+    '  47.1',
     ''
   );
 
@@ -108,10 +108,10 @@ test('expect not toBeCloseTo', () => {
     () => expect(47).not.toBeCloseTo(47.001),
     'Expectation failed: expect(received).not.toBeCloseTo(value)',
     '',
-    '  Expected:',
-    '    47',
-    '  not to be close to (precision: 2 decimal points):',
-    '    47.001',
+    'Expected:',
+    '  47',
+    'not to be close to (precision: 2 decimal points):',
+    '  47.001',
     ''
   );
 });
@@ -124,9 +124,9 @@ test('expect toBeDefined', () => {
     () => expect(undefined).toBeDefined(),
     'Expectation failed: expect(received).toBeDefined()',
     '',
-    '  Expected:',
-    '    undefined',
-    '  to be defined.',
+    'Expected:',
+    '  undefined',
+    'to be defined.',
     ''
   );
 });
@@ -139,9 +139,9 @@ test('expect not toBeDefined', () => {
     () => expect(true).not.toBeDefined(),
     'Expectation failed: expect(received).not.toBeDefined()',
     '',
-    '  Expected:',
-    '    true',
-    '  not to be defined.',
+    'Expected:',
+    '  true',
+    'not to be defined.',
     ''
   );
 });
@@ -158,9 +158,9 @@ test('expect toBeFalsy', () => {
     () => expect(true).toBeFalsy(),
     'Expectation failed: expect(received).toBeFalsy()',
     '',
-    '  Expected:',
-    '    true',
-    '  to be falsy.',
+    'Expected:',
+    '  true',
+    'to be falsy.',
     ''
   );
 });
@@ -174,9 +174,9 @@ test('expect not toBeFalsy', () => {
     () => expect(undefined).not.toBeFalsy(),
     'Expectation failed: expect(received).not.toBeFalsy()',
     '',
-    '  Expected:',
-    '    undefined',
-    '  not to be falsy.',
+    'Expected:',
+    '  undefined',
+    'not to be falsy.',
     ''
   );
 
@@ -184,9 +184,9 @@ test('expect not toBeFalsy', () => {
     () => expect([]).toBeFalsy(),
     'Expectation failed: expect(received).toBeFalsy()',
     '',
-    '  Expected:',
-    '    Array []',
-    '  to be falsy.',
+    'Expected:',
+    '  Array []',
+    'to be falsy.',
     ''
   );
 
@@ -194,9 +194,9 @@ test('expect not toBeFalsy', () => {
     () => expect({}).toBeFalsy(),
     'Expectation failed: expect(received).toBeFalsy()',
     '',
-    '  Expected:',
-    '    Object {}',
-    '  to be falsy.',
+    'Expected:',
+    '  Object {}',
+    'to be falsy.',
     ''
   );
 });
@@ -209,10 +209,10 @@ test('expect toBeInstanceOf', () => {
     () => expect(false).toBeInstanceOf(Wow),
     'Expectation failed: expect(received).toBeInstanceOf(expected)',
     '',
-    '  Expected:',
-    '    false',
-    '  to be an instance of:',
-    '    [Function: Wow]',
+    'Expected:',
+    '  false',
+    'to be an instance of:',
+    '  [Function: Wow]',
     ''
   );
 });
@@ -225,10 +225,10 @@ test('expect not toBeInstanceOf', () => {
     () => expect(new Wow()).not.toBeInstanceOf(Wow),
     'Expectation failed: expect(received).not.toBeInstanceOf(expected)',
     '',
-    '  Expected:',
-    '    Wow {}',
-    '  not to be an instance of:',
-    '    [Function: Wow]',
+    'Expected:',
+    '  Wow {}',
+    'not to be an instance of:',
+    '  [Function: Wow]',
     ''
   );
 });
@@ -240,9 +240,9 @@ test('expect toBeNull', () => {
     () => expect(true).toBeNull(),
     'Expectation failed: expect(received).toBeNull()',
     '',
-    '  Expected:',
-    '    true',
-    '  to be null.',
+    'Expected:',
+    '  true',
+    'to be null.',
     ''
   );
 });
@@ -255,9 +255,9 @@ test('expect not toBeNull', () => {
     () => expect(null).not.toBeNull(),
     'Expectation failed: expect(received).not.toBeNull()',
     '',
-    '  Expected:',
-    '    null',
-    '  not to be null.',
+    'Expected:',
+    '  null',
+    'not to be null.',
     ''
   );
 });
@@ -272,9 +272,9 @@ test('expect toBeTruthy', () => {
     () => expect(false).toBeTruthy(),
     'Expectation failed: expect(received).toBeTruthy()',
     '',
-    '  Expected:',
-    '    false',
-    '  to be truthy.',
+    'Expected:',
+    '  false',
+    'to be truthy.',
     ''
   );
 });
@@ -287,9 +287,9 @@ test('expect not toBeTruthy', () => {
     () => expect('yep').not.toBeTruthy(),
     'Expectation failed: expect(received).not.toBeTruthy()',
     '',
-    '  Expected:',
-    '    "yep"',
-    '  not to be truthy.',
+    'Expected:',
+    '  "yep"',
+    'not to be truthy.',
     ''
   );
 });
@@ -302,9 +302,9 @@ test('expect toBeUndefined', () => {
     () => expect(true).toBeUndefined(),
     'Expectation failed: expect(received).toBeUndefined()',
     '',
-    '  Expected:',
-    '    true',
-    '  to be undefined.',
+    'Expected:',
+    '  true',
+    'to be undefined.',
     ''
   );
 });
@@ -317,9 +317,9 @@ test('expect not toBeUndefined', () => {
     () => expect(undefined).not.toBeUndefined(),
     'Expectation failed: expect(received).not.toBeUndefined()',
     '',
-    '  Expected:',
-    '    undefined',
-    '  not to be undefined.',
+    'Expected:',
+    '  undefined',
+    'not to be undefined.',
     ''
   );
 });
@@ -334,11 +334,11 @@ test('expect toEqual', () => {
     () => expect(47).toEqual(48),
     'Expectation failed: expect(received).toEqual(expected)',
     '',
-    '  Expected:',
-    '    47',
-    '  to equal:',
-    '    48',
-    '  but values are different.',
+    'Expected:',
+    '  47',
+    'to equal:',
+    '  48',
+    'but values are different.',
     ''
   );
 
@@ -346,11 +346,24 @@ test('expect toEqual', () => {
     () => expect(47).toEqual('47'),
     'Expectation failed: expect(received).toEqual(expected)',
     '',
-    '  Expected:',
-    '    47',
-    '  to equal:',
-    '    "47"',
-    '  but types are different (received a number, but expected a string).',
+    'Expected:',
+    '  47',
+    'to equal:',
+    '  "47"',
+    'but types are different (received a number, but expected a string).',
+    ''
+  );
+
+  expectErrorMessage(
+    () => expect({ a: 1 }).toEqual({ a: 1, c: 5 }),
+    'Expectation failed: expect(received).toEqual(expected)',
+    '',
+    'Expected:',
+    '  Object { a: 1 }',
+    'to equal:',
+    '  Object { a: 1, c: 5 }',
+    'but objects are different:',
+    '  - unexpected key "c"',
     ''
   );
 
@@ -358,14 +371,14 @@ test('expect toEqual', () => {
     () => expect({ a: 1, b: 3 }).toEqual({ a: 2, c: 5 }),
     'Expectation failed: expect(received).toEqual(expected)',
     '',
-    '  Expected:',
-    '    Object { a: 1, b: 3 }',
-    '  to equal:',
-    '    Object { a: 2, c: 5 }',
-    '  but objects are different:',
-    '    - at key "a": received 1, but expected 2',
-    '    - missing expected key "c"',
-    '    - unexpected key "b"',
+    'Expected:',
+    '  Object { a: 1, b: 3 }',
+    'to equal:',
+    '  Object { a: 2, c: 5 }',
+    'but objects are different:',
+    '  - at key "a": received 1, but expected 2',
+    '  - missing expected key "c"',
+    '  - unexpected key "b"',
     ''
   );
 });
@@ -381,10 +394,10 @@ test('expect not toEqual', () => {
     () => expect(47).not.toEqual(47),
     'Expectation failed: expect(received).not.toEqual(expected)',
     '',
-    '  Expected:',
-    '    47',
-    '  not to equal:',
-    '    47',
+    'Expected:',
+    '  47',
+    'not to equal:',
+    '  47',
     ''
   );
 
@@ -392,10 +405,10 @@ test('expect not toEqual', () => {
     () => expect({ a: 1 }).not.toEqual({ a: 1 }),
     'Expectation failed: expect(received).not.toEqual(expected)',
     '',
-    '  Expected:',
-    '    Object { a: 1 }',
-    '  not to equal:',
-    '    Object { a: 1 }',
+    'Expected:',
+    '  Object { a: 1 }',
+    'not to equal:',
+    '  Object { a: 1 }',
     ''
   );
 });
@@ -410,12 +423,12 @@ test('expect toHaveLength', () => {
     () => expect([]).toHaveLength(99),
     'Expectation failed: expect(received).toHaveLength(expected)',
     '',
-    '  Expected:',
-    '    Array []',
-    '  to have length:',
-    '    99',
-    '  but actual length was:',
-    '    0',
+    'Expected:',
+    '  Array []',
+    'to have length:',
+    '  99',
+    'but actual length was:',
+    '  0',
     ''
   );
 
@@ -423,12 +436,12 @@ test('expect toHaveLength', () => {
     () => expect({}).toHaveLength(100),
     'Expectation failed: expect(received).toHaveLength(expected)',
     '',
-    '  Expected:',
-    '    Object {}',
-    '  to have length:',
-    '    100',
-    '  but actual length was:',
-    '    undefined',
+    'Expected:',
+    '  Object {}',
+    'to have length:',
+    '  100',
+    'but actual length was:',
+    '  undefined',
     ''
   );
 });
@@ -441,10 +454,10 @@ test('expect not toHaveLength', () => {
     () => expect([1, 1, 1]).not.toHaveLength(3),
     'Expectation failed: expect(received).not.toHaveLength(expected)',
     '',
-    '  Expected:',
-    '    Array [1, 1, 1]',
-    '  not to have length:',
-    '    3',
+    'Expected:',
+    '  Array [1, 1, 1]',
+    'not to have length:',
+    '  3',
     ''
   );
 });
@@ -457,10 +470,10 @@ test('expect toHaveProperty', () => {
     () => expect({}).toHaveProperty('hello'),
     'Expectation failed: expect(received).toHaveProperty(property)',
     '',
-    '  Expected:',
-    '    Object {}',
-    '  to have property:',
-    '    "hello"',
+    'Expected:',
+    '  Object {}',
+    'to have property:',
+    '  "hello"',
     ''
   );
 
@@ -468,14 +481,14 @@ test('expect toHaveProperty', () => {
     () => expect({ hello: 'world' }).toHaveProperty('hello', 'other'),
     'Expectation failed: expect(received).toHaveProperty(property, value)',
     '',
-    '  Expected:',
-    '    Object { hello: "world" }',
-    '  to have property:',
-    '    "hello"',
-    '  with value:',
-    '    "other"',
-    '  but actual value for "hello" was:',
-    '    "world"',
+    'Expected:',
+    '  Object { hello: "world" }',
+    'to have property:',
+    '  "hello"',
+    'with value:',
+    '  "other"',
+    'but actual value for "hello" was:',
+    '  "world"',
     ''
   );
 });
@@ -488,10 +501,10 @@ test('expect not toHaveProperty', () => {
     () => expect({ hello: 'world' }).not.toHaveProperty('hello'),
     'Expectation failed: expect(received).not.toHaveProperty(property)',
     '',
-    '  Expected:',
-    '    Object { hello: "world" }',
-    '  not to have property:',
-    '    "hello"',
+    'Expected:',
+    '  Object { hello: "world" }',
+    'not to have property:',
+    '  "hello"',
     ''
   );
 
@@ -499,14 +512,14 @@ test('expect not toHaveProperty', () => {
     () => expect({ hello: 'world' }).not.toHaveProperty('hello', 'world'),
     'Expectation failed: expect(received).not.toHaveProperty(property, value)',
     '',
-    '  Expected:',
-    '    Object { hello: "world" }',
-    '  not to have property:',
-    '    "hello"',
-    '  with value:',
-    '    "world"',
-    '  but actual value for "hello" was:',
-    '    "world"',
+    'Expected:',
+    '  Object { hello: "world" }',
+    'not to have property:',
+    '  "hello"',
+    'with value:',
+    '  "world"',
+    'but actual value for "hello" was:',
+    '  "world"',
     ''
   );
 });
@@ -519,12 +532,12 @@ test('expect toHaveType', () => {
     () => expect(true).toHaveType('string'),
     'Expectation failed: expect(received).toHaveType(expected)',
     '',
-    '  Expected:',
-    '    true',
-    '  to have type:',
-    '    "string"',
-    '  but actual type was:',
-    '    "boolean"',
+    'Expected:',
+    '  true',
+    'to have type:',
+    '  "string"',
+    'but actual type was:',
+    '  "boolean"',
     ''
   );
 });
@@ -537,10 +550,10 @@ test('expect not toHaveType', () => {
     () => expect(undefined).not.toHaveType('undefined'),
     'Expectation failed: expect(received).not.toHaveType(expected)',
     '',
-    '  Expected:',
-    '    undefined',
-    '  not to have type:',
-    '    "undefined"',
+    'Expected:',
+    '  undefined',
+    'not to have type:',
+    '  "undefined"',
     ''
   );
 });
@@ -553,10 +566,10 @@ test('expect toBeGreaterThan', () => {
     () => expect(10).toBeGreaterThan(100),
     'Expectation failed: expect(received).toBeGreaterThan(expected)',
     '',
-    '  Expected:',
-    '    10',
-    '  to be greater than:',
-    '    100',
+    'Expected:',
+    '  10',
+    'to be greater than:',
+    '  100',
     ''
   );
 });
@@ -569,10 +582,10 @@ test('expect not toBeGreaterThan', () => {
     () => expect(10).not.toBeGreaterThan(9),
     'Expectation failed: expect(received).not.toBeGreaterThan(expected)',
     '',
-    '  Expected:',
-    '    10',
-    '  not to be greater than:',
-    '    9',
+    'Expected:',
+    '  10',
+    'not to be greater than:',
+    '  9',
     ''
   );
 });
@@ -586,10 +599,10 @@ test('expect toBeGreaterThanOrEqual', () => {
     () => expect(10).toBeGreaterThanOrEqual(100),
     'Expectation failed: expect(received).toBeGreaterThanOrEqual(expected)',
     '',
-    '  Expected:',
-    '    10',
-    '  to be greater than or equal:',
-    '    100',
+    'Expected:',
+    '  10',
+    'to be greater than or equal:',
+    '  100',
     ''
   );
 });
@@ -602,10 +615,10 @@ test('expect not toBeGreaterThanOrEqual', () => {
     () => expect(10).not.toBeGreaterThanOrEqual(9),
     'Expectation failed: expect(received).not.toBeGreaterThanOrEqual(expected)',
     '',
-    '  Expected:',
-    '    10',
-    '  not to be greater than or equal:',
-    '    9',
+    'Expected:',
+    '  10',
+    'not to be greater than or equal:',
+    '  9',
     ''
   );
 });
@@ -618,10 +631,10 @@ test('expect toBeLessThan', () => {
     () => expect(10).toBeLessThan(1),
     'Expectation failed: expect(received).toBeLessThan(expected)',
     '',
-    '  Expected:',
-    '    10',
-    '  to be less than:',
-    '    1',
+    'Expected:',
+    '  10',
+    'to be less than:',
+    '  1',
     ''
   );
 });
@@ -634,10 +647,10 @@ test('expect not toBeLessThan', () => {
     () => expect(10).not.toBeLessThan(11),
     'Expectation failed: expect(received).not.toBeLessThan(expected)',
     '',
-    '  Expected:',
-    '    10',
-    '  not to be less than:',
-    '    11',
+    'Expected:',
+    '  10',
+    'not to be less than:',
+    '  11',
     ''
   );
 });
@@ -651,10 +664,10 @@ test('expect toBeLessThanOrEqual', () => {
     () => expect(10).toBeLessThanOrEqual(1),
     'Expectation failed: expect(received).toBeLessThanOrEqual(expected)',
     '',
-    '  Expected:',
-    '    10',
-    '  to be less than or equal:',
-    '    1',
+    'Expected:',
+    '  10',
+    'to be less than or equal:',
+    '  1',
     ''
   );
 });
@@ -667,10 +680,10 @@ test('expect not toBeLessThanOrEqual', () => {
     () => expect(10).not.toBeLessThanOrEqual(90),
     'Expectation failed: expect(received).not.toBeLessThanOrEqual(expected)',
     '',
-    '  Expected:',
-    '    10',
-    '  not to be less than or equal:',
-    '    90',
+    'Expected:',
+    '  10',
+    'not to be less than or equal:',
+    '  90',
     ''
   );
 });
@@ -683,10 +696,10 @@ test('expect toMatch', () => {
     () => expect('hello world').toMatch('wow'),
     'Expectation failed: expect(received).toMatch(string)',
     '',
-    '  Expected:',
-    '    "hello world"',
-    '  to contain string:',
-    '    "wow"',
+    'Expected:',
+    '  "hello world"',
+    'to contain string:',
+    '  "wow"',
     ''
   );
 
@@ -694,10 +707,10 @@ test('expect toMatch', () => {
     () => expect('hello world').toMatch(/wow/),
     'Expectation failed: expect(received).toMatch(regex)',
     '',
-    '  Expected:',
-    '    "hello world"',
-    '  to match regular expression:',
-    '    /wow/',
+    'Expected:',
+    '  "hello world"',
+    'to match regular expression:',
+    '  /wow/',
     ''
   );
 });
@@ -710,10 +723,10 @@ test('expect not toMatch', () => {
     () => expect('hello world').not.toMatch('ello'),
     'Expectation failed: expect(received).not.toMatch(string)',
     '',
-    '  Expected:',
-    '    "hello world"',
-    '  not to contain string:',
-    '    "ello"',
+    'Expected:',
+    '  "hello world"',
+    'not to contain string:',
+    '  "ello"',
     ''
   );
 
@@ -721,10 +734,10 @@ test('expect not toMatch', () => {
     () => expect('hello world').not.toMatch(/ello/),
     'Expectation failed: expect(received).not.toMatch(regex)',
     '',
-    '  Expected:',
-    '    "hello world"',
-    '  not to match regular expression:',
-    '    /ello/',
+    'Expected:',
+    '  "hello world"',
+    'not to match regular expression:',
+    '  /ello/',
     ''
   );
 });
@@ -750,9 +763,9 @@ test('expect toThrow', () => {
     () => expect(() => {}).toThrow(),
     'Expectation failed: expect(received).toThrow()',
     '',
-    '  Expected:',
-    '    [Function]',
-    '  to throw.',
+    'Expected:',
+    '  [Function]',
+    'to throw.',
     ''
   );
 
@@ -763,10 +776,10 @@ test('expect toThrow', () => {
       }).toThrow('bad'),
     'Expectation failed: expect(received).toThrow(string)',
     '',
-    '  Expected:',
-    '    [Function]',
-    '  to throw an error containing string:',
-    '    "bad"',
+    'Expected:',
+    '  [Function]',
+    'to throw an error containing string:',
+    '  "bad"',
     ''
   );
 
@@ -774,11 +787,11 @@ test('expect toThrow', () => {
     () => expect(() => {}).toThrow('bad'),
     'Expectation failed: expect(received).toThrow(string)',
     '',
-    '  Expected:',
-    '    [Function]',
-    '  to throw an error containing string:',
-    '    "bad"',
-    '  but it did not throw.',
+    'Expected:',
+    '  [Function]',
+    'to throw an error containing string:',
+    '  "bad"',
+    'but it did not throw.',
     ''
   );
 
@@ -789,10 +802,10 @@ test('expect toThrow', () => {
       }).toThrow(/bad/),
     'Expectation failed: expect(received).toThrow(regex)',
     '',
-    '  Expected:',
-    '    [Function]',
-    '  to throw an error matching regular expression:',
-    '    /bad/',
+    'Expected:',
+    '  [Function]',
+    'to throw an error matching regular expression:',
+    '  /bad/',
     ''
   );
 
@@ -800,11 +813,11 @@ test('expect toThrow', () => {
     () => expect(() => {}).toThrow(/bad/),
     'Expectation failed: expect(received).toThrow(regex)',
     '',
-    '  Expected:',
-    '    [Function]',
-    '  to throw an error matching regular expression:',
-    '    /bad/',
-    '  but it did not throw.',
+    'Expected:',
+    '  [Function]',
+    'to throw an error matching regular expression:',
+    '  /bad/',
+    'but it did not throw.',
     ''
   );
 
@@ -815,10 +828,10 @@ test('expect toThrow', () => {
       }).toThrow(TypeError),
     'Expectation failed: expect(received).toThrow(errorType)',
     '',
-    '  Expected:',
-    '    [Function]',
-    '  to throw an instance of:',
-    '    [Function: TypeError]',
+    'Expected:',
+    '  [Function]',
+    'to throw an instance of:',
+    '  [Function: TypeError]',
     ''
   );
 
@@ -826,11 +839,11 @@ test('expect toThrow', () => {
     () => expect(() => {}).toThrow(TypeError),
     'Expectation failed: expect(received).toThrow(errorType)',
     '',
-    '  Expected:',
-    '    [Function]',
-    '  to throw an instance of:',
-    '    [Function: TypeError]',
-    '  but it did not throw.',
+    'Expected:',
+    '  [Function]',
+    'to throw an instance of:',
+    '  [Function: TypeError]',
+    'but it did not throw.',
     ''
   );
 });
@@ -854,9 +867,9 @@ test('expect not toThrow', () => {
       }).not.toThrow(),
     'Expectation failed: expect(received).not.toThrow()',
     '',
-    '  Expected:',
-    '    [Function]',
-    '  not to throw.',
+    'Expected:',
+    '  [Function]',
+    'not to throw.',
     ''
   );
 
@@ -867,10 +880,10 @@ test('expect not toThrow', () => {
       }).not.toThrow('fail'),
     'Expectation failed: expect(received).not.toThrow(string)',
     '',
-    '  Expected:',
-    '    [Function]',
-    '  not to throw an error containing string:',
-    '    "fail"',
+    'Expected:',
+    '  [Function]',
+    'not to throw an error containing string:',
+    '  "fail"',
     ''
   );
 
@@ -881,10 +894,10 @@ test('expect not toThrow', () => {
       }).not.toThrow(/fail/),
     'Expectation failed: expect(received).not.toThrow(regex)',
     '',
-    '  Expected:',
-    '    [Function]',
-    '  not to throw an error matching regular expression:',
-    '    /fail/',
+    'Expected:',
+    '  [Function]',
+    'not to throw an error matching regular expression:',
+    '  /fail/',
     ''
   );
 
@@ -895,10 +908,10 @@ test('expect not toThrow', () => {
       }).not.toThrow(TypeError),
     'Expectation failed: expect(received).not.toThrow(errorType)',
     '',
-    '  Expected:',
-    '    [Function]',
-    '  not to throw an instance of:',
-    '    [Function: TypeError]',
+    'Expected:',
+    '  [Function]',
+    'not to throw an instance of:',
+    '  [Function: TypeError]',
     ''
   );
 });

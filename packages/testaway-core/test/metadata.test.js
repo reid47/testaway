@@ -1,6 +1,6 @@
 const createRun = require('../dist/index.min');
 
-fdescribe('test metadata', () => {
+describe('test metadata', () => {
   let run;
 
   beforeEach(() => {
