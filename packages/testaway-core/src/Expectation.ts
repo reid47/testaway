@@ -121,6 +121,19 @@ export class Expectation {
     return this.assert(this.actual !== void 0, 'toBeDefined', 'to be defined', [], []);
   }
 
+  toBeEmpty(): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toBeDefined());
+
+    let pass = false;
+    if (Array.isArray(this.actual) || typeof this.actual === 'string') {
+      pass = this.actual.length === 0;
+    } else if (this.actual && typeof this.actual === 'object') {
+      pass = Object.keys(this.actual).length === 0;
+    }
+
+    return this.assert(pass, 'toBeEmpty', 'to be empty', [], []);
+  }
+
   toBeFalsy(): void | Promise<void> {
     if (this.async) return this.awaitActual().then(x => x && x.toBeFalsy());
 

@@ -195,6 +195,68 @@ test('expect toBeFalsy', () => {
   );
 });
 
+test('expect toBeEmpty', () => {
+  expect([]).toBeEmpty();
+  expect('').toBeEmpty();
+  expect({}).toBeEmpty();
+
+  expectErrorMessage(
+    () => expect('nope').toBeEmpty(),
+    'Expectation failed: expect(received).toBeEmpty()',
+    '',
+    'Expected:',
+    '  "nope"',
+    'to be empty.',
+    ''
+  );
+
+  expectErrorMessage(
+    () => expect([1, 2, 3]).toBeEmpty(),
+    'Expectation failed: expect(received).toBeEmpty()',
+    '',
+    'Expected:',
+    '  Array [1, 2, 3]',
+    'to be empty.',
+    ''
+  );
+
+  expectErrorMessage(
+    () => expect({ a: 1 }).toBeEmpty(),
+    'Expectation failed: expect(received).toBeEmpty()',
+    '',
+    'Expected:',
+    '  Object { a: 1 }',
+    'to be empty.',
+    ''
+  );
+
+  expectErrorMessage(
+    () => expect(47).toBeEmpty(),
+    'Expectation failed: expect(received).toBeEmpty()',
+    '',
+    'Expected:',
+    '  47',
+    'to be empty.',
+    ''
+  );
+});
+
+test('expect not toBeEmpty', () => {
+  expect([1, 2, 3]).not.toBeEmpty();
+  expect('hi').not.toBeEmpty();
+  expect({ a: 1 }).not.toBeEmpty();
+
+  expectErrorMessage(
+    () => expect([]).not.toBeEmpty(),
+    'Expectation failed: expect(received).not.toBeEmpty()',
+    '',
+    'Expected:',
+    '  Array []',
+    'not to be empty.',
+    ''
+  );
+});
+
 test('expect not toBeFalsy', () => {
   expect(47).not.toBeFalsy();
   expect('hi').not.toBeFalsy();
