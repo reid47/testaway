@@ -2,7 +2,6 @@ import { ExpectationError } from './ExpectationError';
 import { deepEqual } from './utils/deep-equal';
 import { prettyPrint } from './utils/pretty-print';
 import { typeOf } from './utils/type-of';
-import { ValueType } from './types';
 
 const isDomElement = (obj: any) =>
   obj && obj.classList && typeof obj.classList.contains === 'function';
@@ -75,7 +74,7 @@ export class Expectation {
     if (this.async) return this.awaitActual().then(x => x && x.toBe(expected));
 
     let additionalInfo;
-    if (typeOf(this.actual) === ValueType.object && typeOf(expected) === ValueType.object) {
+    if (typeOf(this.actual) === 'object' && typeOf(expected) === 'object') {
       additionalInfo = [
         '',
         'Checked for reference equality because both values are objects. ' +

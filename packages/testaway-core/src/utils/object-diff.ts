@@ -24,7 +24,7 @@ function objectDiffRecursive(expected: any, actual: any, diffs: Diff[], keyPath:
 
   if (expectedType !== actualType) {
     diffs.push(createDiff('wrong-type', keyPath, expected, actual));
-  } else if (expectedType === ValueType.regexp) {
+  } else if (expectedType === 'RegExp') {
     if (
       expected.source !== actual.source ||
       expected.global !== actual.global ||
@@ -33,11 +33,11 @@ function objectDiffRecursive(expected: any, actual: any, diffs: Diff[], keyPath:
     ) {
       diffs.push(createDiff('wrong-value', keyPath, expected, actual));
     }
-  } else if (expectedType === ValueType.date) {
+  } else if (expectedType === 'Date') {
     if (expected.getTime() !== actual.getTime()) {
       diffs.push(createDiff('wrong-value', keyPath, expected, actual));
     }
-  } else if (expectedType !== ValueType.object && expectedType !== ValueType.array) {
+  } else if (expectedType !== 'object' && expectedType !== 'array') {
     if (expected !== actual) {
       diffs.push(createDiff('wrong-value', keyPath, expected, actual));
     }

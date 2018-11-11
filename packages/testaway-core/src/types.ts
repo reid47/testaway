@@ -77,18 +77,18 @@ export const enum TestEvent {
   runFinished
 }
 
-export const enum ValueType {
-  null,
-  undefined,
-  boolean,
-  number,
-  string,
-  function,
-  regexp,
-  date,
-  array,
-  object
-}
+export type ValueType =
+  | 'null'
+  | 'undefined'
+  | 'boolean'
+  | 'number'
+  | 'string'
+  | 'function'
+  | 'RegExp'
+  | 'symbol'
+  | 'Date'
+  | 'array'
+  | 'object';
 
 export type TestStatus = 'passed' | 'failed' | 'skipped';
 
