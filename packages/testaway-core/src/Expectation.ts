@@ -343,6 +343,13 @@ export class Expectation {
     return this.assert(pass, 'toMatch', phrase, [param], [expected]);
   }
 
+  toSatisfy(predicate: Function): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toSatisfy(predicate));
+
+    const pass = predicate(this.actual);
+    return this.assert(pass, 'toSatisfy', 'to satisfy predicate function', ['predicate'], []);
+  }
+
   toThrow(expected?: string | RegExp | Function): void | Promise<void> {
     if (this.async) {
       const args = arguments;

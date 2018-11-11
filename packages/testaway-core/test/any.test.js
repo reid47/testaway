@@ -1,6 +1,6 @@
 const { expectErrorMessage } = require('./test-helpers');
 
-fdescribe('any', () => {
+describe('any', () => {
   test('any(String)', () => {
     expect('wow').toEqual(any(String));
     expect('').toEqual(any(String));

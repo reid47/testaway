@@ -742,6 +742,34 @@ test('expect not toMatch', () => {
   );
 });
 
+test('expect toSatisfy', () => {
+  expect('hello world').toSatisfy(s => s.length > 10);
+
+  expectErrorMessage(
+    () => expect('hello world').toSatisfy(s => s.length > 100),
+    'Expectation failed: expect(received).toSatisfy(predicate)',
+    '',
+    'Expected:',
+    '  "hello world"',
+    'to satisfy predicate function.',
+    ''
+  );
+});
+
+test('expect not toSatisfy', () => {
+  expect('hello world').not.toSatisfy(s => s.length > 100);
+
+  expectErrorMessage(
+    () => expect('hello world').not.toSatisfy(s => s.length > 10),
+    'Expectation failed: expect(received).not.toSatisfy(predicate)',
+    '',
+    'Expected:',
+    '  "hello world"',
+    'not to satisfy predicate function.',
+    ''
+  );
+});
+
 test('expect toThrow', () => {
   expect(() => {
     throw new Error('failed');
