@@ -81,13 +81,13 @@ export class Mock {
     });
   }
 
-  // resolvesTo(resolvedValue: any) {
-  //   this.defaultReturnValue = Promise.resolve(resolvedValue);
-  // }
+  resolvesTo(resolvedValue: any) {
+    this.addHandler(() => Promise.resolve(resolvedValue));
+  }
 
-  // rejectsWith(rejectedValue: any) {
-  //   this.defaultReturnValue = Promise.resolve(rejectedValue);
-  // }
+  rejectsWith(rejectedValue: any) {
+    this.addHandler(() => Promise.reject(rejectedValue));
+  }
 
   resetCalls() {
     this.calls = [];

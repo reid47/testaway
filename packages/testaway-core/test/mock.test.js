@@ -128,6 +128,54 @@ fdescribe('mock', () => {
       expect(f3('fine')).toBeUndefined();
     });
 
+    test('resolving', async () => {
+      const f1 = mock.func();
+      f1.mock.resolvesTo(47);
+      expect(f1()).toBeInstanceOf(Promise);
+      expect(await f1()).toBe(47);
+      await expect(f1()).resolves.toBe(47);
+
+      const f2 = mock.func();
+      f2.mock.onCall(2).resolvesTo('resolved!');
+      expect(f2()).toBeUndefined();
+      expect(f2()).toBeUndefined();
+      expect(await f2()).toBe('resolved!');
+      expect(f2()).toBeUndefined();
+
+      const f3 = mock.func();
+      f3.mock.onArgs('async').resolvesTo('resolved!');
+      expect(f3('not async')).toBeUndefined();
+      expect(f3('nope')).toBeUndefined();
+      expect(await f3('async')).toBe('resolved!');
+      expect(f3('nah')).toBeUndefined();
+    });
+
+    test('rejecting', async () => {
+      const f1 = mock.func();
+      f1.mock.rejectsWith('bad');
+      await expect(f1()).rejects.toBe('bad');
+      await f1().catch(thrown => expect(thrown).toBe('bad'));
+      try {
+        await f1();
+      } catch (err) {
+        expect(err).toBe('bad');
+      }
+
+      const f2 = mock.func();
+      f2.mock.onCall(2).rejectsWith('rejected!');
+      expect(f2()).toBeUndefined();
+      expect(f2()).toBeUndefined();
+      await expect(f2()).rejects.toBe('rejected!');
+      expect(f2()).toBeUndefined();
+
+      const f3 = mock.func();
+      f3.mock.onArgs('async').rejectsWith('rejected!');
+      expect(f3('not async')).toBeUndefined();
+      expect(f3('nope')).toBeUndefined();
+      await expect(f3('async')).rejects.toBe('rejected!');
+      expect(f3('nah')).toBeUndefined();
+    });
+
     test('resetting', () => {
       const f1 = mock.func();
       f1.mock.onCall(0).returns('mocked 0');
