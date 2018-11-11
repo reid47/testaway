@@ -62,6 +62,36 @@ test('expect not toBe', () => {
   );
 });
 
+test('expect toBeArray', () => {
+  expect([]).toBeArray();
+  expect([1, 2, 3]).toBeArray();
+
+  expectErrorMessage(
+    () => expect(47).toBeArray(),
+    'Expectation failed: expect(received).toBeArray()',
+    '',
+    'Expected:',
+    '  47',
+    'to be an array.',
+    ''
+  );
+});
+
+test('expect not toBeArray', () => {
+  expect(47).not.toBeArray();
+  expect('hi').not.toBeArray();
+
+  expectErrorMessage(
+    () => expect([1, 2, 3]).not.toBeArray(),
+    'Expectation failed: expect(received).not.toBeArray()',
+    '',
+    'Expected:',
+    '  Array [1, 2, 3]',
+    'not to be an array.',
+    ''
+  );
+});
+
 test('expect toBeCloseTo', () => {
   expect(47).toBeCloseTo(47);
   expect(47.0).toBeCloseTo(47.0001);

@@ -93,6 +93,12 @@ export class Expectation {
     );
   }
 
+  toBeArray(): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toBeArray());
+
+    return this.assert(Array.isArray(this.actual), 'toBeArray', 'to be an array', [], []);
+  }
+
   toBeCloseTo(value: number, precision: number = 2): void | Promise<void> {
     if (this.async) return this.awaitActual().then(x => x && x.toBeCloseTo(value, precision));
 
@@ -346,8 +352,13 @@ export class Expectation {
   toSatisfy(predicate: Function): void | Promise<void> {
     if (this.async) return this.awaitActual().then(x => x && x.toSatisfy(predicate));
 
-    const pass = predicate(this.actual);
-    return this.assert(pass, 'toSatisfy', 'to satisfy predicate function', ['predicate'], []);
+    return this.assert(
+      predicate(this.actual),
+      'toSatisfy',
+      'to satisfy predicate function',
+      ['predicate'],
+      []
+    );
   }
 
   toThrow(expected?: string | RegExp | Function): void | Promise<void> {
