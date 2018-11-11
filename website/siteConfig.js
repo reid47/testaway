@@ -1,14 +1,3 @@
-const users = [
-  {
-    caption: 'User1',
-    // You will need to prepend the image path with your baseUrl
-    // if it is not '/', like: '/test-site/img/docusaurus.svg'.
-    image: '/img/docusaurus.svg',
-    infoLink: 'https://www.facebook.com',
-    pinned: true
-  }
-];
-
 const siteConfig = {
   title: 'Testaway',
   tagline: 'A JavaScript testing library',
@@ -26,9 +15,6 @@ const siteConfig = {
     { blog: true, label: 'Blog' }
   ],
 
-  // If you have users set above, you add it here:
-  users,
-
   /* path to images for header/footer */
   headerIcon: 'img/docusaurus.svg',
   footerIcon: 'img/docusaurus.svg',
@@ -36,14 +22,13 @@ const siteConfig = {
 
   /* Colors for website */
   colors: {
-    primaryColor: '#2E8555',
-    secondaryColor: '#205C3B'
+    primaryColor: '#353f5a',
+    secondaryColor: '#131823'
   },
 
   copyright: `Copyright © ${new Date().getFullYear()} Reid Mitchell`,
 
   highlight: {
-    // Highlight.js theme to use for syntax highlighting in code blocks.
     theme: 'default'
   },
 
