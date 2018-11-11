@@ -15,14 +15,11 @@ const siteConfig = {
     { blog: true, label: 'Blog' }
   ],
 
-  /* path to images for header/footer */
   headerIcon: 'img/testaway.svg',
-  footerIcon: 'img/testaway.svg',
   favicon: 'img/favicon.png',
 
-  /* Colors for website */
   colors: {
-    primaryColor: '#353f5a',
+    primaryColor: '#2288a7',
     secondaryColor: '#131823'
   },
 
@@ -32,16 +29,11 @@ const siteConfig = {
     theme: 'default'
   },
 
-  // Add custom scripts here that would be placed in <script> tags.
   scripts: ['https://buttons.github.io/buttons.js'],
+  stylesheets: ['https://fonts.googleapis.com/css?family=Roboto:300,700'],
 
-  // On page navigation for the current documentation page.
   onPageNav: 'separate',
   cleanUrl: true,
-
-  // Open Graph and Twitter card images.
-  ogImage: 'img/docusaurus.png',
-  twitterImage: 'img/docusaurus.png',
 
   enableUpdateBy: true,
   enableUpdateTime: true
