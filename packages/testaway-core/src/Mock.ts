@@ -92,6 +92,10 @@ export class Mock {
     this.addHandler(() => Promise.reject(rejectedValue));
   }
 
+  runs(implementationFunc: Function) {
+    this.addHandler(implementationFunc);
+  }
+
   resetCalls() {
     this.calls = [];
   }

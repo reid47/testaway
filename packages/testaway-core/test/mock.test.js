@@ -176,6 +176,33 @@ describe('mock', () => {
       expect(f3('nah')).toBeUndefined();
     });
 
+    test('running implementation funcs', () => {
+      let counter = 0;
+
+      const f1 = mock.func();
+      f1.mock.runs(() => {
+        counter++;
+        return counter;
+      });
+      expect(f1()).toBe(1);
+      expect(counter).toBe(1);
+      expect(f1()).toBe(2);
+      expect(counter).toBe(2);
+
+      const f2 = mock.func();
+      f2.mock.runs((...args) => `called with: ${args}`);
+      expect(f2(true)).toBe('called with: true');
+      expect(f2(47)).toBe('called with: 47');
+      expect(f2('hello', 'world')).toBe('called with: hello,world');
+
+      const f3 = mock.func(_ => {
+        _.onCall(1).runs(() => 'did it');
+      });
+      expect(f3()).toBeUndefined();
+      expect(f3()).toBe('did it');
+      expect(f3()).toBeUndefined();
+    });
+
     test('resetting', () => {
       const f1 = mock.func();
       f1.mock.onCall(0).returns('mocked 0');
