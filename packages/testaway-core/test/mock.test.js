@@ -1,5 +1,5 @@
 describe('mock', () => {
-  describe('mock functions', () => {
+  describe('mock.func()', () => {
     test('mock names', () => {
       const f1 = mock.func();
       expect(f1.mock.name).toBeUndefined();
@@ -247,6 +247,40 @@ describe('mock', () => {
       expect(f()).toBe(47);
       expect(f()).toBe('call 1');
       expect(f()).toBe(47);
+    });
+  });
+
+  describe('mock.wrap()', () => {
+    it('returns a mock function', () => {
+      const f = mock.wrap(() => {});
+      expect(f).toHaveType('function');
+      expect(`${f}`).toBe('[MockFunction]');
+    });
+
+    it('throws when not given a function', () => {
+      const message = 'must be given an implementation function to wrap';
+      expect(() => mock.wrap()).toThrow(message);
+      expect(() => mock.wrap('nameOnly')).toThrow(message);
+      expect(() => mock.wrap('name', 47)).toThrow(message);
+      expect(() => mock.wrap(47)).toThrow(message);
+    });
+
+    it('can be given a name', () => {
+      const f1 = mock.wrap(() => {});
+      expect(f1.mock.name).toBeUndefined();
+
+      const f2 = mock.wrap('myFunc', () => {});
+      expect(f2.mock.name).toBe('myFunc');
+    });
+
+    it('delegates to wrapped function', () => {
+      const f = mock.wrap((...args) => {
+        return `called with: ${args}`;
+      });
+
+      expect(f(47)).toBe('called with: 47');
+      expect(f(true, false, 1, 2)).toBe('called with: true,false,1,2');
+      expect(f.mock.callCount).toBe(2);
     });
   });
 });

@@ -15,4 +15,15 @@ export class MockFactory {
 
     return MockFunction;
   }
+
+  static wrap(nameOrFunc?: string | Function, func?: Function) {
+    const name = typeof nameOrFunc === 'string' ? nameOrFunc : void 0;
+    const implementationFunc = typeof nameOrFunc === 'function' ? nameOrFunc : func;
+
+    if (typeof implementationFunc !== 'function') {
+      throw new TypeError('mock.wrap() must be given an implementation function to wrap.');
+    }
+
+    return MockFactory.func(name, (_: Mock) => _.runs(implementationFunc));
+  }
 }
