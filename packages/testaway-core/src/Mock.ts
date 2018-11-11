@@ -5,13 +5,21 @@ const initialCallHandler = () => void 0;
 export class Mock {
   name?: string;
   calls: any[] = [];
-  context: any = null;
-  defaultCallHandler: any = initialCallHandler;
+  defaultCallHandler: Function = initialCallHandler;
+  context: {
+    callNumber?: number;
+    callArgs?: any[];
+  } | null = null;
   callHandlers: {
     callNumber?: number;
     callArgs?: any[];
     handler: Function;
   }[] = [];
+
+  constructor(name?: string, setup?: Function) {
+    this.name = name;
+    if (setup) setup(this);
+  }
 
   get called() {
     return this.calls.length > 0;
@@ -23,11 +31,6 @@ export class Mock {
 
   get lastCall() {
     return this.calls[this.calls.length - 1];
-  }
-
-  constructor(name?: string, setup?: Function) {
-    this.name = name;
-    if (setup) setup(this);
   }
 
   addHandler(handler: Function) {

@@ -1,4 +1,4 @@
-fdescribe('mock', () => {
+describe('mock', () => {
   describe('mock functions', () => {
     test('mock names', () => {
       const f1 = mock.func();
