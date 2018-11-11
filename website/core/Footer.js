@@ -1,4 +1,5 @@
 const React = require('react');
+const Logo = require(process.cwd() + '/core/Logo');
 
 class Footer extends React.Component {
   docUrl(doc, language) {
@@ -17,6 +18,9 @@ class Footer extends React.Component {
     return (
       <footer className="nav-footer" id="footer">
         <section className="sitemap">
+          <div>
+            <Logo height="80px" innerColor="#fff" outerColor="#fff" />
+          </div>
           <div>
             <h5>Docs</h5>
             <a href={this.docUrl('doc1.html', language)}>Getting Started</a>
