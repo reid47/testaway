@@ -1,4 +1,4 @@
-const { expectErrorMessage, expectAsyncErrorMessage } = require('./test-helpers');
+const { expectErrorMessage } = require('./test-helpers');
 
 test('expect toBe', () => {
   expect(47).toBe(47);

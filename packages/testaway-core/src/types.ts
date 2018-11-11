@@ -1,11 +1,21 @@
 import { Expectation } from './Expectation';
-import { SimpleReporter } from './SimpleReporter';
 import { MockFactory } from './MockFactory';
+import { Any } from './Any';
 
 export interface Testaway {
-  analyze: () => void;
+  analyze: () => SuiteDefinition;
   execute: () => void;
   expect: (obj: any) => Expectation;
+  any: {
+    (ctor: Function): Any;
+    arrayContaining: (elements: any[]) => Any;
+    empty: () => Any;
+    falsy: () => Any;
+    satisfying: (predicate: Function) => Any;
+    stringContaining: (substring: String) => Any;
+    stringMatching: (match: String | RegExp) => Any;
+    truthy: () => Any;
+  };
   beforeEach: (func: TestFunc) => void;
   afterEach: (func: TestFunc) => void;
   beforeAll: (func: TestFunc) => void;

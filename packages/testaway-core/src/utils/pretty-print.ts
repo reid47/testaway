@@ -1,3 +1,5 @@
+import { Any } from '../Any';
+
 const makeIndent = (amount: number): string => '  '.repeat(amount);
 
 export function prettyPrint(obj: any, depth = 0): string {
@@ -64,6 +66,8 @@ export function prettyPrint(obj: any, depth = 0): string {
   }
 
   if (type === 'object') {
+    if (obj.__TESTAWAY__ANY__) return `${indent}${obj.toString()}`;
+
     const ctor = (obj.constructor && obj.constructor.name) || 'Object';
     const keys = Object.keys(obj);
     if (!keys.length) return `${indent}${ctor} {}`;

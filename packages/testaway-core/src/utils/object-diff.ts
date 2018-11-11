@@ -1,5 +1,6 @@
 import { typeOf } from './type-of';
 import { ValueType, Diff } from '../types';
+import { Any } from '../Any';
 
 function createDiff(
   type: 'wrong-type' | 'wrong-value' | 'missing-key' | 'extra-key',
@@ -13,6 +14,13 @@ function createDiff(
 const hasProp = Object.prototype.hasOwnProperty;
 
 function objectDiffRecursive(expected: any, actual: any, diffs: Diff[], keyPath: string[]) {
+  if (expected instanceof Any) {
+    if (!expected.matches(actual)) {
+      diffs.push(createDiff('wrong-value', keyPath, expected, actual));
+    }
+    return;
+  }
+
   const [expectedType, actualType] = [typeOf(expected), typeOf(actual)];
 
   if (expectedType !== actualType) {
