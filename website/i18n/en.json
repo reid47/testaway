@@ -5,33 +5,36 @@
     "previous": "Previous",
     "tagline": "A JavaScript testing library",
     "docs": {
-      "doc1": {
-        "title": "Latin-ish",
-        "sidebar_label": "Example Page"
+      "any": {
+        "title": "Any"
       },
-      "doc2": {
-        "title": "document number 2"
+      "async-testing": {
+        "title": "Asynchronous tests"
       },
-      "doc3": {
-        "title": "This is document number 3"
+      "expectations": {
+        "title": "Expectations"
       },
-      "doc4": {
-        "title": "Other Document"
+      "get-started": {
+        "title": "Getting started"
       },
-      "doc5": {
-        "title": "Fifth Document"
+      "mocks": {
+        "title": "Mocks"
+      },
+      "test-options": {
+        "title": "Test options"
+      },
+      "tests-and-suites": {
+        "title": "Tests and suites"
       }
     },
     "links": {
-      "Get Started": "Get Started",
-      "Guides": "Guides",
-      "API": "API",
-      "Blog": "Blog"
+      "Docs": "Docs",
+      "Blog": "Blog",
+      "GitHub": "GitHub"
     },
     "categories": {
-      "Docusaurus": "Docusaurus",
-      "First Category": "First Category",
-      "Second Category": "Second Category"
+      "About": "About",
+      "Core": "Core"
     }
   },
   "pages-strings": {

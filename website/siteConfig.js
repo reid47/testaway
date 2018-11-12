@@ -9,24 +9,23 @@ const siteConfig = {
   organizationName: 'reid47',
 
   headerLinks: [
-    { doc: 'doc1', label: 'Get Started' },
-    { doc: 'doc1', label: 'Guides' },
-    { doc: 'doc4', label: 'API' },
-    { blog: true, label: 'Blog' }
+    { doc: 'get-started', label: 'Docs' },
+    { blog: true, label: 'Blog' },
+    { href: 'https://github.com/reid47/testaway', label: 'GitHub' }
   ],
 
   headerIcon: 'img/testaway.svg',
-  favicon: 'img/favicon.png',
+  favicon: 'img/favicon.ico',
 
   colors: {
-    primaryColor: '#2288a7',
+    primaryColor: '#1f7c98',
     secondaryColor: '#131823'
   },
 
   copyright: `Copyright © ${new Date().getFullYear()} Reid Mitchell`,
 
   highlight: {
-    theme: 'default'
+    theme: 'atom-one-light'
   },
 
   scripts: ['https://buttons.github.io/buttons.js'],
@@ -37,6 +36,12 @@ const siteConfig = {
 
   enableUpdateBy: true,
   enableUpdateTime: true
+
+  // algolia: {
+  //   apiKey: 'my-api-key',
+  //   indexName: 'my-index-name',
+  //   algoliaOptions: {}
+  // }
 };
 
 module.exports = siteConfig;
