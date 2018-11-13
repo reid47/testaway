@@ -11,31 +11,25 @@ const stripIndent = (message: string) =>
 export class ExpectationError extends Error {
   constructor(
     expectation: Expectation,
+    reason: 'incorrect-usage' | 'assertion-failed',
     matcherName: string,
     matcherPhrase: string,
     matcherParamNames: string[] | null,
     matcherArgs: any[],
-    additionalInfo?: any[]
+    additionalLines?: any[]
   ) {
     const matcher = `${expectation.alreadyRejected ? '.rejects' : ''}${
       expectation.alreadyResolved ? '.resolves' : ''
     }${expectation.negated ? '.not' : ''}.${matcherName}`;
-    const phrase = `${expectation.negated ? 'not ' : ''}${matcherPhrase}`;
-    const phraseEnd = matcherArgs.length === 0 ? '.' : `:\n        ${prettyPrint(matcherArgs[0])}`;
 
-    let additional = '';
-    if (additionalInfo) {
-      additional += additionalInfo
-        .map(info => {
-          if (typeof info === 'string') return `\n${info}`;
-          const label = info[0];
-          const value = info[1];
-          return `\n${label}:\n  ${prettyPrint(value)}`;
-        })
-        .join('');
-    }
+    const phrase = `${
+      expectation.negated && reason === 'assertion-failed' ? 'not ' : ''
+    }${matcherPhrase}`;
 
+    const phraseEnd = matcherArgs.length === 0 ? '.' : `:\n        ${matcherArgs[0]}`;
+    const additional = additionalLines ? `\n${additionalLines.join('\n')}` : '';
     const matcherParams = matcherParamNames ? `(${matcherParamNames.join(', ')})` : '';
+
     const message = stripIndent(`
       Expectation failed: expect(received)${matcher}${matcherParams}
 

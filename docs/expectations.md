@@ -194,6 +194,50 @@ expect('hello, world').toContain('test');
 
 ### `toEqual(expected: any)`
 
+### `toHaveBeenCalled()`
+
+Expects that a [mock function](mocks.md) has been called at least once.
+
+This looks at the current call count, which is the number of times the function was called since the mock was created, or since its calls were last reset.
+
+#### Passing examples
+
+```js
+const myFunction = mock.func();
+myFunction();
+expect(myFunction).toHaveBeenCalled();
+```
+
+#### Failing examples
+
+```js
+const myFunction = mock.func();
+expect(myFunction).toHaveBeenCalled();
+```
+
+### `toHaveBeenCalledTimes(count: number)`
+
+Expects that a [mock function](mocks.md) has been called a given number of times.
+
+This looks at the current call count, which is the number of times the function was called since the mock was created, or since its calls were last reset.
+
+#### Passing examples
+
+```js
+const myFunction = mock.func();
+myFunction();
+myFunction();
+expect(myFunction).toHaveBeenCalledTimes(2);
+```
+
+#### Failing examples
+
+```js
+const myFunction = mock.func();
+myFunction();
+expect(myFunction).toHaveBeenCalledTimes(100);
+```
+
 ### `toHaveClass(expected: string | string[])`
 
 ### `toHaveLength(expected: number)`

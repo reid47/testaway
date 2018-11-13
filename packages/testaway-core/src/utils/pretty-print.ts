@@ -1,4 +1,5 @@
 import { Any } from '../Any';
+import { Mock } from '../Mock';
 
 const makeIndent = (amount: number): string => '  '.repeat(amount);
 
@@ -20,6 +21,7 @@ export function prettyPrint(obj: any, depth = 0): string {
       return `${indent}"${obj}"`;
 
     case 'function':
+      if (obj.mock instanceof Mock) return `${indent}${obj.toString()}`;
       return `${indent}[Function${obj.name ? `: ${obj.name}` : ''}]`;
 
     case 'symbol':

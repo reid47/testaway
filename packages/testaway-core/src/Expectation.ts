@@ -2,9 +2,14 @@ import { ExpectationError } from './ExpectationError';
 import { deepEqual } from './utils/deep-equal';
 import { prettyPrint } from './utils/pretty-print';
 import { typeOf } from './utils/type-of';
+import { Mock } from './Mock';
 
 const isDomElement = (obj: any) =>
   obj && obj.classList && typeof obj.classList.contains === 'function';
+
+const isMockFunction = (f: any) => typeof f === 'function' && f.mock instanceof Mock;
+
+const times = (n: number) => (n === 1 ? `${n} time` : `${n} times`);
 
 interface Queryable {
   querySelectorAll(selector: string): NodeListOf<Element>;
@@ -73,9 +78,9 @@ export class Expectation {
   toBe(expected: any): void | Promise<void> {
     if (this.async) return this.awaitActual().then(x => x && x.toBe(expected));
 
-    let additionalInfo;
+    let additionalLines;
     if (typeOf(this.actual) === 'object' && typeOf(expected) === 'object') {
-      additionalInfo = [
+      additionalLines = [
         '',
         'Checked for reference equality because both values are objects. ' +
           'To check for structural equality, use toEqual.'
@@ -87,8 +92,8 @@ export class Expectation {
       'toBe',
       'to be',
       ['expected'],
-      [expected],
-      additionalInfo
+      [prettyPrint(expected)],
+      additionalLines
     );
   }
 
@@ -110,7 +115,7 @@ export class Expectation {
       'toBeCloseTo',
       `to be close to (precision: ${precision} decimal points)`,
       ['value'],
-      [value]
+      [prettyPrint(value)]
     );
   }
 
@@ -147,7 +152,7 @@ export class Expectation {
       'toBeGreaterThan',
       'to be greater than',
       ['expected'],
-      [expected]
+      [prettyPrint(expected)]
     );
   }
 
@@ -159,7 +164,7 @@ export class Expectation {
       'toBeGreaterThanOrEqual',
       'to be greater than or equal',
       ['expected'],
-      [expected]
+      [prettyPrint(expected)]
     );
   }
 
@@ -171,7 +176,7 @@ export class Expectation {
       'toBeInstanceOf',
       'to be an instance of',
       ['expected'],
-      [expected]
+      [prettyPrint(expected)]
     );
   }
 
@@ -183,7 +188,7 @@ export class Expectation {
       'toBeLessThan',
       'to be less than',
       ['expected'],
-      [expected]
+      [prettyPrint(expected)]
     );
   }
 
@@ -195,7 +200,7 @@ export class Expectation {
       'toBeLessThanOrEqual',
       'to be less than or equal',
       ['expected'],
-      [expected]
+      [prettyPrint(expected)]
     );
   }
 
@@ -230,7 +235,7 @@ export class Expectation {
       'toContain',
       `to contain ${isArray ? 'element' : 'substring'}`,
       ['expected'],
-      [expected]
+      [prettyPrint(expected)]
     );
   }
 
@@ -244,8 +249,60 @@ export class Expectation {
       'toEqual',
       'to equal',
       ['expected'],
-      [expected],
+      [prettyPrint(expected)],
       this.negated ? undefined : reasons
+    );
+  }
+
+  toHaveBeenCalled(): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toHaveBeenCalled());
+
+    if (!isMockFunction(this.actual)) {
+      return this.fail(
+        'incorrect-usage',
+        'toHaveBeenCalled',
+        'to be a mock function',
+        [],
+        [],
+        ['', 'toHaveBeenCalled can only be used with mock functions.']
+      );
+    }
+
+    return this.assert(
+      this.actual.mock.callCount > 0,
+      'toHaveBeenCalled',
+      this.negated ? 'to have been called' : 'to have been called at least once',
+      [],
+      []
+    );
+  }
+
+  toHaveBeenCalledTimes(count: number): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toHaveBeenCalledTimes(count));
+
+    if (!isMockFunction(this.actual)) {
+      return this.fail(
+        'incorrect-usage',
+        'toHaveBeenCalledTimes',
+        'to be a mock function',
+        ['count'],
+        [],
+        ['', 'toHaveBeenCalledTimes can only be used with mock functions.']
+      );
+    }
+
+    const { callCount } = this.actual.mock;
+    return this.assert(
+      callCount === count,
+      'toHaveBeenCalledTimes',
+      `to have been called`,
+      ['count'],
+      [times(count)],
+      this.negated
+        ? undefined
+        : callCount === 0
+        ? ['but it was never called.']
+        : ['but it was called:', `  ${times(callCount)}`]
     );
   }
 
@@ -253,12 +310,12 @@ export class Expectation {
     if (this.async) return this.awaitActual().then(x => x && x.toHaveClass(expected));
 
     if (!isDomElement(this.actual)) {
-      return this.assert(
-        false,
+      return this.fail(
+        'incorrect-usage',
         'toHaveClass',
         'to be a DOM node with class',
         ['expected'],
-        [expected],
+        [prettyPrint(expected)],
         ['but it was not a DOM node.']
       );
     }
@@ -278,8 +335,8 @@ export class Expectation {
       'toHaveClass',
       `to have class${expectedClasses.length > 1 ? 'es' : ''}`,
       ['expected'],
-      [expectedClasses.join(' ')],
-      [['but actual classes were', this.actual.className]]
+      [prettyPrint(expectedClasses.join(' '))],
+      ['but actual classes were:', prettyPrint(this.actual.className, 1)]
     );
   }
 
@@ -287,15 +344,17 @@ export class Expectation {
     if (this.async) return this.awaitActual().then(x => x && x.toHaveLength(expected));
 
     const actualLength = this.actual.length;
-    const additionalInfo = this.negated ? undefined : [['but actual length was', actualLength]];
+    const additionalLines = this.negated
+      ? undefined
+      : ['but actual length was:', prettyPrint(actualLength, 1)];
 
     return this.assert(
       actualLength === expected,
       'toHaveLength',
       'to have length',
       ['expected'],
-      [expected],
-      additionalInfo
+      [prettyPrint(expected)],
+      additionalLines
     );
   }
 
@@ -313,14 +372,22 @@ export class Expectation {
 
     const expectingValue = arguments.length > 1;
     if (!expectingValue) {
-      return this.assert(hasProperty, 'toHaveProperty', 'to have property', ['property'], [key]);
+      return this.assert(
+        hasProperty,
+        'toHaveProperty',
+        'to have property',
+        ['property'],
+        [prettyPrint(key)]
+      );
     }
 
     const actualValue = this.actual[key];
     const hasCorrectValue = this.actual[key] === value;
-    const additionalInfo = [
-      ['with value', value],
-      [`but actual value for ${prettyPrint(key)} was`, actualValue]
+    const additionalLines = [
+      'with value:',
+      prettyPrint(value, 1),
+      `but actual value for ${prettyPrint(key)} was:`,
+      prettyPrint(actualValue, 1)
     ];
 
     return this.assert(
@@ -328,8 +395,8 @@ export class Expectation {
       'toHaveProperty',
       'to have property',
       ['property', 'value'],
-      [key, value],
-      additionalInfo
+      [prettyPrint(key)],
+      additionalLines
     );
   }
 
@@ -338,14 +405,17 @@ export class Expectation {
 
     const actualType = typeof this.actual;
     const pass = actualType === expected;
-    const additionalInfo = this.negated ? undefined : [['but actual type was', actualType]];
+    const additionalLines = this.negated
+      ? undefined
+      : ['but actual type was:', prettyPrint(actualType, 1)];
+
     return this.assert(
       pass,
       'toHaveType',
       'to have type',
       ['expected'],
-      [expected],
-      additionalInfo
+      [prettyPrint(expected)],
+      additionalLines
     );
   }
 
@@ -360,7 +430,7 @@ export class Expectation {
   //   }
 
   //   const pass = this.actual.textContent === expected;
-  //   return this.assert(pass, this.toHaveText, [expected]);
+  //   return this.assert(pass, this.toHaveText, [prettyPrint(expected)]);
   // }
 
   toMatch(expected: string | RegExp): void | Promise<void> {
@@ -375,7 +445,7 @@ export class Expectation {
     const phrase = givenString ? 'to contain string' : 'to match regular expression';
     const param = givenString ? 'string' : 'regex';
 
-    return this.assert(pass, 'toMatch', phrase, [param], [expected]);
+    return this.assert(pass, 'toMatch', phrase, [param], [prettyPrint(expected)]);
   }
 
   toSatisfy(predicate: Function): void | Promise<void> {
@@ -423,7 +493,7 @@ export class Expectation {
         'toThrow',
         'to throw an instance of',
         ['errorType'],
-        [expected],
+        [prettyPrint(expected)],
         threwAnything ? undefined : ['but it did not throw.']
       );
     }
@@ -436,7 +506,7 @@ export class Expectation {
         'toThrow',
         'to throw an error matching regular expression',
         ['regex'],
-        [expected],
+        [prettyPrint(expected)],
         threwAnything ? undefined : ['but it did not throw.']
       );
     }
@@ -446,7 +516,7 @@ export class Expectation {
       'toThrow',
       'to throw an error containing string',
       ['string'],
-      [expected],
+      [prettyPrint(expected)],
       threwAnything ? undefined : ['but it did not throw.']
     );
   }
@@ -498,18 +568,37 @@ export class Expectation {
     matcherPhrase: string,
     matcherParamNames: string[] | null,
     matcherArgs: any[],
-    additionalInfo?: any[]
+    additionalLines?: any[]
   ) {
     if (!this.negated && condition) return;
     if (this.negated && !condition) return;
 
-    throw new ExpectationError(
-      this,
+    this.fail(
+      'assertion-failed',
       matcherName,
       matcherPhrase,
       matcherParamNames,
       matcherArgs,
-      additionalInfo
+      additionalLines
+    );
+  }
+
+  private fail(
+    reason: 'incorrect-usage' | 'assertion-failed',
+    matcherName: string,
+    matcherPhrase: string,
+    matcherParamNames: string[] | null,
+    matcherArgs: any[],
+    additionalLines?: any[]
+  ) {
+    throw new ExpectationError(
+      this,
+      reason,
+      matcherName,
+      matcherPhrase,
+      matcherParamNames,
+      matcherArgs,
+      additionalLines
     );
   }
 }

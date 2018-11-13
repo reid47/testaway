@@ -6,6 +6,7 @@ require('./any.test');
 require('./expect.async.test');
 require('./expect.dom.test');
 require('./expect.extend.test');
+require('./expect.mocks.test');
 require('./expect.test');
 require('./metadata.test');
 require('./mock.test');
