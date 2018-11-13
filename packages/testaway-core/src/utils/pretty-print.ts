@@ -1,5 +1,4 @@
-import { Any } from '../Any';
-import { Mock } from '../Mock';
+import { ANY_PROPERTY, MOCK_PROPERTY } from '../constants';
 
 const makeIndent = (amount: number): string => '  '.repeat(amount);
 
@@ -21,7 +20,7 @@ export function prettyPrint(obj: any, depth = 0): string {
       return `${indent}"${obj}"`;
 
     case 'function':
-      if (obj.mock instanceof Mock) return `${indent}${obj.toString()}`;
+      if (obj.mock && obj.mock[MOCK_PROPERTY]) return `${indent}${obj.toString()}`;
       return `${indent}[Function${obj.name ? `: ${obj.name}` : ''}]`;
 
     case 'symbol':
@@ -68,7 +67,7 @@ export function prettyPrint(obj: any, depth = 0): string {
   }
 
   if (type === 'object') {
-    if (obj.__TESTAWAY__ANY__) return `${indent}${obj.toString()}`;
+    if (obj[ANY_PROPERTY]) return `${indent}${obj.toString()}`;
 
     const ctor = (obj.constructor && obj.constructor.name) || 'Object';
     const keys = Object.keys(obj);

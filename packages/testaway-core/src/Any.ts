@@ -1,5 +1,6 @@
 import { prettyPrint } from './utils/pretty-print';
 import { deepEqual } from './utils/deep-equal';
+import { ANY_PROPERTY } from './constants';
 
 type AnyStyle =
   | 'arrayContaining'
@@ -12,7 +13,7 @@ type AnyStyle =
   | 'truthy';
 
 export class Any {
-  readonly __TESTAWAY__ANY__: boolean = true;
+  readonly [ANY_PROPERTY]: boolean = true;
   expected: any;
   style: AnyStyle;
 

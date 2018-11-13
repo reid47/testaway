@@ -1,8 +1,10 @@
 import { deepEqual } from './utils/deep-equal';
+import { MOCK_PROPERTY } from './constants';
 
 const initialCallHandler = () => void 0;
 
 export class Mock {
+  readonly [MOCK_PROPERTY]: boolean = true;
   name?: string;
   calls: any[] = [];
   defaultCallHandler: Function = initialCallHandler;

@@ -2,12 +2,12 @@ import { ExpectationError } from './ExpectationError';
 import { deepEqual } from './utils/deep-equal';
 import { prettyPrint } from './utils/pretty-print';
 import { typeOf } from './utils/type-of';
-import { Mock } from './Mock';
+import { MOCK_PROPERTY } from './constants';
 
 const isDomElement = (obj: any) =>
   obj && obj.classList && typeof obj.classList.contains === 'function';
 
-const isMockFunction = (f: any) => typeof f === 'function' && f.mock instanceof Mock;
+const isMockFunction = (f: any) => typeof f === 'function' && f.mock && f.mock[MOCK_PROPERTY];
 
 const times = (n: number) => (n === 1 ? `${n} time` : `${n} times`);
 
