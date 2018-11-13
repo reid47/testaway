@@ -175,6 +175,23 @@ expect(null).toBeUndefined();
 
 ### `toContain(expected: any)`
 
+If the actual value is an array, expects the array to contain an element that is equal to `expected` (checking for deep equality, like `toEqual` does). If the actual value is a string, expects the string to contain the substring `expected`.
+
+#### Passing examples
+
+```js
+expect([1, 2, 3]).toContain(2);
+expect([{ a: 1 }, { b: 2 }]).toContain({ b: 2 });
+expect('hello, world').toContain('hello');
+```
+
+#### Failing examples
+
+```js
+expect([1, 2, 3]).toContain(4);
+expect('hello, world').toContain('test');
+```
+
 ### `toEqual(expected: any)`
 
 ### `toHaveClass(expected: string | string[])`
