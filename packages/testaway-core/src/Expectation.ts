@@ -217,6 +217,23 @@ export class Expectation {
     return this.assert(this.actual === void 0, 'toBeUndefined', 'to be undefined', [], []);
   }
 
+  toContain(expected: any): void | Promise<void> {
+    if (this.async) return this.awaitActual().then(x => x && x.toContain(expected));
+
+    const isArray = Array.isArray(this.actual);
+    const pass = isArray
+      ? this.actual.some((element: any) => deepEqual(expected, element).equal)
+      : this.actual.indexOf(expected) > -1;
+
+    return this.assert(
+      pass,
+      'toContain',
+      `to contain ${isArray ? 'element' : 'substring'}`,
+      ['expected'],
+      [expected]
+    );
+  }
+
   toEqual(expected: any): void | Promise<void> {
     if (this.async) return this.awaitActual().then(x => x && x.toEqual(expected));
 

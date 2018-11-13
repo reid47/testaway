@@ -173,6 +173,8 @@ expect({}).toBeUndefined();
 expect(null).toBeUndefined();
 ```
 
+### `toContain(expected: any)`
+
 ### `toEqual(expected: any)`
 
 ### `toHaveClass(expected: string | string[])`

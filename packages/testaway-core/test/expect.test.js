@@ -195,6 +195,42 @@ test('expect toBeFalsy', () => {
   );
 });
 
+test('expect not toBeFalsy', () => {
+  expect(47).not.toBeFalsy();
+  expect('hi').not.toBeFalsy();
+  expect([]).not.toBeFalsy();
+
+  expectErrorMessage(
+    () => expect(undefined).not.toBeFalsy(),
+    'Expectation failed: expect(received).not.toBeFalsy()',
+    '',
+    'Expected:',
+    '  undefined',
+    'not to be falsy.',
+    ''
+  );
+
+  expectErrorMessage(
+    () => expect([]).toBeFalsy(),
+    'Expectation failed: expect(received).toBeFalsy()',
+    '',
+    'Expected:',
+    '  Array []',
+    'to be falsy.',
+    ''
+  );
+
+  expectErrorMessage(
+    () => expect({}).toBeFalsy(),
+    'Expectation failed: expect(received).toBeFalsy()',
+    '',
+    'Expected:',
+    '  Object {}',
+    'to be falsy.',
+    ''
+  );
+});
+
 test('expect toBeEmpty', () => {
   expect([]).toBeEmpty();
   expect('').toBeEmpty();
@@ -253,42 +289,6 @@ test('expect not toBeEmpty', () => {
     'Expected:',
     '  Array []',
     'not to be empty.',
-    ''
-  );
-});
-
-test('expect not toBeFalsy', () => {
-  expect(47).not.toBeFalsy();
-  expect('hi').not.toBeFalsy();
-  expect([]).not.toBeFalsy();
-
-  expectErrorMessage(
-    () => expect(undefined).not.toBeFalsy(),
-    'Expectation failed: expect(received).not.toBeFalsy()',
-    '',
-    'Expected:',
-    '  undefined',
-    'not to be falsy.',
-    ''
-  );
-
-  expectErrorMessage(
-    () => expect([]).toBeFalsy(),
-    'Expectation failed: expect(received).toBeFalsy()',
-    '',
-    'Expected:',
-    '  Array []',
-    'to be falsy.',
-    ''
-  );
-
-  expectErrorMessage(
-    () => expect({}).toBeFalsy(),
-    'Expectation failed: expect(received).toBeFalsy()',
-    '',
-    'Expected:',
-    '  Object {}',
-    'to be falsy.',
     ''
   );
 });
@@ -412,6 +412,62 @@ test('expect not toBeUndefined', () => {
     'Expected:',
     '  undefined',
     'not to be undefined.',
+    ''
+  );
+});
+
+test('expect toContain', () => {
+  expect([1, 2, 3]).toContain(3);
+  expect(['hello', 'world']).toContain('hello');
+  expect('hello').toContain('ell');
+  expect([{ a: 1 }, { b: 2 }, { c: 3 }]).toContain({ b: 2 });
+
+  expectErrorMessage(
+    () => expect([1, 2, 3]).toContain(4),
+    'Expectation failed: expect(received).toContain(expected)',
+    '',
+    'Expected:',
+    '  Array [1, 2, 3]',
+    'to contain element:',
+    '  4',
+    ''
+  );
+
+  expectErrorMessage(
+    () => expect('a string').toContain('something'),
+    'Expectation failed: expect(received).toContain(expected)',
+    '',
+    'Expected:',
+    '  "a string"',
+    'to contain substring:',
+    '  "something"',
+    ''
+  );
+});
+
+test('expect not toContain', () => {
+  expect([1, 2, 3]).not.toContain(5);
+  expect('hi').not.toContain('wow');
+
+  expectErrorMessage(
+    () => expect([1, 2]).not.toContain(2),
+    'Expectation failed: expect(received).not.toContain(expected)',
+    '',
+    'Expected:',
+    '  Array [1, 2]',
+    'not to contain element:',
+    '  2',
+    ''
+  );
+
+  expectErrorMessage(
+    () => expect('hello').not.toContain('ell'),
+    'Expectation failed: expect(received).not.toContain(expected)',
+    '',
+    'Expected:',
+    '  "hello"',
+    'not to contain substring:',
+    '  "ell"',
     ''
   );
 });
