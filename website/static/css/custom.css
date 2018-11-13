@@ -3,6 +3,10 @@ body {
     'Open Sans', 'Helvetica Neue', sans-serif !important;
 }
 
+code {
+  padding: 2px 4px !important;
+}
+
 .fixedHeaderContainer {
   background: #fff !important;
   border-bottom: 1px solid #e0e0e0;

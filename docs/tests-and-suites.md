@@ -197,10 +197,100 @@ xsuite('skipped suite', () => {
 
 ## Test setup and teardown
 
+Sometimes, you will want to set up some conditions before your tests run (and/or clean up things you set up for your tests). These functions help you do that.
+
+If placed outside of a `describe` suite, these setup/teardown functions will apply to every test in the test run. If inside a suite, they will only apply to tests in that suite and any inner suites.
+
 ### `beforeEach(func)`
+
+`beforeEach` takes a function that will be run before every test that follows it.
+
+In this example, we use `beforeEach` to create a fresh instance of the `Counter` class for each test to work with.
+
+```js
+describe('Counter', () => {
+  let counter;
+
+  beforeEach(() => {
+    counter = new Counter('my counter');
+  });
+
+  it('has a name', () => {
+    expect(counter.getName()).toBe('my counter');
+  });
+
+  it('can be incremented', () => {
+    expect(counter.getCount()).toBe(0);
+    counter.increment();
+    expect(counter.getCount()).toBe(1);
+  });
+});
+```
 
 ### `afterEach(func)`
 
+`afterEach` takes a function that will be run after every test that follows it.
+
+In this example, we use `afterEach` to clear out `localStorage` between tests so they don't affect one another.
+
+```js
+afterEach(() => {
+  localStorage.clear();
+});
+
+it('can store strings', () => {
+  expect(localStorage.get('key')).toBeUndefined();
+  myLocalStorageHelper.store('hello');
+  expect(localStorage.get('key')).toBe('hello');
+});
+
+it('can store numbers', () => {
+  expect(localStorage.get('key')).toBeUndefined();
+  myLocalStorageHelper.store(47);
+  expect(localStorage.get('key')).toBe('47');
+});
+```
+
 ### `beforeAll(func)`
 
+`beforeAll` takes a function that will run once before all of the tests in the test run. If placed in a suite, it will run once before all of the tests in that suite.
+
+In this example, we use `beforeAll` to do some asynchronous actions (opening a browser window and logging in) before running an integration-style test that needs a logged-in browser session.
+
+```js
+beforeAll(async () => {
+  await openBrowser();
+  await logIn();
+});
+
+it('has the right heading', async () => {
+  const headingText = await getText('h2.my-heading');
+  expect(headingText).toBe('You are logged in!');
+});
+```
+
 ### `afterAll(func)`
+
+`afterAll` takes a function that will run once after all of the tests in the test run. If placed in a suite, it will run once after all of the tests in that suite.
+
+In this example, we use `afterAll` with some integration-style tests to close down a browser window after all tests have run.
+
+```js
+beforeAll(async () => {
+  await openBrowser();
+});
+
+afterAll(async () => {
+  await closeBrowser();
+});
+
+it('has a heading', async () => {
+  const text = await getText('h1');
+  expect(text).toBe('Hello, world');
+});
+
+it('has a log-in button', async () => {
+  const button = await getText('button.log-in');
+  expect(button).toBe('Click to log in');
+});
+```
