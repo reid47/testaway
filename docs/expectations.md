@@ -104,7 +104,7 @@ expect(obj.missingProperty).toBeDefined();
 
 ### `toBeEmpty()`
 
-Expects the actual value to be either an empty string (`''`), an empty array (`[]`), or an empty object (`{}`).
+Expects the actual value to be either an empty string (`''`), an empty array (`[]`), an empty object (`{}`), an empty Map, or an empty Set.
 
 #### Passing examples
 
@@ -112,12 +112,16 @@ Expects the actual value to be either an empty string (`''`), an empty array (`[
 expect('').toBeEmpty();
 expect([]).toBeEmpty();
 expect({}).toBeEmpty();
+expect(new Map()).toBeEmpty();
+expect(new Set()).toBeEmpty();
 ```
 
 #### Failing examples
 
 ```js
 expect('hello').toBeEmpty();
+expect([1, 2, 3]).toBeEmpty();
+expect(new Set([1, 2, 3])).toBeEmpty();
 expect(undefined).toBeEmpty();
 ```
 

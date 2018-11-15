@@ -235,6 +235,8 @@ test('expect toBeEmpty', () => {
   expect([]).toBeEmpty();
   expect('').toBeEmpty();
   expect({}).toBeEmpty();
+  expect(new Map()).toBeEmpty();
+  expect(new Set()).toBeEmpty();
 
   expectErrorMessage(
     () => expect('nope').toBeEmpty(),
@@ -281,6 +283,8 @@ test('expect not toBeEmpty', () => {
   expect([1, 2, 3]).not.toBeEmpty();
   expect('hi').not.toBeEmpty();
   expect({ a: 1 }).not.toBeEmpty();
+  expect(new Map([['a', 1]])).not.toBeEmpty();
+  expect(new Set([1, 2, 3])).not.toBeEmpty();
 
   expectErrorMessage(
     () => expect([]).not.toBeEmpty(),

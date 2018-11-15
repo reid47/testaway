@@ -133,7 +133,13 @@ export class Expectation {
     if (Array.isArray(this.actual) || typeof this.actual === 'string') {
       pass = this.actual.length === 0;
     } else if (this.actual && typeof this.actual === 'object') {
-      pass = Object.keys(this.actual).length === 0;
+      if (typeof Map !== 'undefined' && this.actual instanceof Map) {
+        pass = this.actual.size === 0;
+      } else if (typeof Set !== 'undefined' && this.actual instanceof Set) {
+        pass = this.actual.size === 0;
+      } else {
+        pass = Object.keys(this.actual).length === 0;
+      }
     }
 
     return this.assert(pass, 'toBeEmpty', 'to be empty', [], []);
