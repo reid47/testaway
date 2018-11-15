@@ -141,17 +141,136 @@ expect(true).toBeFalsy();
 
 ### `toBeGreaterThan(expected: number)`
 
+Expects the actual value to be greater than a given number (using `>`).
+
+#### Passing examples
+
+```js
+expect(47).toBeGreaterThan(0);
+expect(0).toBeGreaterThan(-200);
+```
+
+#### Failing examples
+
+```js
+expect(1).toBeGreaterThan(2);
+expect(1).toBeGreaterThan(1);
+```
+
 ### `toBeGreaterThanOrEqual(expected: number)`
 
-### `toBeInstanceOf(expected: Function)`
+Expects the actual value to be greater than or equal to a given number (using `>=`).
+
+#### Passing examples
+
+```js
+expect(47).toBeGreaterThanOrEqual(0);
+expect(0).toBeGreaterThanOrEqual(-200);
+expect(1).toBeGreaterThanOrEqual(1);
+```
+
+#### Failing examples
+
+```js
+expect(1).toBeGreaterThanOrEqual(2);
+expect(-1).toBeGreaterThanOrEqual(0);
+```
+
+### `toBeInstanceOf(expected: Class)`
+
+Expects the actual value to be an instance of the expected class (using the `instanceof` operator).
+
+#### Passing examples
+
+```js
+expect({}).toBeInstanceOf(Object);
+expect(/wow/).toBeInstanceOf(RegExp);
+expect(() => {}).toBeInstanceOf(Function);
+```
+
+#### Failing examples
+
+```js
+expect('a string').toBeInstanceOf(RegExp);
+expect(47).toBeInstanceOf(Function);
+```
 
 ### `toBeLessThan(expected: number)`
 
+Expects the actual value to be less than a given number (using `<`).
+
+#### Passing examples
+
+```js
+expect(0).toBeLessThanOr(47);
+expect(-200).toBeLessThanOr(0);
+```
+
+#### Failing examples
+
+```js
+expect(2).toBeLessThanOr(1);
+expect(0).toBeLessThanOr(-10);
+expect(1).toBeLessThanOr(1);
+```
+
 ### `toBeLessThanOrEqual(expected: number)`
+
+Expects the actual value to be less than or equal to a given number (using `<=`).
+
+#### Passing examples
+
+```js
+expect(0).toBeLessThanOrEqual(47);
+expect(-200).toBeLessThanOrEqual(0);
+expect(1).toBeLessThanOrEqual(1);
+```
+
+#### Failing examples
+
+```js
+expect(2).toBeLessThanOrEqual(1);
+expect(0).toBeLessThanOrEqual(-10);
+```
 
 ### `toBeNull()`
 
+Expects the actual value to be `null`.
+
+#### Passing examples
+
+```js
+expect(null).toBeNull();
+const obj = { prop: null };
+expect(obj.prop).toBeNull();
+```
+
+#### Failing examples
+
+```js
+expect(true).toBeNull();
+expect({}).toBeNull();
+expect(undefined).toBeNull();
+```
+
 ### `toBeTruthy()`
+
+Expects the actual value to be any non-falsy value. Falsy values in JavaScript include: `false`, `null`, `undefined`, `0`, `''`, and `NaN`.
+
+#### Passing examples
+
+```js
+expect(true).toBeTruthy();
+expect('hello').toBeTruthy();
+expect({}).toBeTruthy();
+```
+
+#### Failing examples
+
+```js
+expect(false).toBeTruthy();
+expect(undefined).toBeTruthy();
+```
 
 ### `toBeUndefined()`
 
@@ -193,6 +312,25 @@ expect('hello, world').toContain('test');
 ```
 
 ### `toEqual(expected: any)`
+
+Expects the actual value to be deeply equal to the expected value. This means that for objects and arrays, every property/element will be checked recursively for deep equality.
+
+#### Passing examples
+
+```js
+expect(47).toEqual(47);
+expect('test').toEqual('test');
+expect([1, 2, 3]).toEqual([1, 2, 3]);
+expect({ a: 1, b: { hello: 'world' } }).toEqual({ a: 1, b: { hello: 'world' } });
+```
+
+#### Failing examples
+
+```js
+expect('hello').toEqual('world');
+expect([1, 2, 3]).toEqual([1, 2, 3, 4]);
+expect({ a: 1 }).toEqual({ a: 1, b: 2 });
+```
 
 ### `toHaveBeenCalled()`
 
@@ -266,7 +404,52 @@ expect(myFunction).toHaveBeenCalledWith('some argument');
 
 ### `toHaveClass(expected: string | string[])`
 
+Expects that a DOM node has a given class name, or all given class names.
+
+If given an array, expects the node to have all class names in the array. If given a string with multiple space-separated class names, it will expect the node to have each of the class names (in any order).
+
+#### Passing examples
+
+```js
+const div = document.createElement('div');
+div.className = 'class-one class-two';
+expect(div).toHaveClass('class-one');
+expect(div).toHaveClass('class-two');
+expect(div).toHaveClass('class-one class two');
+expect(div).toHaveClass(['class-one', 'class two']);
+```
+
+#### Failing examples
+
+```js
+const div = document.createElement('div');
+div.className = 'class-one class-two';
+expect(div).toHaveClass('class-three');
+expect(div).toHaveClass('class-one class two class-three');
+expect(div).toHaveClass(['class-one', 'class two', 'class three']);
+```
+
 ### `toHaveLength(expected: number)`
+
+Expects that the actual value has a given length.
+
+This just looks for a `.length` property, so it will work on an array, a string, and anything else that has a `.length` property.
+
+#### Passing examples
+
+```js
+expect('hello').toHaveLength(5);
+expect([1, 2, 3]).toHaveLength(3);
+expect({ length: 47 }).toHaveLength(47);
+```
+
+#### Failing examples
+
+```js
+expect('hi').toHaveLength(5);
+expect([]).toHaveLength(1);
+expect({ length: 0 }).toHaveLength(47);
+```
 
 ### `toHaveProperty(key: string, value?: any)`
 
