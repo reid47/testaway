@@ -2,7 +2,8 @@ import { ExpectationError } from './ExpectationError';
 import { deepEqual } from './utils/deep-equal';
 import { prettyPrint } from './utils/pretty-print';
 import { typeOf } from './utils/type-of';
-import { MOCK_PROPERTY } from './constants';
+import { MOCK_PROPERTY, ARGUMENTS_PROPERTY } from './constants';
+import { Mock } from './Mock';
 
 const isDomElement = (obj: any) =>
   obj && obj.classList && typeof obj.classList.contains === 'function';
@@ -295,7 +296,7 @@ export class Expectation {
     return this.assert(
       callCount === count,
       'toHaveBeenCalledTimes',
-      `to have been called`,
+      'to have been called',
       ['count'],
       [times(count)],
       this.negated
@@ -303,6 +304,47 @@ export class Expectation {
         : callCount === 0
         ? ['but it was never called.']
         : ['but it was called:', `  ${times(callCount)}`]
+    );
+  }
+
+  toHaveBeenCalledWith(...expectedArgs: any[]): void | Promise<void> {
+    if (this.async) {
+      return this.awaitActual().then(x => x && x.toHaveBeenCalledWith(...expectedArgs));
+    }
+
+    if (!isMockFunction(this.actual)) {
+      return this.fail(
+        'incorrect-usage',
+        'toHaveBeenCalledWith',
+        'to be a mock function',
+        ['...args'],
+        [],
+        ['', 'toHaveBeenCalledWith can only be used with mock functions.']
+      );
+    }
+
+    const { calls, callCount } = this.actual.mock as Mock;
+    const pass = calls.some(call => deepEqual(expectedArgs, call.args).equal);
+    (expectedArgs as any)[ARGUMENTS_PROPERTY] = true;
+
+    return this.assert(
+      pass,
+      'toHaveBeenCalledWith',
+      'to have been called with',
+      ['...args'],
+      [prettyPrint(expectedArgs)],
+      this.negated
+        ? undefined
+        : callCount === 0
+        ? ['but it was never called.']
+        : [
+            'but it was called with:',
+            ...calls.map(({ args }, i) => {
+              args[ARGUMENTS_PROPERTY] = true;
+              const prefix = calls.length > 1 ? `call #${i}: ` : '';
+              return `  ${prefix}${prettyPrint(args)}`;
+            })
+          ]
     );
   }
 

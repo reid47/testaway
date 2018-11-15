@@ -1,4 +1,4 @@
-import { ANY_PROPERTY, MOCK_PROPERTY } from '../constants';
+import { ANY_PROPERTY, MOCK_PROPERTY, ARGUMENTS_PROPERTY } from '../constants';
 
 const makeIndent = (amount: number): string => '  '.repeat(amount);
 
@@ -32,21 +32,35 @@ export function prettyPrint(obj: any, depth = 0): string {
   }
 
   if (Array.isArray(obj)) {
+    let ctor = 'Array';
+    let lbrace = '[';
+    let rbrace = ']';
+
+    if ((obj as any)[ARGUMENTS_PROPERTY]) {
+      ctor = 'arguments';
+      lbrace = '(';
+      rbrace = ')';
+    }
+
     const shouldOneLine =
       obj.length < 5 &&
       obj.every(
         element =>
-          typeof element === 'number' || typeof element === 'string' || typeof element === 'boolean'
+          typeof element === 'number' ||
+          typeof element === 'string' ||
+          typeof element === 'boolean' ||
+          element == null
       );
 
     if (shouldOneLine) {
-      return `${indent}Array [${obj.map(element => prettyPrint(element)).join(', ')}]`;
+      return `${indent}${ctor} ${lbrace}${obj
+        .map(element => prettyPrint(element))
+        .join(', ')}${rbrace}`;
     }
 
-    // TODO: test all this...
-    return `${indent}Array [${obj
+    return `${indent}${ctor} ${lbrace}${obj
       .map(element => `${indent}${prettyPrint(element, depth + 1)}\n`)
-      .join(',')}]`;
+      .join(',')}${rbrace}`;
   }
 
   if ('outerHTML' in obj) {
