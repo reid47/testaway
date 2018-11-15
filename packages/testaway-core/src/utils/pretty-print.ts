@@ -1,4 +1,5 @@
 import { ANY_PROPERTY, MOCK_PROPERTY, ARGUMENTS_PROPERTY } from '../constants';
+import { isMap } from './is';
 
 const makeIndent = (amount: number): string => '  '.repeat(amount);
 

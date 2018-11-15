@@ -1,125 +1,129 @@
 import { prettyPrint } from './utils/pretty-print';
 import { deepEqual } from './utils/deep-equal';
 import { ANY_PROPERTY } from './constants';
-import { isFunction, isString, isRegExp, isArray, isObject } from './utils/is';
-
-type AnyStyle =
-  | 'arrayContaining'
-  | 'ctor'
-  | 'empty'
-  | 'falsy'
-  | 'satisfying'
-  | 'stringContaining'
-  | 'stringMatching'
-  | 'truthy';
+import { isFunction, isString, isRegExp, isArray, isObject, isMap, isSet } from './utils/is';
 
 export class Any {
   readonly [ANY_PROPERTY]: boolean = true;
   expected: any;
-  style: AnyStyle;
 
-  constructor(expected: any, style: AnyStyle) {
+  constructor(expected: any) {
     this.expected = expected;
-    this.style = style;
   }
 
   matches(value: any) {
-    if (this.style === 'arrayContaining') {
-      if (!isArray(this.expected) || !isArray(value)) return false;
+    return true;
+  }
 
-      return this.expected.every(expectedElement =>
-        value.some(actualElement => deepEqual(expectedElement, actualElement).equal)
-      );
-    }
+  toString() {
+    return 'anything';
+  }
+}
 
-    if (this.style === 'ctor') {
-      return (
-        typeof value !== 'undefined' &&
-        typeof value.constructor !== 'undefined' &&
-        value.constructor === this.expected
-      );
-    }
+class AnyConstructor extends Any {
+  matches(value: any) {
+    return (
+      typeof value !== 'undefined' &&
+      typeof value.constructor !== 'undefined' &&
+      value.constructor === this.expected
+    );
+  }
 
-    if (this.style === 'empty') {
-      if (isString(value)) return value.length === 0;
-      if (Array.isArray(value)) return value.length === 0;
-      if (isObject(value)) return Object.keys(value).length === 0;
-    }
+  toString() {
+    return `any ${this.expected.name}`;
+  }
+}
 
-    if (this.style === 'falsy') {
-      return !value;
-    }
+class AnyArrayContaining extends Any {
+  matches(value: any) {
+    if (!isArray(this.expected) || !isArray(value)) return false;
 
-    if (this.style === 'satisfying') {
-      return isFunction(this.expected) && !!this.expected(value);
-    }
+    return this.expected.every(expectedElement =>
+      value.some(actualElement => deepEqual(expectedElement, actualElement).equal)
+    );
+  }
 
-    if (this.style === 'stringContaining') {
-      return isString(value) && value.indexOf(this.expected) > -1;
-    }
+  toString() {
+    return 'any array containing given elements (in any order)';
+  }
+}
 
-    if (this.style === 'stringMatching') {
-      if (isString(value)) {
-        if (isString(this.expected)) return value.indexOf(this.expected) > -1;
-        if (isRegExp(this.expected)) return this.expected.test(value);
-      }
-    }
+class AnyFalsyValue extends Any {
+  matches(value: any) {
+    return !value;
+  }
 
-    if (this.style === 'truthy') {
-      return !!value;
+  toString() {
+    return 'any falsy value';
+  }
+}
+
+class AnyEmptyValue extends Any {
+  matches(value: any) {
+    if (isString(value) || isArray(value)) return value.length === 0;
+    if (isMap(value) || isSet(value)) return value.size === 0;
+    if (isObject(value)) return Object.keys(value).length === 0;
+
+    return false;
+  }
+
+  toString() {
+    return 'any empty string, array, object, Map, or Set';
+  }
+}
+
+class AnySatisfying extends Any {
+  matches(value: any) {
+    return isFunction(this.expected) && !!this.expected(value);
+  }
+
+  toString() {
+    return 'any value satisfying given function';
+  }
+}
+
+class AnyStringContaining extends Any {
+  matches(value: any) {
+    return isString(value) && value.indexOf(this.expected) > -1;
+  }
+
+  toString() {
+    return `any string containing ${prettyPrint(this.expected)}`;
+  }
+}
+
+class AnyStringMatching extends Any {
+  matches(value: any) {
+    if (isString(value)) {
+      if (isString(this.expected)) return value.indexOf(this.expected) > -1;
+      if (isRegExp(this.expected)) return this.expected.test(value);
     }
 
     return false;
   }
 
   toString() {
-    let descriptor = '';
-
-    switch (this.style) {
-      case 'arrayContaining':
-        descriptor = 'array containing given elements (in any order)';
-        break;
-
-      case 'ctor':
-        descriptor = this.expected.name;
-        break;
-
-      case 'empty':
-        descriptor = 'empty string, array, or object';
-        break;
-
-      case 'falsy':
-        descriptor = 'falsy value';
-        break;
-
-      case 'satisfying':
-        descriptor = 'value satisfying given function';
-        break;
-
-      case 'stringContaining':
-        descriptor = `string containing ${prettyPrint(this.expected)}`;
-        break;
-
-      case 'stringMatching':
-        descriptor = `string matching ${prettyPrint(this.expected)}`;
-        break;
-
-      case 'truthy':
-        descriptor = 'truthy value';
-        break;
-    }
-
-    return `any ${descriptor}`;
+    return `any string matching ${prettyPrint(this.expected)}`;
   }
 }
 
-const any = (ctor: Function) => new Any(ctor, 'ctor');
-any.arrayContaining = (expectedElements: any[]) => new Any(expectedElements, 'arrayContaining');
-any.falsy = () => new Any(null, 'falsy');
-any.empty = () => new Any(null, 'empty');
-any.satisfying = (predicate: Function) => new Any(predicate, 'satisfying');
-any.stringContaining = (substring: String) => new Any(substring, 'stringContaining');
-any.stringMatching = (match: String | RegExp) => new Any(match, 'stringMatching');
-any.truthy = () => new Any(null, 'truthy');
+class AnyTruthyValue extends Any {
+  matches(value: any) {
+    return !!value;
+  }
+
+  toString() {
+    return 'any truthy value';
+  }
+}
+
+const any = (ctor: Function) => new AnyConstructor(ctor);
+any.arrayContaining = (expectedElements: any[]) => new AnyArrayContaining(expectedElements);
+any.falsy = () => new AnyFalsyValue(null);
+any.empty = () => new AnyEmptyValue(null);
+any.satisfying = (predicate: Function) => new AnySatisfying(predicate);
+any.stringContaining = (substring: String) => new AnyStringContaining(substring);
+any.stringMatching = (match: String | RegExp) => new AnyStringMatching(match);
+any.truthy = () => new AnyTruthyValue(null);
 
 export { any };

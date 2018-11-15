@@ -57,9 +57,13 @@ describe('any', () => {
     expect('').toEqual(any.empty());
     expect([]).toEqual(any.empty());
     expect({}).toEqual(any.empty());
+    expect(new Map()).toEqual(any.empty());
+    expect(new Set()).toEqual(any.empty());
     expect('nope').not.toEqual(any.empty());
     expect(['nope']).not.toEqual(any.empty());
     expect({ nope: true }).not.toEqual(any.empty());
+    expect(new Map([['a', 1]])).not.toEqual(any.empty());
+    expect(new Set(['a'])).not.toEqual(any.empty());
     expect(47).not.toEqual(any.empty());
     expect(false).not.toEqual(any.empty());
 
@@ -70,7 +74,7 @@ describe('any', () => {
       'Expected:',
       '  true',
       'to equal:',
-      '  any empty string, array, or object',
+      '  any empty string, array, object, Map, or Set',
       'but values are different.',
       ''
     );
