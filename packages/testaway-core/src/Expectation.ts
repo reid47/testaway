@@ -2,13 +2,19 @@ import { ExpectationError } from './ExpectationError';
 import { deepEqual } from './utils/deep-equal';
 import { prettyPrint } from './utils/pretty-print';
 import { typeOf } from './utils/type-of';
-import { MOCK_PROPERTY, ARGUMENTS_PROPERTY } from './constants';
+import { ARGUMENTS_PROPERTY } from './constants';
 import { Mock } from './Mock';
-
-const isDomElement = (obj: any) =>
-  obj && obj.classList && typeof obj.classList.contains === 'function';
-
-const isMockFunction = (f: any) => typeof f === 'function' && f.mock && f.mock[MOCK_PROPERTY];
+import {
+  isMockFunction,
+  isDomElement,
+  isString,
+  isFunction,
+  isRegExp,
+  isArray,
+  isObject,
+  isMap,
+  isSet
+} from './utils/is';
 
 const times = (n: number) => (n === 1 ? `${n} time` : `${n} times`);
 
@@ -130,12 +136,12 @@ export class Expectation {
     if (this.async) return this.awaitActual().then(x => x && x.toBeDefined());
 
     let pass = false;
-    if (Array.isArray(this.actual) || typeof this.actual === 'string') {
+    if (isArray(this.actual) || isString(this.actual)) {
       pass = this.actual.length === 0;
-    } else if (this.actual && typeof this.actual === 'object') {
-      if (typeof Map !== 'undefined' && this.actual instanceof Map) {
+    } else if (this.actual && isObject(this.actual)) {
+      if (isMap(this.actual)) {
         pass = this.actual.size === 0;
-      } else if (typeof Set !== 'undefined' && this.actual instanceof Set) {
+      } else if (isSet(this.actual)) {
         pass = this.actual.size === 0;
       } else {
         pass = Object.keys(this.actual).length === 0;
@@ -368,13 +374,12 @@ export class Expectation {
       );
     }
 
-    const expectedClasses =
-      typeof expected === 'string'
-        ? expected
-            .split(/\s+/)
-            .map(s => s.trim())
-            .filter(Boolean)
-        : expected;
+    const expectedClasses = isString(expected)
+      ? expected
+          .split(/\s+/)
+          .map(s => s.trim())
+          .filter(Boolean)
+      : expected;
 
     const pass = expectedClasses.every(cls => this.actual.classList.contains(cls));
 
@@ -484,7 +489,7 @@ export class Expectation {
   toMatch(expected: string | RegExp): void | Promise<void> {
     if (this.async) return this.awaitActual().then(x => x && x.toMatch(expected));
 
-    const givenString = typeof expected === 'string';
+    const givenString = isString(expected);
 
     const pass = givenString
       ? this.actual.indexOf(expected) > -1
@@ -518,7 +523,7 @@ export class Expectation {
       });
     }
 
-    if (typeof this.actual !== 'function') {
+    if (!isFunction(this.actual)) {
       throw new Error('toThrow(...) expects a function to be passed to expect(...)');
     }
 
@@ -535,7 +540,7 @@ export class Expectation {
       return this.assert(threwAnything, 'toThrow', 'to throw', [], []);
     }
 
-    if (typeof expected === 'function') {
+    if (isFunction(expected)) {
       return this.assert(
         caught instanceof expected,
         'toThrow',
@@ -548,7 +553,7 @@ export class Expectation {
 
     const caughtMessage = caught instanceof Error ? caught.message : String(caught);
 
-    if (expected instanceof RegExp) {
+    if (isRegExp(expected)) {
       return this.assert(
         expected.test(caughtMessage),
         'toThrow',

@@ -1,6 +1,7 @@
 import { prettyPrint } from './utils/pretty-print';
 import { deepEqual } from './utils/deep-equal';
 import { ANY_PROPERTY } from './constants';
+import { isFunction, isString, isRegExp, isArray, isObject } from './utils/is';
 
 type AnyStyle =
   | 'arrayContaining'
@@ -24,12 +25,11 @@ export class Any {
 
   matches(value: any) {
     if (this.style === 'arrayContaining') {
-      if (!Array.isArray(this.expected) || !Array.isArray(value)) return false;
-      return this.expected.every(expectedElement => {
-        return value.some(actualElement => {
-          return deepEqual(expectedElement, actualElement).equal;
-        });
-      });
+      if (!isArray(this.expected) || !isArray(value)) return false;
+
+      return this.expected.every(expectedElement =>
+        value.some(actualElement => deepEqual(expectedElement, actualElement).equal)
+      );
     }
 
     if (this.style === 'ctor') {
@@ -41,9 +41,9 @@ export class Any {
     }
 
     if (this.style === 'empty') {
-      if (typeof value === 'string') return value.length === 0;
+      if (isString(value)) return value.length === 0;
       if (Array.isArray(value)) return value.length === 0;
-      if (typeof value === 'object') return Object.keys(value).length === 0;
+      if (isObject(value)) return Object.keys(value).length === 0;
     }
 
     if (this.style === 'falsy') {
@@ -51,17 +51,17 @@ export class Any {
     }
 
     if (this.style === 'satisfying') {
-      return typeof this.expected === 'function' && !!this.expected(value);
+      return isFunction(this.expected) && !!this.expected(value);
     }
 
     if (this.style === 'stringContaining') {
-      return typeof value === 'string' && value.indexOf(this.expected) > -1;
+      return isString(value) && value.indexOf(this.expected) > -1;
     }
 
     if (this.style === 'stringMatching') {
-      if (typeof value === 'string') {
-        if (typeof this.expected === 'string') return value.indexOf(this.expected) > -1;
-        if (this.expected instanceof RegExp) return this.expected.test(value);
+      if (isString(value)) {
+        if (isString(this.expected)) return value.indexOf(this.expected) > -1;
+        if (isRegExp(this.expected)) return this.expected.test(value);
       }
     }
 

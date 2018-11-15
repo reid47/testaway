@@ -1,9 +1,10 @@
 import { Mock } from './Mock';
+import { isFunction, isString } from './utils/is';
 
 export class MockFactory {
   static func(nameOrSetupFunc?: string | Function, setupFunc?: Function) {
-    const name = typeof nameOrSetupFunc === 'string' ? nameOrSetupFunc : void 0;
-    const setup = typeof nameOrSetupFunc === 'function' ? nameOrSetupFunc : setupFunc;
+    const name = isString(nameOrSetupFunc) ? nameOrSetupFunc : void 0;
+    const setup = isFunction(nameOrSetupFunc) ? nameOrSetupFunc : setupFunc;
     const instance = new Mock(name, setup);
 
     function MockFunction(...args: any[]) {
@@ -17,10 +18,10 @@ export class MockFactory {
   }
 
   static wrap(nameOrFunc?: string | Function, func?: Function) {
-    const name = typeof nameOrFunc === 'string' ? nameOrFunc : void 0;
-    const implementationFunc = typeof nameOrFunc === 'function' ? nameOrFunc : func;
+    const name = isString(nameOrFunc) ? nameOrFunc : void 0;
+    const implementationFunc = isFunction(nameOrFunc) ? nameOrFunc : func;
 
-    if (typeof implementationFunc !== 'function') {
+    if (!isFunction(implementationFunc)) {
       throw new TypeError('mock.wrap() must be given an implementation function to wrap.');
     }
 

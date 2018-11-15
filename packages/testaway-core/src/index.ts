@@ -4,6 +4,7 @@ import { Expectation } from './Expectation';
 import { SimpleReporter } from './SimpleReporter';
 import { MockFactory } from './MockFactory';
 import { any } from './Any';
+import { isFunction } from './utils/is';
 
 export default function createTestRun(testRunOptions?: TestRunOptions): Testaway {
   const testRun = new TestRun(testRunOptions);
@@ -13,8 +14,8 @@ export default function createTestRun(testRunOptions?: TestRunOptions): Testaway
     funcOrOptions: TestFunc | TestOptions,
     func: TestFunc
   ) => {
-    const actualFunc = typeof funcOrOptions === 'function' ? funcOrOptions : func;
-    const options = typeof funcOrOptions === 'function' ? {} : funcOrOptions;
+    const actualFunc = isFunction(funcOrOptions) ? funcOrOptions : func;
+    const options = isFunction(funcOrOptions) ? {} : funcOrOptions;
     if (suite) testRun.addSuite(name, actualFunc, category, options);
     else testRun.addTest(name, actualFunc, category, options);
   };
