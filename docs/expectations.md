@@ -238,6 +238,32 @@ myFunction();
 expect(myFunction).toHaveBeenCalledTimes(100);
 ```
 
+### `toHaveBeenCalledWith(...args: any[])`
+
+Expects that a [mock function](mocks.md) has been called at least once with the given set of arguments.
+
+#### Passing examples
+
+```js
+const numberFunction = mock.func();
+numberFunction(1);
+numberFunction(2);
+numberFunction(3);
+expect(numberFunction).toHaveBeenCalledWith(2);
+
+const logFunction = mock.func();
+logFunction('hello', 'world');
+expect(logFunction).toHaveBeenCalledWith('hello', 'world');
+```
+
+#### Failing examples
+
+```js
+const myFunction = mock.func();
+myFunction();
+expect(myFunction).toHaveBeenCalledWith('some argument');
+```
+
 ### `toHaveClass(expected: string | string[])`
 
 ### `toHaveLength(expected: number)`
