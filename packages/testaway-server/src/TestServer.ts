@@ -1,6 +1,6 @@
-import * as express from 'express';
-import * as WebSocket from 'ws';
-import * as http from 'http';
+import express from 'express';
+import WebSocket from 'ws';
+import http from 'http';
 import { BrowserTestRunner } from './BrowserTestRunner';
 import { FileServer } from './FileServer';
 import { executeTemplate, analyzeTemplate } from './html-templates';

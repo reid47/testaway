@@ -1,4 +1,4 @@
-import * as puppeteer from 'puppeteer-core';
+import puppeteer from 'puppeteer-core';
 
 const executablePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 

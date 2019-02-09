@@ -2,6 +2,7 @@
   "compilerOptions": {
     "noImplicitAny": true,
     "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true,
     "outDir": "./dist",
     "target": "es5",
     "module": "commonjs",

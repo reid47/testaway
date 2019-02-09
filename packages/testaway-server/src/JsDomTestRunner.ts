@@ -1,4 +1,4 @@
-import * as JsDom from 'jsdom';
+import JsDom from 'jsdom';
 
 export class JsDomTestRunner {
   async init() {}
