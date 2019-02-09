@@ -1,5 +1,5 @@
-import chokidar from 'chokidar';
-import webpack from 'webpack';
+import * as chokidar from 'chokidar';
+import * as webpack from 'webpack';
 import MemoryFs = require('memory-fs');
 import { TestServer } from './TestServer';
 
