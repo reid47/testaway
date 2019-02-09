@@ -594,8 +594,9 @@ export class Expectation {
           exp.alreadyResolved = true;
           return exp;
         },
-        rejected =>
-          this.assert(false, 'resolves', 'to resolve, but it rejected with', null, [rejected])
+        rejected => {
+          this.assert(false, 'resolves', 'to resolve, but it rejected with', null, [rejected]);
+        }
       );
   }
 
@@ -603,8 +604,9 @@ export class Expectation {
     return Promise.resolve()
       .then(() => this.actual)
       .then(
-        resolved =>
-          this.assert(false, 'rejects', 'to reject, but it resolved to', null, [resolved]),
+        resolved => {
+          this.assert(false, 'rejects', 'to reject, but it resolved to', null, [resolved]);
+        },
         rejected => {
           const exp = new Expectation(rejected);
           exp.domContext = this.domContext;
