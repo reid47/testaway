@@ -1,13 +1,14 @@
+@import './variables';
+
 .TestFile {
-  margin: 16px;
-  background: #fff;
-  box-shadow: 0 2px 4px 0px rgba(110, 110, 110, 0.2);
+  margin: 32px;
+  border: 1px solid $dark-color;
 }
 
 .TestFile-header {
   font-size: 12px;
   padding: 8px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid $dark-color;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -62,7 +63,7 @@
 
 .TestSuite-list.nested {
   margin-left: 8px;
-  border-left: 1px solid #bbb;
+  border-left: 1px solid $dark-color;
 }
 
 .TestSuite-name,
@@ -81,7 +82,6 @@
 .test-list-item {
   list-style: none;
   position: relative;
-  padding-left: 4px;
 }
 
 .test-error {

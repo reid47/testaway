@@ -5,7 +5,7 @@ import ExpandIcon from 'react-feather/dist/icons/plus-square';
 import CheckCircle from 'react-feather/dist/icons/check-circle';
 import XCircle from 'react-feather/dist/icons/x-circle';
 import PlayIcon from 'react-feather/dist/icons/play';
-import './TestFile.css';
+import './TestFile.scss';
 
 const flexGrow = <div style={{ flexGrow: 1 }} />;
 
@@ -39,6 +39,7 @@ function TestSuite({ fileResults, runFile, depth = 0, name, tests, suites }) {
   const isRoot = depth === 0;
   const [expanded, setExpanded] = useState(isRoot);
   const testCount = countTests(tests, suites);
+  const testOrTests = testCount === 1 ? 'test' : 'tests';
 
   const toggleButton = (
     <button className="TestSuite-toggle" onClick={() => setExpanded(!expanded)}>
@@ -52,7 +53,9 @@ function TestSuite({ fileResults, runFile, depth = 0, name, tests, suites }) {
         <div className={`TestSuite-name ${isRoot ? 'test-file-name' : ''}`}>
           {toggleButton}
           {name}
-          <span className="TestSuite-count">({testCount} tests)</span>
+          <span className="TestSuite-count">
+            ({testCount} {testOrTests})
+          </span>
         </div>
       )}
       {expanded && (
@@ -66,6 +69,7 @@ function TestSuite({ fileResults, runFile, depth = 0, name, tests, suites }) {
               {suites.map(({ name, suites, tests }) => {
                 const key = name.join('>>');
                 const suiteName = name[name.length - 1];
+
                 return (
                   <TestSuite
                     key={key}

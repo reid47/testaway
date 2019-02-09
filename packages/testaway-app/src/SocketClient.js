@@ -97,7 +97,8 @@ class SocketClient extends React.PureComponent {
       connected,
       fileNames,
       fileDefinitions,
-      fileResults
+      fileResults,
+      runFile: this.runFile
     });
   }
 }

@@ -1,0 +1,39 @@
+@import './variables';
+
+.Toolbar {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px;
+  // background: $primary-color;
+  border-bottom: 1px solid $dark-color;
+
+  h1 {
+    margin: 0;
+    font-size: 1rem;
+    display: inline-block;
+  }
+}
+
+.Toolbar-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Toolbar-button {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    margin-right: 4px;
+  }
+}

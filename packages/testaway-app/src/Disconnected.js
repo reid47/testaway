@@ -1,6 +1,6 @@
 import React from 'react';
 import Activity from 'react-feather/dist/icons/activity';
-import './App.css';
+import './App.scss';
 
 function Disconnected(props) {
   const { socketPort } = props;

@@ -1,14 +1,14 @@
 import React from 'react';
 import Toolbar from './Toolbar';
 import TestFile from './TestFile';
-import './App.css';
+import './App.scss';
 
 function Main(props) {
-  const { fileNames, runFile, fileDefinitions, fileResults } = props;
+  const { fileNames, runFile, fileDefinitions, fileResults, settings } = props;
 
   return (
     <div className="App">
-      <Toolbar />
+      <Toolbar settings={settings} />
       <main>
         {fileNames.map(fileName => (
           <TestFile
